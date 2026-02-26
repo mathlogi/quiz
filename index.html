@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Quiz Educativo</title>
+    <style>
+        :root { --primary: #0b3163; --accent: #00a774; --danger: #d00000; --white: #ffffff; }
+        body { margin: 0; font-family: sans-serif; background: #f0f2f5; display: flex; flex-direction: column; min-height: 100vh; }
+        .top-bar { background: var(--primary); color: white; padding: 15px; display: flex; justify-content: space-between; }
+        #timer-bar { height: 8px; background: var(--accent); width: 100%; transition: width 1s linear; }
+        .box { background: white; padding: 20px; border-radius: 15px; margin: 20px auto; max-width: 600px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-width: 600px; margin: 0 auto; }
+        button { background: var(--primary); color: white; border: none; padding: 15px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        input { padding: 15px; width: 80%; border: 2px solid var(--primary); border-radius: 8px; margin-bottom: 10px; }
+        #feedback { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; color: white; font-size: 30px; font-weight: bold; z-index: 10; text-align: center; padding: 20px; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+    <div id="menu" style="padding: 50px; text-align: center;">
+        <h1 style="color: var(--primary)">Meus Quizzes</h1>
+        <div id="list"></div>
+    </div>
+
+    <div id="game" class="hidden">
+        <div class="top-bar">
+            <span id="q-info">Questão</span>
+            <span id="score">0 pts</span>
+            <span id="t-txt">45s</span>
+        </div>
+        <div style="background:#ccc"><div id="timer-bar"></div></div>
+        <div class="box">
+            <div id="img-q"></div>
+            <h2 id="txt-q">Pergunta</h2>
+            <div id="short-zone" class="hidden">
+                <input type="text" id="ans-in" placeholder="Resposta...">
+                <button onclick="checkShort()">Submeter</button>
+            </div>
+        </div>
+        <div id="opt-grid" class="options"></div>
+    </div>
+
+    <div id="feedback"></div>
+
+    <div id="rank" class="hidden" style="text-align:center; padding: 50px;">
+        <h2 id="res-title">Fim!</h2>
+        <div id="res-grade" style="font-size: 60px; color: var(--accent)"></div>
+        <h3>Top 5</h3>
+        <table id="table" style="margin: auto; width: 300px;"></table>
+        <br><button onclick="location.reload()">Voltar</button>
+    </div>
+
+    <script src="perguntas.js"></script>
+    <script>
+        let cur = 0, pts = 0, time, tLeft, quiz, name;
+        const audio = new AudioContext();
+
+        function play(f, d) {
+            let o = audio.createOscillator(), g = audio.createGain();
+            o.frequency.value = f; g.gain.value = 0.1;
+            o.connect(g); g.connect(audio.destination);
+            o.start(); o.stop(audio.currentTime + d);
+        }
+
+        window.onload = () => {
+            const l = document.getElementById("list");
+            database.forEach(q => {
+                let b = document.createElement("button");
+                b.innerText = q.title;
+                b.style.margin = "10px";
+                b.onclick = () => {
+                    name = prompt("Teu nome:");
+                    if(!name) return;
+                    quiz = q;
+                    document.getElementById("menu").classList.add("hidden");
+                    document.getElementById("game").classList.remove("hidden");
+                    load();
+                };
+                l.appendChild(b);
+            });
+        };
+
+        function load() {
+            clearInterval(time); tLeft = 45; updateT();
+            let q = quiz.questions[cur];
+            document.getElementById("txt-q").innerText = q.q;
+            document.getElementById("q-info").innerText = `Questão ${cur+1}/${quiz.questions.length}`;
+            document.getElementById("img-q").innerHTML = q.img ? `<img src="${q.img}" style="max-width:100%">` : "";
+            
+            const grid = document.getElementById("opt-grid"), sz = document.getElementById("short-zone");
+            if(q.type === "multiple") {
+                grid.classList.remove("hidden"); sz.classList.add("hidden");
+                grid.innerHTML = "";
+                q.opts.forEach((o, i) => {
+                    let b = document.createElement("button"); b.innerText = o;
+                    b.onclick = () => validate(i === q.ans, q.opts[q.ans]);
+                    grid.appendChild(b);
+                });
+            } else {
+                grid.classList.add("hidden"); sz.classList.remove("hidden");
+                document.getElementById("ans-in").value = "";
+            }
+            time = setInterval(() => { tLeft--; updateT(); if(tLeft<=0) validate(false, q.ans); }, 1000);
+        }
+
+        function updateT() {
+            document.getElementById("t-txt").innerText = tLeft+"s";
+            document.getElementById("timer-bar").style.width = (tLeft/45*100)+"%";
+        }
+
+        function checkShort() { validate(document.getElementById("ans-in").value.trim().toLowerCase() === quiz.questions[cur].ans.toLowerCase(), quiz.questions[cur].ans); }
+
+        function validate(c, r) {
+            clearInterval(time);
+            const f = document.getElementById("feedback");
+            f.style.display = "flex";
+            if(c) { pts += 10; f.innerText = "CERTO! 🎯"; f.style.background = "#00a774"; play(600, 0.2); }
+            else { f.innerText = "ERRADO! ❌\nResposta: " + r; f.style.background = "#d00000"; play(200, 0.3); }
+            
+            setTimeout(() => {
+                f.style.display = "none"; cur++;
+                if(cur < quiz.questions.length) load(); else finish();
+            }, 2500);
+        }
+
+        function finish() {
+            document.getElementById("game").classList.add("hidden");
+            document.getElementById("rank").classList.remove("hidden");
+            let g = Math.round((pts / (quiz.questions.length * 10)) * 100);
+            document.getElementById("res-grade").innerText = g + "/100";
+            
+            let rs = JSON.parse(localStorage.getItem("r_"+quiz.id) || "[]");
+            rs.push({n: name, s: g}); rs.sort((a,b) => b.s - a.s);
+            localStorage.setItem("r_"+quiz.id, JSON.stringify(rs.slice(0,10)));
+            document.getElementById("table").innerHTML = rs.slice(0,5).map((x,i) => `<tr><td>${i+1}º</td><td>${x.n}</td><td>${x.s}</td></tr>`).join("");
+        }
+    </script>
+</body>
+</html>
