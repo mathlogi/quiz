@@ -17,5 +17,31 @@ const database = [
                 ans: "pentágono" 
             }
         ]
+    },
+    {
+        id: "mat_12_complexos",
+        title: "Matemática 12º Ano - Complexos",
+        questions: [
+            {
+                type: "multiple",
+                q: "Qual é a forma algébrica do número complexo $z = 2e^{i\frac{\pi}{3}}$?",
+                img: "",
+                opts: ["$1 + i\sqrt{3}$", "$\sqrt{3} + i$", "$1 - i\sqrt{3}$", "$2 + 2i$"],
+                ans: 0
+            },
+            {
+                type: "short",
+                q: "Calcula o valor da derivada de $f(x) = x^2$ no ponto $x=3$.",
+                img: "",
+                ans: "6"
+            },
+            {
+                type: "multiple",
+                q: "Qual o valor do limite $\lim_{n \to \infty} (1 + \frac{1}{n})^n$?",
+                img: "",
+                opts: ["0", "1", "$e$", "$\infty$"],
+                ans: 2
+            }
+        ]
     }
 ];
