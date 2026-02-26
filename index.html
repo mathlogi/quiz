@@ -2,50 +2,131 @@
 <html lang="pt-pt">
 <head>
     <meta charset="UTF-8">
-    <title>Quiz Educativo Pro</title>
+    <title>Math Logi Lab - Quiz</title>
     <style>
         :root { --primary: #0b3163; --accent: #00a774; --danger: #d00000; --white: #ffffff; }
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #f0f2f5; display: flex; flex-direction: column; min-height: 100vh; }
-        #menu { padding: 50px; text-align: center; }
-        .login-box { margin-bottom: 30px; }
-        input#player-name-input { padding: 15px; width: 300px; border: 2px solid var(--primary); border-radius: 10px; font-size: 16px; outline: none; }
-        button { background: var(--primary); color: white; border: none; padding: 15px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; margin: 5px; }
-        button:hover { opacity: 0.9; transform: translateY(-2px); }
-        .top-bar { background: var(--primary); color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
+        
+        body { 
+            margin: 0; font-family: 'Segoe UI', sans-serif; 
+            background-color: #004d40; /* Cor de segurança caso a imagem falhe */
+            display: flex; flex-direction: column; min-height: 100vh; 
+        }
+
+        /* --- ECRÃ DE ABERTURA (MATH LOGI LAB) --- */
+        #login-screen {
+            height: 100vh;
+            width: 100%;
+            background: url('https://raw.githubusercontent.com/mathlogi/quiz/main/PREPARAÇÃO EXAME 9ºANO (15).png') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end; /* Coloca o input na parte de baixo como na imagem */
+            padding-bottom: 15vh;
+            box-sizing: border-box;
+        }
+
+        .input-container {
+            background: white;
+            border-radius: 50px; /* Arredondado como no design */
+            padding: 5px 25px;
+            width: 80%;
+            max-width: 500px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        #player-name-input {
+            border: none;
+            padding: 15px;
+            width: 100%;
+            font-size: 18px;
+            text-align: center;
+            outline: none;
+            border-radius: 50px;
+            color: #333;
+        }
+
+        #start-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-left: 10px;
+            transition: 0.3s;
+        }
+        #start-btn:hover { background: var(--primary); }
+
+        /* --- MENU DE QUIZZES (APARECE DEPOIS) --- */
+        #quiz-selection {
+            display: none;
+            text-align: center;
+            padding: 50px;
+            background: #f0f2f5;
+            min-height: 100vh;
+        }
+
+        .quiz-card {
+            background: white;
+            margin: 15px auto;
+            padding: 20px;
+            max-width: 400px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border-left: 8px solid var(--primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* --- JOGO E BARRA DE TEMPO --- */
+        .top-bar { background: var(--primary); color: white; padding: 15px; display: flex; justify-content: space-between; }
         #timer-bar { height: 8px; background: var(--accent); width: 100%; transition: width 1s linear; }
         .box { background: white; padding: 30px; border-radius: 15px; margin: 20px auto; max-width: 600px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .options { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; max-width: 600px; margin: 0 auto; }
+        .options { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; max-width: 600px; margin: 0 auto; padding: 20px; }
+        
         #feedback { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; color: white; font-size: 30px; font-weight: bold; z-index: 100; text-align: center; }
         .hidden { display: none !important; }
+
+        button.opt-btn { background: var(--primary); color: white; border: none; padding: 20px; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        button.opt-btn:hover { transform: scale(1.02); }
+
         table { width: 100%; max-width: 400px; margin: 20px auto; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; }
         th { background: var(--primary); color: white; padding: 12px; }
-        td { padding: 10px; border-bottom: 1px solid #eee; color: #333; text-align: center; }
+        td { padding: 10px; border-bottom: 1px solid #eee; text-align: center; }
     </style>
 </head>
 <body>
 
-    <div id="menu">
-        <h1 style="color: var(--primary)">📚 Plataforma de Quiz</h1>
-        <div class="login-box">
-            <p style="color: #666;">Introduz o teu nome para começar:</p>
-            <input type="text" id="player-name-input" placeholder="Teu nome...">
+    <div id="login-screen">
+        <div class="input-container">
+            <input type="text" id="player-name-input" placeholder="INTRODUZ O TEU NOME PARA COMEÇAR:">
+            <button id="start-btn" onclick="goToMenu()">OK</button>
         </div>
-        <div id="list"></div>
     </div>
 
-    <div id="game" class="hidden">
+    <div id="quiz-selection">
+        <h1 style="color: var(--primary)">Escolha o seu Desafio</h1>
+        <div id="quiz-list"></div>
+    </div>
+
+    <div id="game-ui" class="hidden">
         <div class="top-bar">
             <span id="q-info">Questão</span>
-            <span id="score">0 pts</span>
+            <span id="score-val">0 pts</span>
             <span id="t-txt">45s</span>
         </div>
         <div style="background:#ccc"><div id="timer-bar"></div></div>
         <div class="box">
             <div id="img-q"></div>
-            <h2 id="txt-q">A carregar...</h2>
+            <h2 id="txt-q">Pergunta</h2>
             <div id="short-zone" class="hidden">
-                <input type="text" id="ans-in" placeholder="Escreve aqui..." style="width: 80%; margin-bottom: 15px; padding: 10px;">
-                <br><button onclick="checkShort()">Responder</button>
+                <input type="text" id="ans-in" placeholder="Resposta..." style="width: 80%; border: 2px solid var(--primary); border-radius: 8px; padding: 10px;">
+                <br><br><button onclick="checkShort()" style="background:var(--accent); padding:10px 20px; border:none; color:white; border-radius:8px; cursor:pointer;">Responder</button>
             </div>
         </div>
         <div id="opt-grid" class="options"></div>
@@ -53,15 +134,14 @@
 
     <div id="feedback"></div>
 
-    <div id="rank" class="hidden" style="text-align:center; padding: 50px;">
+    <div id="rank-screen" class="hidden" style="text-align:center; padding: 50px;">
         <h2 id="res-title">Fim do Quiz!</h2>
         <div id="res-grade" style="font-size: 60px; font-weight: bold; color: var(--accent); margin: 20px 0;"></div>
         <div style="background: white; padding: 20px; border-radius: 15px; display: inline-block; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
             <h3 style="margin-top:0">🏆 Ranking Global</h3>
-            <div id="loading-rank">A carregar ranking...</div>
             <table id="table"></table>
         </div>
-        <br><br><button onclick="location.reload()">Sair / Novo Jogo</button>
+        <br><br><button onclick="location.reload()" style="background:var(--primary); color:white; border:none; padding:15px; border-radius:8px; cursor:pointer;">Voltar ao Início</button>
     </div>
 
     <script src="perguntas.js"></script>
@@ -69,7 +149,7 @@
         let cur = 0, pts = 0, time, tLeft, quiz, playerName;
         const audio = new (window.AudioContext || window.webkitAudioContext)();
         
-        // --- CONFIGURAÇÃO JSONBIN ---
+        // --- TENS DE COLOCAR OS TEUS CÓDIGOS JSONBIN AQUI ---
         const BIN_ID = '69a03d0843b1c97be9a0345b'; 
         const API_KEY = '$2a$10$uPoUexkH5KHeuMHnDPbc0O/tP1KH4rqeSLkGjLk8R6lsV4MXfeTEG';
 
@@ -80,42 +160,59 @@
             o.start(); o.stop(audio.currentTime + d);
         }
 
-        window.onload = () => {
-            const listDiv = document.getElementById("list");
-            listDiv.innerHTML = ""; // Limpa para evitar duplicados
-            database.forEach(q => {
-                let btn = document.createElement("button");
-                btn.innerText = "Jogar: " + q.title;
-                btn.onclick = () => {
-                    const nameVal = document.getElementById("player-name-input").value.trim();
-                    if(!nameVal) { alert("Por favor, introduz o teu nome!"); return; }
-                    playerName = nameVal; quiz = q;
-                    document.getElementById("menu").classList.add("hidden");
-                    document.getElementById("game").classList.remove("hidden");
-                    load();
-                };
-                listDiv.appendChild(btn);
-            });
-        };
+        // Passar do ecrã de imagem para a lista de quizzes
+        function goToMenu() {
+            const val = document.getElementById("player-name-input").value.trim();
+            if(!val) { alert("Por favor, introduz o teu nome!"); return; }
+            playerName = val;
+            document.getElementById("login-screen").style.display = "none";
+            document.getElementById("quiz-selection").style.display = "block";
+            renderQuizList();
+        }
 
-        function load() {
+        function renderQuizList() {
+            const listDiv = document.getElementById("quiz-list");
+            listDiv.innerHTML = "";
+            database.forEach(q => {
+                const card = document.createElement("div");
+                card.className = "quiz-card";
+                card.innerHTML = `
+                    <div style="text-align:left">
+                        <strong>${q.title}</strong><br>
+                        <small style="color:#666">${q.questions.length} questões</small>
+                    </div>
+                    <button onclick="startQuiz('${q.id}')" style="background:var(--accent); border:none; color:white; padding:10px 15px; border-radius:8px; cursor:pointer;">Jogar</button>
+                `;
+                listDiv.appendChild(card);
+            });
+        }
+
+        function startQuiz(id) {
+            quiz = database.find(x => x.id === id);
+            document.getElementById("quiz-selection").style.display = "none";
+            document.getElementById("game-ui").classList.remove("hidden");
+            loadQuestion();
+        }
+
+        function loadQuestion() {
             clearInterval(time); tLeft = 45; updateT();
             let q = quiz.questions[cur];
             document.getElementById("txt-q").innerText = q.q;
             document.getElementById("q-info").innerText = `Questão ${cur+1}/${quiz.questions.length}`;
             document.getElementById("img-q").innerHTML = q.img ? `<img src="${q.img}" style="max-height:200px; border-radius:10px; margin-bottom:15px;">` : "";
+            
             const grid = document.getElementById("opt-grid"), sz = document.getElementById("short-zone");
             if(q.type === "multiple") {
                 grid.classList.remove("hidden"); sz.classList.add("hidden");
                 grid.innerHTML = "";
                 q.opts.forEach((o, i) => {
-                    let b = document.createElement("button"); b.innerText = o;
+                    let b = document.createElement("button"); b.className = "opt-btn"; b.innerText = o;
                     b.onclick = () => validate(i === q.ans, q.opts[q.ans]);
                     grid.appendChild(b);
                 });
             } else {
                 grid.classList.add("hidden"); sz.classList.remove("hidden");
-                document.getElementById("ans-in").value = ""; document.getElementById("ans-in").focus();
+                document.getElementById("ans-in").value = "";
             }
             time = setInterval(() => { tLeft--; updateT(); if(tLeft<=0) validate(false, q.type === "multiple" ? q.opts[q.ans] : q.ans); }, 1000);
         }
@@ -123,12 +220,11 @@
         function updateT() {
             document.getElementById("t-txt").innerText = tLeft+"s";
             document.getElementById("timer-bar").style.width = (tLeft/45*100)+"%";
-            document.getElementById("timer-bar").style.background = tLeft < 10 ? "var(--danger)" : "var(--accent)";
         }
 
         function checkShort() { 
-            const userAns = document.getElementById("ans-in").value.trim().toLowerCase();
-            validate(userAns === quiz.questions[cur].ans.toLowerCase(), quiz.questions[cur].ans); 
+            const val = document.getElementById("ans-in").value.trim().toLowerCase();
+            validate(val === quiz.questions[cur].ans.toLowerCase(), quiz.questions[cur].ans); 
         }
 
         function validate(isCorrect, rightAns) {
@@ -137,41 +233,37 @@
             fb.style.display = "flex";
             if(isCorrect) { pts += 10; fb.innerText = "CORRETO! 🎯"; fb.style.background = "var(--accent)"; play(600, 0.2); }
             else { fb.innerText = "ERRADO! ❌\nResposta: " + rightAns; fb.style.background = "var(--danger)"; play(200, 0.3); }
-            setTimeout(() => { fb.style.display = "none"; cur++; if(cur < quiz.questions.length) load(); else finish(); }, 2500);
+            
+            setTimeout(() => {
+                fb.style.display = "none"; cur++;
+                if(cur < quiz.questions.length) loadQuestion(); else finish();
+            }, 2500);
         }
 
         async function finish() {
-            document.getElementById("game").classList.add("hidden");
-            document.getElementById("rank").classList.remove("hidden");
+            document.getElementById("game-ui").classList.add("hidden");
+            document.getElementById("rank-screen").classList.remove("hidden");
             let grade = Math.round((pts / (quiz.questions.length * 10)) * 100);
             document.getElementById("res-grade").innerText = grade + "/100";
 
             try {
-                // 1. Obter Ranking da Nuvem
-                const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
-                    headers: { 'X-Master-Key': API_KEY }
-                });
+                const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, { headers: { 'X-Master-Key': API_KEY } });
                 const data = await res.json();
-                let ranks = data.record.record || []; // Acede à estrutura que criámos
-
-                // 2. Adicionar nova nota
-                ranks.push({ n: playerName, s: grade });
+                let ranks = data.record.record || [];
+                ranks.push({ n: playerName, s: grade, q: quiz.title });
                 ranks.sort((a, b) => b.s - a.s);
                 const topRanks = ranks.slice(0, 10);
 
-                // 3. Atualizar Nuvem
                 await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json', 'X-Master-Key': API_KEY },
                     body: JSON.stringify({ record: topRanks })
                 });
 
-                // 4. Mostrar Tabela
-                document.getElementById("loading-rank").classList.add("hidden");
                 document.getElementById("table").innerHTML = "<tr><th>Pos</th><th>Nome</th><th>Nota</th></tr>" + 
                     topRanks.slice(0, 5).map((x, i) => `<tr><td>${i+1}º</td><td>${x.n}</td><td>${x.s}</td></tr>`).join("");
             } catch (e) {
-                document.getElementById("loading-rank").innerText = "Erro ao sincronizar ranking global.";
+                document.getElementById("table").innerHTML = "<tr><td colspan='3'>Erro ao carregar ranking.</td></tr>";
             }
         }
     </script>
