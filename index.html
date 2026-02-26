@@ -44,7 +44,7 @@
             <div id="img-q"></div>
             <h2 id="txt-q">A carregar...</h2>
             <div id="short-zone" class="hidden">
-                <input type="text" id="ans-in" placeholder="Escreve aqui..." style="width: 80%; margin-bottom: 15px;">
+                <input type="text" id="ans-in" placeholder="Escreve aqui..." style="width: 80%; margin-bottom: 15px; padding: 10px;">
                 <br><button onclick="checkShort()">Responder</button>
             </div>
         </div>
@@ -58,6 +58,7 @@
         <div id="res-grade" style="font-size: 60px; font-weight: bold; color: var(--accent); margin: 20px 0;"></div>
         <div style="background: white; padding: 20px; border-radius: 15px; display: inline-block; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
             <h3 style="margin-top:0">🏆 Ranking Global</h3>
+            <div id="loading-rank">A carregar ranking...</div>
             <table id="table"></table>
         </div>
         <br><br><button onclick="location.reload()">Sair / Novo Jogo</button>
@@ -68,9 +69,9 @@
         let cur = 0, pts = 0, time, tLeft, quiz, playerName;
         const audio = new (window.AudioContext || window.webkitAudioContext)();
         
-        // CONFIGURAÇÃO JSONBIN (Ranking Global)
-        const BIN_ID = '67bf0b5fe41b4d34e49bd65d'; // ID Público para testes
-        const API_KEY = '$2a$10$W2Y1.K4qU9G.X8Vp5N5M9O.QzE8U6T7Y6V5u4i3o2p1q0r9s8t7u6'; // Precisarás da tua própria para persistência real
+        // --- CONFIGURAÇÃO JSONBIN ---
+        const BIN_ID = '69a03d0843b1c97be9a0345b'; 
+        const API_KEY = '$2a$10$uPoUexkH5KHeuMHnDPbc0O/tP1KH4rqeSLkGjLk8R6lsV4MXfeTEG';
 
         function play(f, d) {
             let o = audio.createOscillator(), g = audio.createGain();
@@ -81,6 +82,7 @@
 
         window.onload = () => {
             const listDiv = document.getElementById("list");
+            listDiv.innerHTML = ""; // Limpa para evitar duplicados
             database.forEach(q => {
                 let btn = document.createElement("button");
                 btn.innerText = "Jogar: " + q.title;
@@ -143,16 +145,34 @@
             document.getElementById("rank").classList.remove("hidden");
             let grade = Math.round((pts / (quiz.questions.length * 10)) * 100);
             document.getElementById("res-grade").innerText = grade + "/100";
-            
-            // Lógica de Ranking (Sincronização Simples)
-            let ranks = JSON.parse(localStorage.getItem("rank_" + quiz.id) || "[]");
-            ranks.push({n: playerName, s: grade});
-            ranks.sort((a,b) => b.s - a.s);
-            const topRanks = ranks.slice(0,10);
-            localStorage.setItem("rank_" + quiz.id, JSON.stringify(topRanks));
-            
-            document.getElementById("table").innerHTML = "<tr><th>Pos</th><th>Nome</th><th>Nota</th></tr>" + 
-                topRanks.slice(0,5).map((x,i) => `<tr><td>${i+1}º</td><td>${x.n}</td><td>${x.s}</td></tr>`).join("");
+
+            try {
+                // 1. Obter Ranking da Nuvem
+                const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+                    headers: { 'X-Master-Key': API_KEY }
+                });
+                const data = await res.json();
+                let ranks = data.record.record || []; // Acede à estrutura que criámos
+
+                // 2. Adicionar nova nota
+                ranks.push({ n: playerName, s: grade });
+                ranks.sort((a, b) => b.s - a.s);
+                const topRanks = ranks.slice(0, 10);
+
+                // 3. Atualizar Nuvem
+                await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json', 'X-Master-Key': API_KEY },
+                    body: JSON.stringify({ record: topRanks })
+                });
+
+                // 4. Mostrar Tabela
+                document.getElementById("loading-rank").classList.add("hidden");
+                document.getElementById("table").innerHTML = "<tr><th>Pos</th><th>Nome</th><th>Nota</th></tr>" + 
+                    topRanks.slice(0, 5).map((x, i) => `<tr><td>${i+1}º</td><td>${x.n}</td><td>${x.s}</td></tr>`).join("");
+            } catch (e) {
+                document.getElementById("loading-rank").innerText = "Erro ao sincronizar ranking global.";
+            }
         }
     </script>
 </body>
