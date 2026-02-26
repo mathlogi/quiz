@@ -43,5 +43,37 @@ const database = [
                 ans: 2
             }
         ]
+    },
+    {
+        id: "mat_geometria",
+        title: "Matemática - Geometria",
+        questions: [
+            { 
+                type: "multiple", 
+                q: "Qual a área de um quadrado com lado 5m?", 
+                img: "", 
+                opts: ["10m²", "20m²", "25m²", "50m²"], 
+                ans: 2 
+            },
+            { 
+                type: "short", 
+                q: "Como se chama o polígono de 3 lados?", 
+                img: "", 
+                ans: "triângulo" 
+            }
+        ]
+    },
+    {
+        id: "eng_estruturas",
+        title: "Engenharia - Estruturas",
+        questions: [
+            { 
+                type: "multiple", 
+                q: "Qual o momento máximo nesta viga biapoiada com carga P ao centro?", 
+                img: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Bending_moment_diagram.png/300px-Bending_moment_diagram.png", 
+                opts: ["PL/2", "PL/4", "PL/8", "ql²/8"], 
+                ans: 1 
+            }
+        ]
     }
 ];
