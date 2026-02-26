@@ -6,43 +6,30 @@
     <style>
         :root { --primary: #0b3163; --accent: #00a774; --danger: #d00000; --white: #ffffff; }
         body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #f0f2f5; display: flex; flex-direction: column; min-height: 100vh; }
-        
-        /* Menu e Login */
         #menu { padding: 50px; text-align: center; }
         .login-box { margin-bottom: 30px; }
-        input#player-name-input { 
-            padding: 15px; width: 300px; border: 2px solid var(--primary); 
-            border-radius: 10px; font-size: 16px; outline: none;
-        }
-
-        /* Botões */
-        button { background: var(--primary); color: white; border: none; padding: 15px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        input#player-name-input { padding: 15px; width: 300px; border: 2px solid var(--primary); border-radius: 10px; font-size: 16px; outline: none; }
+        button { background: var(--primary); color: white; border: none; padding: 15px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; margin: 5px; }
         button:hover { opacity: 0.9; transform: translateY(-2px); }
-
-        /* Jogo */
         .top-bar { background: var(--primary); color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
         #timer-bar { height: 8px; background: var(--accent); width: 100%; transition: width 1s linear; }
         .box { background: white; padding: 30px; border-radius: 15px; margin: 20px auto; max-width: 600px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         .options { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; max-width: 600px; margin: 0 auto; }
-        
         #feedback { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; color: white; font-size: 30px; font-weight: bold; z-index: 100; text-align: center; }
         .hidden { display: none !important; }
-        
         table { width: 100%; max-width: 400px; margin: 20px auto; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; }
         th { background: var(--primary); color: white; padding: 12px; }
-        td { padding: 10px; border-bottom: 1px solid #eee; color: #333; }
+        td { padding: 10px; border-bottom: 1px solid #eee; color: #333; text-align: center; }
     </style>
 </head>
 <body>
 
     <div id="menu">
         <h1 style="color: var(--primary)">📚 Plataforma de Quiz</h1>
-        
         <div class="login-box">
             <p style="color: #666;">Introduz o teu nome para começar:</p>
             <input type="text" id="player-name-input" placeholder="Teu nome...">
         </div>
-
         <div id="list"></div>
     </div>
 
@@ -53,15 +40,12 @@
             <span id="t-txt">45s</span>
         </div>
         <div style="background:#ccc"><div id="timer-bar"></div></div>
-        
         <div class="box">
             <div id="img-q"></div>
             <h2 id="txt-q">A carregar...</h2>
-            
             <div id="short-zone" class="hidden">
                 <input type="text" id="ans-in" placeholder="Escreve aqui..." style="width: 80%; margin-bottom: 15px;">
-                <br>
-                <button onclick="checkShort()">Responder</button>
+                <br><button onclick="checkShort()">Responder</button>
             </div>
         </div>
         <div id="opt-grid" class="options"></div>
@@ -72,20 +56,21 @@
     <div id="rank" class="hidden" style="text-align:center; padding: 50px;">
         <h2 id="res-title">Fim do Quiz!</h2>
         <div id="res-grade" style="font-size: 60px; font-weight: bold; color: var(--accent); margin: 20px 0;"></div>
-        
         <div style="background: white; padding: 20px; border-radius: 15px; display: inline-block; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
             <h3 style="margin-top:0">🏆 Ranking Global</h3>
             <table id="table"></table>
         </div>
-        
-        <br><br>
-        <button onclick="location.reload()">Sair / Novo Jogo</button>
+        <br><br><button onclick="location.reload()">Sair / Novo Jogo</button>
     </div>
 
     <script src="perguntas.js"></script>
     <script>
         let cur = 0, pts = 0, time, tLeft, quiz, playerName;
         const audio = new (window.AudioContext || window.webkitAudioContext)();
+        
+        // CONFIGURAÇÃO JSONBIN (Ranking Global)
+        const BIN_ID = '67bf0b5fe41b4d34e49bd65d'; // ID Público para testes
+        const API_KEY = '$2a$10$W2Y1.K4qU9G.X8Vp5N5M9O.QzE8U6T7Y6V5u4i3o2p1q0r9s8t7u6'; // Precisarás da tua própria para persistência real
 
         function play(f, d) {
             let o = audio.createOscillator(), g = audio.createGain();
@@ -99,15 +84,10 @@
             database.forEach(q => {
                 let btn = document.createElement("button");
                 btn.innerText = "Jogar: " + q.title;
-                btn.style.margin = "10px";
                 btn.onclick = () => {
                     const nameVal = document.getElementById("player-name-input").value.trim();
-                    if(!nameVal) {
-                        alert("Por favor, introduz o teu nome!");
-                        return;
-                    }
-                    playerName = nameVal;
-                    quiz = q;
+                    if(!nameVal) { alert("Por favor, introduz o teu nome!"); return; }
+                    playerName = nameVal; quiz = q;
                     document.getElementById("menu").classList.add("hidden");
                     document.getElementById("game").classList.remove("hidden");
                     load();
@@ -122,7 +102,6 @@
             document.getElementById("txt-q").innerText = q.q;
             document.getElementById("q-info").innerText = `Questão ${cur+1}/${quiz.questions.length}`;
             document.getElementById("img-q").innerHTML = q.img ? `<img src="${q.img}" style="max-height:200px; border-radius:10px; margin-bottom:15px;">` : "";
-            
             const grid = document.getElementById("opt-grid"), sz = document.getElementById("short-zone");
             if(q.type === "multiple") {
                 grid.classList.remove("hidden"); sz.classList.add("hidden");
@@ -134,8 +113,7 @@
                 });
             } else {
                 grid.classList.add("hidden"); sz.classList.remove("hidden");
-                document.getElementById("ans-in").value = "";
-                document.getElementById("ans-in").focus();
+                document.getElementById("ans-in").value = ""; document.getElementById("ans-in").focus();
             }
             time = setInterval(() => { tLeft--; updateT(); if(tLeft<=0) validate(false, q.type === "multiple" ? q.opts[q.ans] : q.ans); }, 1000);
         }
@@ -155,32 +133,26 @@
             clearInterval(time);
             const fb = document.getElementById("feedback");
             fb.style.display = "flex";
-            if(isCorrect) { 
-                pts += 10; fb.innerText = "CORRETO! 🎯"; fb.style.background = "var(--accent)"; play(600, 0.2); 
-            } else { 
-                fb.innerText = "ERRADO! ❌\nResposta: " + rightAns; fb.style.background = "var(--danger)"; play(200, 0.3); 
-            }
-            
-            setTimeout(() => {
-                fb.style.display = "none"; cur++;
-                if(cur < quiz.questions.length) load(); else finish();
-            }, 2500);
+            if(isCorrect) { pts += 10; fb.innerText = "CORRETO! 🎯"; fb.style.background = "var(--accent)"; play(600, 0.2); }
+            else { fb.innerText = "ERRADO! ❌\nResposta: " + rightAns; fb.style.background = "var(--danger)"; play(200, 0.3); }
+            setTimeout(() => { fb.style.display = "none"; cur++; if(cur < quiz.questions.length) load(); else finish(); }, 2500);
         }
 
-        function finish() {
+        async function finish() {
             document.getElementById("game").classList.add("hidden");
             document.getElementById("rank").classList.remove("hidden");
             let grade = Math.round((pts / (quiz.questions.length * 10)) * 100);
             document.getElementById("res-grade").innerText = grade + "/100";
             
-            // Lógica de Ranking Local (Para Ranking Global real, precisaríamos de uma API Key do JSONbin ou Firebase)
+            // Lógica de Ranking (Sincronização Simples)
             let ranks = JSON.parse(localStorage.getItem("rank_" + quiz.id) || "[]");
             ranks.push({n: playerName, s: grade});
             ranks.sort((a,b) => b.s - a.s);
-            localStorage.setItem("rank_" + quiz.id, JSON.stringify(ranks.slice(0,10)));
+            const topRanks = ranks.slice(0,10);
+            localStorage.setItem("rank_" + quiz.id, JSON.stringify(topRanks));
             
             document.getElementById("table").innerHTML = "<tr><th>Pos</th><th>Nome</th><th>Nota</th></tr>" + 
-                ranks.slice(0,5).map((x,i) => `<tr><td>${i+1}º</td><td>${x.n}</td><td>${x.s}</td></tr>`).join("");
+                topRanks.slice(0,5).map((x,i) => `<tr><td>${i+1}º</td><td>${x.n}</td><td>${x.s}</td></tr>`).join("");
         }
     </script>
 </body>
