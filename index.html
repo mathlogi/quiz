@@ -2,99 +2,35 @@
 <html lang="pt-pt">
 <head>
     <meta charset="UTF-8">
-    <title>Math Logi Lab - Quiz</title>
+    <title>Math Logi Lab - Quiz Pro</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
     <style>
         :root { --primary: #0b3163; --accent: #00a774; --danger: #d00000; --white: #ffffff; }
-        
-        body { 
-            margin: 0; font-family: 'Segoe UI', sans-serif; 
-            background-color: #004d40; /* Cor de segurança caso a imagem falhe */
-            display: flex; flex-direction: column; min-height: 100vh; 
-        }
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: #004d40; display: flex; flex-direction: column; min-height: 100vh; }
 
-        /* --- ECRÃ DE ABERTURA (MATH LOGI LAB) --- */
+        /* ECRÃ DE ABERTURA */
         #login-screen {
-            height: 100vh;
-            width: 100%;
-            background: url('https://raw.githubusercontent.com/mathlogi/quiz/main/PREPARAÇÃO EXAME 9ºANO (10).svg') no-repeat center center fixed;
-            background-size: cover;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-end; /* Coloca o input na parte de baixo como na imagem */
-            padding-bottom: 15vh;
-            box-sizing: border-box;
+            height: 100vh; width: 100%;
+            background: url('https://raw.githubusercontent.com/mathlogi/quiz/main/PREPARAÇÃO EXAME 9ºANO (15).png') no-repeat center center fixed;
+            background-size: cover; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 15vh; box-sizing: border-box;
         }
 
-        .input-container {
-            background: white;
-            border-radius: 50px; /* Arredondado como no design */
-            padding: 5px 25px;
-            width: 80%;
-            max-width: 500px;
-            display: flex;
-            align-items: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-        }
+        .input-container { background: white; border-radius: 50px; padding: 5px 25px; width: 80%; max-width: 500px; display: flex; align-items: center; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+        #player-name-input { border: none; padding: 15px; width: 100%; font-size: 18px; text-align: center; outline: none; border-radius: 50px; color: #333; }
+        #start-btn { background: var(--accent); color: white; border: none; padding: 12px 25px; border-radius: 50px; cursor: pointer; font-weight: bold; margin-left: 10px; }
 
-        #player-name-input {
-            border: none;
-            padding: 15px;
-            width: 100%;
-            font-size: 18px;
-            text-align: center;
-            outline: none;
-            border-radius: 50px;
-            color: #333;
-        }
-
-        #start-btn {
-            background: var(--accent);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: bold;
-            margin-left: 10px;
-            transition: 0.3s;
-        }
-        #start-btn:hover { background: var(--primary); }
-
-        /* --- MENU DE QUIZZES (APARECE DEPOIS) --- */
-        #quiz-selection {
-            display: none;
-            text-align: center;
-            padding: 50px;
-            background: #f0f2f5;
-            min-height: 100vh;
-        }
-
-        .quiz-card {
-            background: white;
-            margin: 15px auto;
-            padding: 20px;
-            max-width: 400px;
-            border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            border-left: 8px solid var(--primary);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        /* --- JOGO E BARRA DE TEMPO --- */
+        /* SELEÇÃO E JOGO */
+        #quiz-selection { display: none; text-align: center; padding: 50px; background: #f0f2f5; min-height: 100vh; }
+        .quiz-card { background: white; margin: 15px auto; padding: 20px; max-width: 400px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-left: 8px solid var(--primary); display: flex; justify-content: space-between; align-items: center; }
         .top-bar { background: var(--primary); color: white; padding: 15px; display: flex; justify-content: space-between; }
         #timer-bar { height: 8px; background: var(--accent); width: 100%; transition: width 1s linear; }
         .box { background: white; padding: 30px; border-radius: 15px; margin: 20px auto; max-width: 600px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         .options { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; max-width: 600px; margin: 0 auto; padding: 20px; }
-        
         #feedback { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; color: white; font-size: 30px; font-weight: bold; z-index: 100; text-align: center; }
         .hidden { display: none !important; }
-
-        button.opt-btn { background: var(--primary); color: white; border: none; padding: 20px; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        button.opt-btn:hover { transform: scale(1.02); }
-
+        button.opt-btn { background: var(--primary); color: white; border: none; padding: 20px; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; }
         table { width: 100%; max-width: 400px; margin: 20px auto; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; }
         th { background: var(--primary); color: white; padding: 12px; }
         td { padding: 10px; border-bottom: 1px solid #eee; text-align: center; }
@@ -149,7 +85,6 @@
         let cur = 0, pts = 0, time, tLeft, quiz, playerName;
         const audio = new (window.AudioContext || window.webkitAudioContext)();
         
-        // --- TENS DE COLOCAR OS TEUS CÓDIGOS JSONBIN AQUI ---
         const BIN_ID = '69a03d0843b1c97be9a0345b'; 
         const API_KEY = '$2a$10$uPoUexkH5KHeuMHnDPbc0O/tP1KH4rqeSLkGjLk8R6lsV4MXfeTEG';
 
@@ -160,7 +95,6 @@
             o.start(); o.stop(audio.currentTime + d);
         }
 
-        // Passar do ecrã de imagem para a lista de quizzes
         function goToMenu() {
             const val = document.getElementById("player-name-input").value.trim();
             if(!val) { alert("Por favor, introduz o teu nome!"); return; }
@@ -176,15 +110,10 @@
             database.forEach(q => {
                 const card = document.createElement("div");
                 card.className = "quiz-card";
-                card.innerHTML = `
-                    <div style="text-align:left">
-                        <strong>${q.title}</strong><br>
-                        <small style="color:#666">${q.questions.length} questões</small>
-                    </div>
-                    <button onclick="startQuiz('${q.id}')" style="background:var(--accent); border:none; color:white; padding:10px 15px; border-radius:8px; cursor:pointer;">Jogar</button>
-                `;
+                card.innerHTML = `<div style="text-align:left"><strong>${q.title}</strong></div><button onclick="startQuiz('${q.id}')" style="background:var(--accent); border:none; color:white; padding:10px 15px; border-radius:8px; cursor:pointer;">Jogar</button>`;
                 listDiv.appendChild(card);
             });
+            if(window.MathJax) MathJax.typeset();
         }
 
         function startQuiz(id) {
@@ -214,11 +143,14 @@
                 grid.classList.add("hidden"); sz.classList.remove("hidden");
                 document.getElementById("ans-in").value = "";
             }
+            
+            // ATUALIZA MATHJAX PARA PROCESSAR LATEX NA PERGUNTA NOVA
+            if(window.MathJax) MathJax.typeset();
+
             time = setInterval(() => { tLeft--; updateT(); if(tLeft<=0) validate(false, q.type === "multiple" ? q.opts[q.ans] : q.ans); }, 1000);
         }
 
         function updateT() {
-            document.getElementById("t-txt").innerText = tLeft+"s";
             document.getElementById("timer-bar").style.width = (tLeft/45*100)+"%";
         }
 
@@ -234,10 +166,7 @@
             if(isCorrect) { pts += 10; fb.innerText = "CORRETO! 🎯"; fb.style.background = "var(--accent)"; play(600, 0.2); }
             else { fb.innerText = "ERRADO! ❌\nResposta: " + rightAns; fb.style.background = "var(--danger)"; play(200, 0.3); }
             
-            setTimeout(() => {
-                fb.style.display = "none"; cur++;
-                if(cur < quiz.questions.length) loadQuestion(); else finish();
-            }, 2500);
+            setTimeout(() => { fb.style.display = "none"; cur++; if(cur < quiz.questions.length) loadQuestion(); else finish(); }, 2500);
         }
 
         async function finish() {
@@ -245,7 +174,6 @@
             document.getElementById("rank-screen").classList.remove("hidden");
             let grade = Math.round((pts / (quiz.questions.length * 10)) * 100);
             document.getElementById("res-grade").innerText = grade + "/100";
-
             try {
                 const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, { headers: { 'X-Master-Key': API_KEY } });
                 const data = await res.json();
@@ -253,17 +181,15 @@
                 ranks.push({ n: playerName, s: grade, q: quiz.title });
                 ranks.sort((a, b) => b.s - a.s);
                 const topRanks = ranks.slice(0, 10);
-
                 await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json', 'X-Master-Key': API_KEY },
                     body: JSON.stringify({ record: topRanks })
                 });
-
                 document.getElementById("table").innerHTML = "<tr><th>Pos</th><th>Nome</th><th>Nota</th></tr>" + 
                     topRanks.slice(0, 5).map((x, i) => `<tr><td>${i+1}º</td><td>${x.n}</td><td>${x.s}</td></tr>`).join("");
             } catch (e) {
-                document.getElementById("table").innerHTML = "<tr><td colspan='3'>Erro ao carregar ranking.</td></tr>";
+                document.getElementById("table").innerHTML = "<tr><td colspan='3'>Erro no ranking.</td></tr>";
             }
         }
     </script>
