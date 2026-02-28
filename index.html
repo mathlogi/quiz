@@ -2,13 +2,18 @@
 <html lang="pt-pt">
 <head>
     <meta charset="UTF-8">
-    <title>Math Logi Lab - Quiz Pro</title>
+    <title>MathLogi Lab</title>
+    
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.js"></script>
+
     <style>
-        :root { --primary: #0b3163; --accent: #00a774; --danger: #d00000; --gold: #ffd700; --white: #ffffff; }
-        
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: #0b3163; min-height: 100vh; }
+        :root { --primary: #0b3163; --accent: #00a774; --danger: #d00000; --white: #ffffff; }
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: #0b3163; min-height: 100vh; overflow-x: hidden; }
 
         /* 1. ECRÃ DE ABERTURA */
         #login-screen {
@@ -23,45 +28,30 @@
         /* 2. SELEÇÃO DE QUIZZES (3 COLUNAS) */
         #quiz-selection { display: none; text-align: center; padding: 40px; background: #f0f2f5; min-height: 100vh; }
         .menu-logo { max-width: 200px; margin-bottom: 30px; }
-        
-        #quiz-list { 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); /* 3 Colunas */
-            gap: 20px; 
-            max-width: 1000px; 
-            margin: 0 auto; 
-        }
-        
+        #quiz-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 1000px; margin: 0 auto; }
         @media (max-width: 768px) { #quiz-list { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 480px) { #quiz-list { grid-template-columns: 1fr; } }
+        .quiz-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-top: 6px solid var(--primary); display: flex; flex-direction: column; justify-content: space-between; transition: 0.3s; }
+        .quiz-card strong { color: var(--primary); font-size: 18px; margin-bottom: 10px; display: block; }
 
-        .quiz-card { 
-            background: white; padding: 25px; border-radius: 15px; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-top: 6px solid var(--primary);
-            display: flex; flex-direction: column; justify-content: space-between; transition: 0.3s;
-        }
-        .quiz-card:hover { transform: translateY(-5px); }
-        .quiz-card strong { color: var(--primary); font-size: 18px; display: block; margin-bottom: 10px; }
-
-        /* 3. JOGO */
+        /* 3. INTERFACE DE JOGO */
         .top-bar { background: var(--primary); color: white; padding: 15px; display: flex; justify-content: space-between; }
         #timer-bar { height: 8px; background: var(--accent); width: 100%; transition: width 1s linear; }
         .box { background: white; padding: 30px; border-radius: 15px; margin: 20px auto; max-width: 650px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 90%; }
         .options { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; max-width: 650px; margin: 0 auto; width: 90%; }
-        button.opt-btn { background: var(--primary); color: white; border: none; padding: 18px; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        button.opt-btn { background: var(--primary); color: white; border: none; padding: 18px; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; }
         
-        /* 4. FEEDBACK E RANKING */
+        /* TECLADO MATEMÁTICO */
+        #math-keyboard { margin-top: 15px; display: flex; justify-content: center; gap: 5px; flex-wrap: wrap; }
+        .kb-btn { background: #eee; border: 1px solid #ccc; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-size: 16px; }
+        .kb-btn:hover { background: #ddd; }
+
         #feedback { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; color: white; font-size: 30px; font-weight: bold; z-index: 1000; text-align: center; padding: 20px; }
         .hidden { display: none !important; }
         
-        #rank-screen { text-align: center; padding: 40px; background: #f0f2f5; min-height: 100vh; }
-        .top3-msg { color: var(--accent); font-weight: bold; font-size: 24px; margin: 10px 0; animation: bounce 1s infinite; }
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-
-        table { width: 100%; max-width: 450px; margin: 20px auto; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        table { width: 100%; max-width: 450px; margin: 20px auto; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; }
         th { background: var(--primary); color: white; padding: 12px; }
         td { padding: 12px; border-bottom: 1px solid #eee; text-align: center; color: #333; }
-        .is-top3 { background-color: #e8f5e9; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -88,9 +78,19 @@
         <div class="box">
             <div id="img-q"></div>
             <h2 id="txt-q">A carregar...</h2>
+            
             <div id="short-zone" class="hidden">
-                <input type="text" id="ans-in" placeholder="Resposta..." style="width: 80%; border: 2px solid var(--primary); border-radius: 8px; padding: 12px;">
-                <br><br><button onclick="checkShort()" style="background:var(--accent); padding:10px 30px; border:none; color:white; border-radius:8px; cursor:pointer; font-weight:bold;">SUBMETER</button>
+                <div id="math-field" style="width: 80%; margin: 0 auto 15px; padding: 12px; border: 2px solid var(--primary); border-radius: 8px; background: white; min-height: 45px; font-size: 22px;"></div>
+                
+                <div id="math-keyboard">
+                    <button class="kb-btn" onclick="mqIn('\\frac{}{}')">$\frac{a}{b}$</button>
+                    <button class="kb-btn" onclick="mqIn('^{}')">$x^n$</button>
+                    <button class="kb-btn" onclick="mqIn('\\sqrt{}')">$\sqrt{x}$</button>
+                    <button class="kb-btn" onclick="mqIn('\\pi')">$\pi$</button>
+                    <button class="kb-btn" onclick="mqIn('\\pm')">$\pm$</button>
+                </div>
+                <br>
+                <button onclick="checkShort()" style="background:var(--accent); padding:10px 30px; border:none; color:white; border-radius:8px; cursor:pointer; font-weight:bold;">SUBMETER</button>
             </div>
         </div>
         <div id="opt-grid" class="options"></div>
@@ -98,24 +98,32 @@
 
     <div id="feedback"></div>
 
-    <div id="rank-screen" class="hidden">
-        <h2 style="color:var(--primary)">Resultado Final</h2>
+    <div id="rank-screen" class="hidden" style="text-align:center; padding: 40px; background:#f0f2f5; min-height:100vh;">
+        <h2 id="res-title" style="color:var(--primary)">Resultado Final</h2>
         <div id="res-grade" style="font-size: 60px; font-weight: bold; color: var(--accent);"></div>
         <div id="congrats-area"></div>
-        
         <div style="background: white; padding: 25px; border-radius: 15px; display: inline-block; width: 90%; max-width: 500px;">
-            <h3 style="margin-top:0">🏆 Ranking Global</h3>
+            <h3>🏆 Ranking Global</h3>
             <table id="table"></table>
         </div>
         <br><br><button onclick="location.reload()" style="background:var(--primary); color:white; border:none; padding:15px 30px; border-radius:10px; cursor:pointer; font-weight:bold;">RECOMEÇAR</button>
     </div>
 
-    <script src="perguntas.js"></script>
     <script>
-        let cur = 0, pts = 0, time, tLeft, quiz, playerName;
+        let cur = 0, pts = 0, time, tLeft, quiz, playerName, mathField;
+        const MQ = MathQuill.getInterface(2);
         const audio = new (window.AudioContext || window.webkitAudioContext)();
+        
         const BIN_ID = '69a03d0843b1c97be9a0345b'; 
         const API_KEY = '$2a$10$uPoUexkH5KHeuMHnDPbc0O/tP1KH4rqeSLkGjLk8R6lsV4MXfeTEG';
+
+        window.onload = () => {
+            mathField = MQ.MathField(document.getElementById('math-field'), {
+                handlers: { enter: checkShort }
+            });
+        };
+
+        function mqIn(cmd) { mathField.write(cmd); mathField.focus(); }
 
         function play(f, d) {
             let o = audio.createOscillator(), g = audio.createGain();
@@ -125,7 +133,6 @@
         }
 
         document.getElementById("player-name-input").addEventListener("keypress", (e) => { if (e.key === "Enter") goToMenu(); });
-        document.getElementById("ans-in").addEventListener("keypress", (e) => { if (e.key === "Enter") checkShort(); });
 
         function goToMenu() {
             const val = document.getElementById("player-name-input").value.trim();
@@ -174,20 +181,17 @@
                 });
             } else {
                 grid.classList.add("hidden"); sz.classList.remove("hidden");
-                document.getElementById("ans-in").value = ""; document.getElementById("ans-in").focus();
+                mathField.latex(""); setTimeout(() => mathField.focus(), 100);
             }
             if(window.MathJax) MathJax.typeset();
             time = setInterval(() => { tLeft--; updateT(); if(tLeft<=0) validate(false, q.type === "multiple" ? q.opts[q.ans] : q.ans); }, 1000);
         }
 
-        function updateT() {
-            document.getElementById("t-txt").innerText = tLeft+"s";
-            document.getElementById("timer-bar").style.width = (tLeft/45*100)+"%";
-        }
+        function updateT() { document.getElementById("timer-bar").style.width = (tLeft/45*100)+"%"; }
 
         function checkShort() { 
-            const val = document.getElementById("ans-in").value.trim().toLowerCase();
-            validate(val === quiz.questions[cur].ans.toLowerCase(), quiz.questions[cur].ans); 
+            const val = mathField.latex().trim();
+            validate(val === quiz.questions[cur].ans, quiz.questions[cur].ans); 
         }
 
         function validate(isCorrect, rightAns) {
@@ -195,7 +199,8 @@
             const fb = document.getElementById("feedback");
             fb.style.display = "flex";
             if(isCorrect) { pts += 10; fb.innerText = "CORRETO! 🎯"; fb.style.background = "var(--accent)"; play(600, 0.2); }
-            else { fb.innerText = "ERRADO! ❌\nResposta: " + rightAns; fb.style.background = "var(--danger)"; play(200, 0.3); }
+            else { fb.innerHTML = "ERRADO! ❌<br>Resposta: " + rightAns; fb.style.background = "var(--danger)"; play(200, 0.3); }
+            if(window.MathJax) MathJax.typeset();
             setTimeout(() => { fb.style.display = "none"; cur++; if(cur < quiz.questions.length) loadQuestion(); else finish(); }, 2500);
         }
 
@@ -204,33 +209,24 @@
             document.getElementById("rank-screen").classList.remove("hidden");
             let grade = Math.round((pts / (quiz.questions.length * 10)) * 100);
             document.getElementById("res-grade").innerText = grade + "/100";
-
             try {
                 const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, { headers: { 'X-Master-Key': API_KEY } });
                 const data = await res.json();
                 let ranks = data.record.record || [];
-                ranks.push({ n: playerName, s: grade });
+                ranks.push({ n: playerName, s: grade, q: quiz.title });
                 ranks.sort((a, b) => b.s - a.s);
                 const topRanks = ranks.slice(0, 10);
-                
                 await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json', 'X-Master-Key': API_KEY },
+                    method: 'PUT', headers: { 'Content-Type': 'application/json', 'X-Master-Key': API_KEY },
                     body: JSON.stringify({ record: topRanks })
                 });
-
-                // Lógica de Parabéns Top 3
                 const myPos = topRanks.findIndex(r => r.n === playerName && r.s === grade) + 1;
-                if(myPos > 0 && myPos <= 3) {
-                    document.getElementById("congrats-area").innerHTML = `<div class="top3-msg">🏆 BRILHANTE! Estás no Top 3 Global! 🏆</div>`;
-                }
-
+                if(myPos > 0 && myPos <= 3) document.getElementById("congrats-area").innerHTML = `<div style="color:var(--accent); font-weight:bold; font-size:24px; margin:10px;">🏆 BRILHANTE! Estás no Top 3! 🏆</div>`;
                 document.getElementById("table").innerHTML = "<tr><th>Pos</th><th>Nome</th><th>Nota</th></tr>" + 
-                    topRanks.slice(0, 5).map((x, i) => `<tr class="${(i < 3) ? 'is-top3' : ''}"><td>${i+1}º</td><td>${x.n}</td><td>${x.s}</td></tr>`).join("");
-            } catch (e) {
-                document.getElementById("table").innerHTML = "<tr><td colspan='3'>Ranking Offline.</td></tr>";
-            }
+                    topRanks.slice(0, 5).map((x, i) => `<tr style="${i < 3 ? 'background:#e8f5e9' : ''}"><td>${i+1}º</td><td>${x.n}</td><td>${x.s}</td></tr>`).join("");
+            } catch (e) { document.getElementById("table").innerHTML = "<tr><td>Ranking Indisponível</td></tr>"; }
         }
     </script>
+    <script src="perguntas.js"></script>
 </body>
 </html>
