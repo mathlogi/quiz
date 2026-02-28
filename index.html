@@ -2,7 +2,7 @@
 <html lang="pt-pt">
 <head>
     <meta charset="UTF-8">
-    <title>MathLogi Lab</title>
+    <title>Math Logi Lab - Pro Edition</title>
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
@@ -15,8 +15,7 @@
         :root { --primary: #0b3163; --accent: #00a774; --danger: #d00000; --gold: #ffd700; }
         body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: var(--primary); color: #333; overflow-x: hidden; }
 
-        /* Login & Menu */
-        #login-screen { height: 100vh; background: url('https://raw.githubusercontent.com/mathlogi/quiz/main/PREPARAÇÃO EXAME 9ºANO (10).svg') no-repeat center center/cover; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 12vh; }
+        #login-screen { height: 100vh; background: url('https://raw.githubusercontent.com/mathlogi/quiz/main/PREPARAÇÃO EXAME 9ºANO (15).png') no-repeat center center/cover; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 12vh; }
         .input-wrapper { background: white; border-radius: 50px; padding: 5px 15px; width: 85%; max-width: 450px; display: flex; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
         #player-name-input { border: none; padding: 12px; width: 100%; outline: none; text-align: center; font-size: 16px; }
         #ok-btn { background: var(--accent); color: white; border: none; padding: 10px 25px; border-radius: 50px; cursor: pointer; font-weight: bold; }
@@ -25,29 +24,31 @@
         #quiz-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; max-width: 1100px; margin: 0 auto; }
         .quiz-card { background: white; padding: 25px; border-radius: 15px; border-top: 6px solid var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
 
-        /* Game UI */
         .top-bar { background: var(--primary); color: white; padding: 15px; display: flex; justify-content: space-between; font-weight: bold; }
         #timer-bar-container { height: 8px; background: rgba(255,255,255,0.2); width: 100%; }
         #timer-bar { height: 100%; background: var(--accent); width: 100%; transition: width 1s linear; }
         
         .powerups { display: flex; justify-content: center; gap: 15px; margin: 15px 0; }
-        .pwr-btn { background: white; border: 2px solid var(--gold); padding: 8px 15px; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 13px; transition: 0.3s; }
-        .pwr-btn:disabled { opacity: 0.3; cursor: not-allowed; filter: grayscale(1); }
-        .pwr-btn:hover:not(:disabled) { background: var(--gold); transform: scale(1.05); }
+        .pwr-btn { background: white; border: 2px solid var(--gold); padding: 8px 15px; border-radius: 10px; cursor: pointer; font-weight: bold; }
+        .pwr-btn:disabled { opacity: 0.3; filter: grayscale(1); }
 
         .box { background: white; padding: 30px; border-radius: 20px; margin: 10px auto; max-width: 750px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); width: 90%; }
         #math-field { width: 90%; margin: 15px auto; padding: 15px; border: 2px solid #ddd; border-radius: 10px; font-size: 24px; min-height: 50px; }
         
-        #math-keyboard { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; margin: 15px auto; max-width: 600px; }
-        .kb-btn { background: white; border: 1.5px solid var(--primary); color: var(--primary); padding: 10px; border-radius: 8px; cursor: pointer; font-size: 16px; min-width: 48px; font-weight: bold; }
+        #math-keyboard { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; margin: 15px auto; }
+        .kb-btn { background: white; border: 1.5px solid var(--primary); color: var(--primary); padding: 10px; border-radius: 8px; cursor: pointer; font-size: 16px; min-width: 48px; }
 
         .options { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; max-width: 750px; margin: 0 auto; width: 90%; }
-        .opt-btn { background: var(--primary); color: white; border: 2px solid white; padding: 20px; border-radius: 15px; font-size: 18px; cursor: pointer; transition: 0.2s; min-height: 80px; }
-        .opt-btn.wrong-option { opacity: 0; pointer-events: none; }
+        .opt-btn { background: var(--primary); color: white; border: 2px solid white; padding: 20px; border-radius: 15px; font-size: 18px; cursor: pointer; min-height: 80px; }
+        .opt-btn.wrong-option { visibility: hidden; }
 
-        /* Feedback Screen (Correção das Imagens) */
         #feedback { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; color: white; z-index: 9999; text-align: center; background: rgba(0,0,0,0.95); padding: 30px; }
-        .fb-math-ans { font-size: 38px; background: rgba(255,255,255,0.1); padding: 25px 50px; border-radius: 15px; border: 2px solid var(--accent); margin-top: 20px; }
+        .fb-math-ans { font-size: 38px; background: rgba(255,255,255,0.1); padding: 25px 50px; border-radius: 15px; border: 2px solid var(--accent); margin-top: 20px; min-width: 200px; }
+
+        #rank-screen { text-align: center; padding: 40px; background: #f0f2f5; min-height: 100vh; }
+        table { width: 100%; max-width: 500px; margin: 20px auto; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; }
+        th { background: var(--primary); color: white; padding: 15px; }
+        td { padding: 12px; border-bottom: 1px solid #eee; text-align: center; }
 
         .hidden { display: none !important; }
         .submit-btn { background: var(--accent); padding: 15px 50px; border: none; color: white; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 18px; }
@@ -63,7 +64,7 @@
     </div>
 
     <div id="quiz-selection">
-        <img src="https://raw.githubusercontent.com/mathlogi/quiz/main/PREPARAÇÃO EXAME 9ºANO (11).svg" style="max-width:160px; margin-bottom:15px;">
+        <img src="https://raw.githubusercontent.com/mathlogi/quiz/main/PREPARAÇÃO EXAME 9ºANO (15).png" style="max-width:160px; margin-bottom:15px;">
         <div id="quiz-list"></div>
     </div>
 
@@ -111,14 +112,26 @@
         <div id="fb-correct-ans" class="fb-math-ans"></div>
     </div>
 
+    <div id="rank-screen" class="hidden">
+        <h2 style="color:var(--primary)">Quiz Concluído!</h2>
+        <div id="res-grade" style="font-size: 60px; font-weight: bold; color: var(--accent); margin-bottom: 20px;"></div>
+        <div id="congrats-area"></div>
+        <div style="background: white; padding: 25px; border-radius: 15px; display: inline-block; width: 90%; max-width: 500px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+            <h3 style="margin:0 0 15px 0">🏆 TOP 5 GLOBAL</h3>
+            <table id="table"></table>
+        </div>
+        <br><br><button onclick="location.reload()" class="submit-btn" style="background:var(--primary)">VOLTAR AO MENU</button>
+    </div>
+
     <script src="perguntas.js"></script>
     <script>
         let cur = 0, pts = 0, time, tLeft, quiz, playerName, mathField;
         let isX3 = false, timerPaused = false;
         let pwrUsed = { fifty: false, x3: false, stop: false };
         const MQ = MathQuill.getInterface(2);
+        const BIN_ID = '69a03d0843b1c97be9a0345b'; 
+        const API_KEY = '$2a$10$uPoUexkH5KHeuMHnDPbc0O/tP1KH4rqeSLkGjLk8R6lsV4MXfeTEG';
         
-        // Sistema de Som
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function playSound(freq, type) {
             const osc = audioCtx.createOscillator();
@@ -163,7 +176,6 @@
 
         function startQuiz(id) {
             quiz = JSON.parse(JSON.stringify(database.find(x => x.id === id)));
-            // ALEATORIEDADE: Baralha as questões
             quiz.questions.sort(() => Math.random() - 0.5);
             cur = 0; pts = 0; 
             pwrUsed = { fifty: false, x3: false, stop: false };
@@ -204,7 +216,6 @@
 
         function updateT() { document.getElementById("timer-bar").style.width = (tLeft/120*100)+"%"; document.getElementById("t-txt").innerText = tLeft+"s"; }
 
-        // Power-ups
         function updatePwrButtons() {
             document.getElementById("pwr-50").disabled = pwrUsed.fifty;
             document.getElementById("pwr-x3").disabled = pwrUsed.x3;
@@ -217,8 +228,9 @@
             pwrUsed.fifty = true; updatePwrButtons();
             let btns = Array.from(document.querySelectorAll('.opt-btn'));
             let removed = 0;
-            btns.forEach((b, i) => {
-                if(i !== q.ans && removed < 2) { b.classList.add('wrong-option'); removed++; }
+            let indices = [0,1,2,3].sort(() => Math.random() - 0.5);
+            indices.forEach(i => {
+                if(i !== q.ans && removed < 2) { btns[i].classList.add('wrong-option'); removed++; }
             });
             playSound(440, 'square');
         }
@@ -250,11 +262,34 @@
                 document.getElementById("fb-msg").innerText = "ESTUDAR MAIS!";
                 const ansBox = document.getElementById("fb-correct-ans");
                 ansBox.style.display = "block";
-                safeRender(ansBox, "$" + rightAns + "$");
+                ansBox.innerHTML = "$" + rightAns + "$";
+                safeRender(ansBox, ansBox.innerHTML); // FORÇA O DESENHO MATEMÁTICO
                 fb.style.background = "rgba(208, 0, 0, 0.98)"; 
                 playSound(150, 'sawtooth');
             }
-            setTimeout(() => { fb.style.display = "none"; cur++; if(cur < quiz.questions.length) loadQuestion(); else location.reload(); }, 3500);
+            setTimeout(() => { fb.style.display = "none"; cur++; if(cur < quiz.questions.length) loadQuestion(); else finish(); }, 3500);
+        }
+
+        async function finish() {
+            document.getElementById("game-ui").classList.add("hidden");
+            document.getElementById("rank-screen").classList.remove("hidden");
+            let grade = Math.round((pts / (quiz.questions.length * 10)) * 100);
+            document.getElementById("res-grade").innerText = grade + "%";
+            
+            try {
+                const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, { headers: { 'X-Master-Key': API_KEY } });
+                const data = await res.json();
+                let ranks = data.record.record || [];
+                ranks.push({ n: playerName, s: grade });
+                ranks.sort((a, b) => b.s - a.s);
+                const topRanks = ranks.slice(0, 10);
+                await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+                    method: 'PUT', headers: { 'Content-Type': 'application/json', 'X-Master-Key': API_KEY },
+                    body: JSON.stringify({ record: topRanks })
+                });
+                document.getElementById("table").innerHTML = "<tr><th>Pos</th><th>Nome</th><th>Nota</th></tr>" + 
+                    topRanks.slice(0, 5).map((x, i) => `<tr><td>${i+1}º</td><td>${x.n}</td><td>${x.s}%</td></tr>`).join("");
+            } catch (e) { document.getElementById("table").innerHTML = "<tr><td>Ranking Offline</td></tr>"; }
         }
     </script>
 </body>
