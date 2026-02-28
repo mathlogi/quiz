@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>MathLogi Lab</title>
+  <title>Math Logi Lab - Pro Edition</title>
 
   <!-- KaTeX -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" defer></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
 
   <!-- MathQuill -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.js"></script>
 
   <style>
     :root { --primary:#0b3163; --accent:#00a774; --danger:#d00000; --gold:#ffd700; --muted:#e7ecf3; }
@@ -21,7 +21,7 @@
 
     /* Login */
     #login-screen { height:100vh;
-      background:url('https://raw.githubusercontent.com/mathlogi/quiz/main/PREPARAÇÃO EXAME 9ºANO (10).svg') no-repeat center center/cover;
+      background:url('https://raw.githubusercontent.com/mathlogi/quiz/main/PREPARA%C3%87%C3%83O%20EXAME%209%C2%BAANO%20(15).png') no-repeat center center/cover;
       display:flex; flex-direction:column; align-items:center; justify-content:flex-end; padding-bottom:12vh; }
     .input-wrapper { background:#fff; border-radius:50px; padding:5px 15px; width:85%; max-width:450px; display:flex; box-shadow:0 10px 30px rgba(0,0,0,0.4); }
     #player-name-input { border:none; padding:12px; width:100%; outline:none; text-align:center; font-size:16px; }
@@ -90,7 +90,7 @@
 
   <!-- MENU QUIZ -->
   <div id="quiz-selection">
-    <img src="https://raw.githubusercontent.com/mathlogi/quiz/main/PREPARAÇÃO EXAME 9ºANO (11).svg" style="max-width:160px; margin-bottom:15px;" alt="Math Logi Lab">
+    <img src="https://raw.githubusercontent.com/mathlogi/quiz/main/PREPARA%C3%87%C3%83O%20EXAME%209%C2%BAANO%20(15).png" style="max-width:160px; margin-bottom:15px;" alt="">
     <div id="quiz-list"></div>
   </div>
 
@@ -113,11 +113,11 @@
       <div id="img-q"></div>
       <div id="txt-q" style="font-size:22px;"></div>
 
-      <!-- Short answer zone + EXPANDED KEYBOARD -->
+      <!-- Short answer + Teclado -->
       <div id="short-zone" class="hidden">
         <div id="math-field"></div>
 
-        <!-- Keyboard Tabs -->
+        <!-- Abas -->
         <div class="kb-tabs" id="kb-tabs">
           <button class="kb-tab active" data-tab="basic">Básico</button>
           <button class="kb-tab" data-tab="algebra">Álgebra</button>
@@ -129,7 +129,7 @@
           <button class="kb-tab" data-tab="edit">Edição</button>
         </div>
 
-        <!-- Keyboard Groups -->
+        <!-- Grupos -->
         <div id="math-keyboard">
           <!-- BASIC -->
           <div class="kb-group active" data-tab="basic">
@@ -337,7 +337,7 @@
     <br /><br /><button onclick="location.reload()" class="submit-btn" style="background:var(--primary)">VOLTAR AO MENU</button>
   </div>
 
-  <!-- Perguntas (tem de estar na MESMA pasta) -->
+  <!-- Perguntas (tem de estar na MESMA pasta e definir window.database) -->
   <script src="perguntas.js"></script>
 
   <script>
@@ -377,13 +377,14 @@
     function escapeHtml(s) {
       return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
     }
-
     function shuffle(arr) { return arr.sort(() => Math.random() - 0.5); }
 
     function safeRender(el, textWithDollar) {
-      // Não usar innerHTML c/ conteúdo arbitrário → define como texto e deixa o auto-render transformar
       el.textContent = textWithDollar || '';
-      renderMathInElement(el, { delimiters: [{left:'$', right:'$', display:false}], throwOnError:false });
+      renderMathInElement(el, {
+        delimiters: [{left:'$', right:'$', display:false}],
+        throwOnError:false
+      });
     }
 
     function normalizeLatex(l) {
@@ -425,6 +426,15 @@
           g.classList.toggle('active', g.getAttribute('data-tab') === tab);
         });
       }));
+
+      // Se perguntas.js não carregou, mostra erro explícito
+      if (!Array.isArray(window.database)) {
+        const list = document.getElementById("quiz-list");
+        document.getElementById("login-screen").classList.add("hidden");
+        document.getElementById("quiz-selection").style.display = "block";
+        list.innerHTML = '<div class="quiz-card"><strong>Sem dados</strong><br><small>0 questões</small><br><em>Não foi possível carregar as perguntas. Verifica o ficheiro perguntas.js.</em></div>';
+        console.error("perguntas.js não carregou ou não definiu window.database.");
+      }
     });
 
     // =========================
@@ -465,7 +475,7 @@
       document.getElementById("game-ui").classList.remove("hidden");
 
       // Preload imagens
-      quiz.questions.filter(q => q.img).forEach(u => { const im = new Image(); im.src = u.img; });
+      quiz.questions.filter(q => q.img).forEach(qi => { const im = new Image(); im.src = qi.img; });
 
       loadQuestion();
     }
@@ -477,10 +487,9 @@
       document.getElementById("score-val").innerText = pts + " pts";
 
       const q = quiz.questions[cur];
-      // Texto e imagem
       safeRender(document.getElementById("txt-q"), q.q || "");
       document.getElementById("q-info").innerText = `Questão ${cur + 1}/${quiz.questions.length}`;
-      document.getElementById("img-q").innerHTML = q.img ? `<img src="${encodeURI(q.img)}" alt="Questão">` : "";
+      document.getElementById("img-q").innerHTML = q.img ? `<img src="${encodeURI(q.img)}" alt="">` : "";
 
       const grid = document.getElementById("opt-grid");
       const sz = document.getElementById("short-zone");
@@ -492,7 +501,6 @@
         q.opts.forEach((o, i) => {
           const btn = document.createElement('button');
           btn.className = 'opt-btn';
-          // Render seguro: coloca texto e deixa KaTeX substituir
           btn.textContent = o;
           renderMathInElement(btn, { delimiters: [{left:'$', right:'$', display:false}], throwOnError:false });
           btn.addEventListener('click', () => {
@@ -608,7 +616,7 @@
       document.getElementById("game-ui").classList.add("hidden");
       document.getElementById("rank-screen").classList.remove("hidden");
 
-      // Nota como no original: pts em base 10 por pergunta
+      // Nota como no original (base 10 p/ pergunta)
       let grade = Math.round((pts / (quiz.questions.length * 10)) * 100);
       document.getElementById("res-grade").innerText = grade + "%";
 
