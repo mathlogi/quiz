@@ -2,74 +2,62 @@
 <html lang="pt-pt">
 <head>
     <meta charset="UTF-8">
-    <title>Math Logi Lab - Pro Quiz</title>
+    <title>MathLogi Lab</title>
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.js"></script>
 
     <style>
-        :root { --primary: #0b3163; --accent: #00a774; --danger: #d00000; --white: #ffffff; }
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: #0b3163; min-height: 100vh; color: #333; overflow-x: hidden; }
+        :root { --primary: #0b3163; --accent: #00a774; --danger: #d00000; --gold: #ffd700; }
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: var(--primary); color: #333; overflow-x: hidden; }
 
-        /* ABERTURA */
-        #login-screen {
-            height: 100vh; width: 100%;
-            background: url('https://raw.githubusercontent.com/mathlogi/quiz/main/PREPARAÇÃO EXAME 9ºANO (10).svg') no-repeat center center;
-            background-size: cover; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 12vh;
-        }
-        .input-wrapper { background: white; border-radius: 50px; padding: 5px 15px; width: 85%; max-width: 450px; display: flex; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
-        #player-name-input { border: none; padding: 12px; width: 100%; font-size: 16px; text-align: center; outline: none; }
+        /* Login & Menu */
+        #login-screen { height: 100vh; background: url('https://raw.githubusercontent.com/mathlogi/quiz/main/PREPARAÇÃO EXAME 9ºANO (10).svg') no-repeat center center/cover; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 12vh; }
+        .input-wrapper { background: white; border-radius: 50px; padding: 5px 15px; width: 85%; max-width: 450px; display: flex; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
+        #player-name-input { border: none; padding: 12px; width: 100%; outline: none; text-align: center; font-size: 16px; }
         #ok-btn { background: var(--accent); color: white; border: none; padding: 10px 25px; border-radius: 50px; cursor: pointer; font-weight: bold; }
 
-        /* MENU */
         #quiz-selection { display: none; text-align: center; padding: 40px; background: #f0f2f5; min-height: 100vh; }
-        #quiz-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 1100px; margin: 0 auto; }
-        @media (max-width: 768px) { #quiz-list { grid-template-columns: repeat(2, 1fr); } }
-        .quiz-card { background: white; padding: 25px; border-radius: 15px; border-top: 6px solid var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: 0.3s; }
-        .quiz-card:hover { transform: translateY(-5px); }
+        #quiz-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; max-width: 1100px; margin: 0 auto; }
+        .quiz-card { background: white; padding: 25px; border-radius: 15px; border-top: 6px solid var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
 
-        /* JOGO */
+        /* Game UI */
         .top-bar { background: var(--primary); color: white; padding: 15px; display: flex; justify-content: space-between; font-weight: bold; }
-        #timer-bar { height: 8px; background: var(--accent); width: 100%; transition: width 1s linear; }
-        .box { background: white; padding: 30px; border-radius: 20px; margin: 20px auto; max-width: 750px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); width: 90%; }
+        #timer-bar-container { height: 8px; background: rgba(255,255,255,0.2); width: 100%; }
+        #timer-bar { height: 100%; background: var(--accent); width: 100%; transition: width 1s linear; }
+        
+        .powerups { display: flex; justify-content: center; gap: 15px; margin: 15px 0; }
+        .pwr-btn { background: white; border: 2px solid var(--gold); padding: 8px 15px; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 13px; transition: 0.3s; }
+        .pwr-btn:disabled { opacity: 0.3; cursor: not-allowed; filter: grayscale(1); }
+        .pwr-btn:hover:not(:disabled) { background: var(--gold); transform: scale(1.05); }
 
-        /* TECLADO E MATHQUILL */
-        #math-field { width: 90%; margin: 0 auto 15px; padding: 15px; border: 2px solid #ddd; border-radius: 10px; background: #fafafa; min-height: 50px; font-size: 24px; display: inline-block; }
-        #math-keyboard { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; margin-bottom: 20px; max-width: 650px; margin: 0 auto; }
-        .kb-btn { background: white; border: 1.5px solid var(--primary); color: var(--primary); padding: 8px; border-radius: 8px; cursor: pointer; font-size: 15px; min-width: 45px; height: 45px; font-weight: bold; }
-        .kb-btn:hover { background: var(--primary); color: white; }
+        .box { background: white; padding: 30px; border-radius: 20px; margin: 10px auto; max-width: 750px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); width: 90%; }
+        #math-field { width: 90%; margin: 15px auto; padding: 15px; border: 2px solid #ddd; border-radius: 10px; font-size: 24px; min-height: 50px; }
+        
+        #math-keyboard { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; margin: 15px auto; max-width: 600px; }
+        .kb-btn { background: white; border: 1.5px solid var(--primary); color: var(--primary); padding: 10px; border-radius: 8px; cursor: pointer; font-size: 16px; min-width: 48px; font-weight: bold; }
 
-        /* OPÇÕES */
-        .options { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; max-width: 750px; margin: 0 auto; width: 90%; padding-bottom: 30px; }
-        .opt-btn { background: var(--primary); border: 2px solid white; color: white; padding: 20px; border-radius: 15px; font-size: 18px; cursor: pointer; min-height: 80px; display: flex; align-items: center; justify-content: center; }
-        .opt-btn:hover { background: var(--accent); }
+        .options { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; max-width: 750px; margin: 0 auto; width: 90%; }
+        .opt-btn { background: var(--primary); color: white; border: 2px solid white; padding: 20px; border-radius: 15px; font-size: 18px; cursor: pointer; transition: 0.2s; min-height: 80px; }
+        .opt-btn.wrong-option { opacity: 0; pointer-events: none; }
 
-        /* FEEDBACK REFORMULADO (CORREÇÃO PARA IMAGEM 737579) */
-        #feedback { 
-            position: fixed; inset: 0; display: none; flex-direction: column; 
-            align-items: center; justify-content: center; color: white; z-index: 9999; 
-            text-align: center; background: rgba(0,0,0,0.95); padding: 30px;
-        }
-        .fb-icon { font-size: 80px; margin-bottom: 10px; }
-        .fb-msg { font-size: 28px; font-weight: bold; margin-bottom: 20px; }
-        .fb-ans-label { font-size: 18px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; opacity: 0.8; }
-        .fb-math-ans { font-size: 36px; background: rgba(255,255,255,0.15); padding: 20px 40px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.4); min-width: 200px; }
+        /* Feedback Screen (Correção das Imagens) */
+        #feedback { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; color: white; z-index: 9999; text-align: center; background: rgba(0,0,0,0.95); padding: 30px; }
+        .fb-math-ans { font-size: 38px; background: rgba(255,255,255,0.1); padding: 25px 50px; border-radius: 15px; border: 2px solid var(--accent); margin-top: 20px; }
 
         .hidden { display: none !important; }
-        .submit-btn { background: var(--accent); padding: 15px 50px; border: none; color: white; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 18px; margin-top: 10px; }
+        .submit-btn { background: var(--accent); padding: 15px 50px; border: none; color: white; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 18px; }
     </style>
 </head>
 <body>
 
     <div id="login-screen">
         <div class="input-wrapper">
-            <input type="text" id="player-name-input" placeholder="O TEU NOME...">
+            <input type="text" id="player-name-input" placeholder="INTRODUZ O TEU NOME...">
             <button id="ok-btn" onclick="goToMenu()">OK</button>
         </div>
     </div>
@@ -85,10 +73,17 @@
             <span id="score-val">0 pts</span>
             <span id="t-txt">120s</span>
         </div>
-        <div style="background:rgba(255,255,255,0.2)"><div id="timer-bar"></div></div>
+        <div id="timer-bar-container"><div id="timer-bar"></div></div>
+        
+        <div class="powerups">
+            <button id="pwr-50" class="pwr-btn" onclick="use5050()">🌓 50/50</button>
+            <button id="pwr-x3" class="pwr-btn" onclick="useX3()">🚀 PONTOS x3</button>
+            <button id="pwr-stop" class="pwr-btn" onclick="useStop()">⏳ STOP TEMPO</button>
+        </div>
+
         <div class="box">
             <div id="img-q"></div>
-            <div id="txt-q" style="font-size: 20px; line-height: 1.6;"></div>
+            <div id="txt-q" style="font-size: 22px;"></div>
             
             <div id="short-zone" class="hidden">
                 <div id="math-field"></div>
@@ -96,20 +91,13 @@
                     <button class="kb-btn" onclick="mqIn('x')">x</button>
                     <button class="kb-btn" onclick="mqIn('y')">y</button>
                     <button class="kb-btn" onclick="mqIn('=')">=</button>
-                    <button class="kb-btn" onclick="mqIn('%')">%</button>
                     <button class="kb-btn" onclick="mqIn('\\pi')">π</button>
-                    <button class="kb-btn" onclick="mqIn('!')">n!</button>
-                    <button class="kb-btn" onclick="mqIn('+')">+</button>
-                    <button class="kb-btn" onclick="mqIn('-')">-</button>
                     <button class="kb-btn" onclick="mqIn('\\cdot')">⋅</button>
                     <button class="kb-btn" onclick="mqIn('\\frac{}{}')">a/b</button>
                     <button class="kb-btn" onclick="mqIn('^{}')">xⁿ</button>
                     <button class="kb-btn" onclick="mqIn('\\sqrt{}')">√</button>
                     <button class="kb-btn" onclick="mqIn('(')">(</button>
                     <button class="kb-btn" onclick="mqIn(')')">)</button>
-                    <button class="kb-btn" onclick="mqIn('\\le')">≤</button>
-                    <button class="kb-btn" onclick="mqIn('\\ge')">≥</button>
-                    <button class="kb-btn" onclick="mqIn('\\infty')">∞</button>
                 </div>
                 <button class="submit-btn" onclick="checkShort()">SUBMETER</button>
             </div>
@@ -118,99 +106,125 @@
     </div>
 
     <div id="feedback">
-        <div class="fb-icon" id="fb-icon"></div>
-        <div class="fb-msg" id="fb-msg"></div>
-        <div class="fb-ans-label" id="fb-ans-label">Resposta Correta:</div>
-        <div class="fb-math-ans" id="fb-correct-ans"></div>
+        <div id="fb-icon" style="font-size: 80px;"></div>
+        <div id="fb-msg" style="font-size: 30px; font-weight: bold; margin-top: 10px;"></div>
+        <div id="fb-correct-ans" class="fb-math-ans"></div>
     </div>
 
     <script src="perguntas.js"></script>
     <script>
         let cur = 0, pts = 0, time, tLeft, quiz, playerName, mathField;
+        let isX3 = false, timerPaused = false;
+        let pwrUsed = { fifty: false, x3: false, stop: false };
         const MQ = MathQuill.getInterface(2);
-        const TIME_LIMIT = 120;
+        
+        // Sistema de Som
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playSound(freq, type) {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = type || 'sine';
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 1);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start(); osc.stop(audioCtx.currentTime + 1);
+        }
 
-        $(document).ready(function() {
+        $(document).ready(() => {
             mathField = MQ.MathField(document.getElementById('math-field'), {
-                handlers: { enter: function() { checkShort(); } }
+                handlers: { enter: checkShort }
             });
         });
 
-        // Função de renderização robusta
-        function safeRender(element, text) {
+        function safeRender(el, text) {
             if(!text) return;
-            // Corrige problemas de barras invertidas antes de renderizar
-            let cleanText = text.replace(/\\\\/g, '\\'); 
-            element.innerHTML = cleanText;
-            renderMathInElement(element, {
-                delimiters: [{left: "$", right: "$", display: false}],
-                throwOnError : false
-            });
+            el.innerHTML = text.replace(/\\\\/g, '\\');
+            renderMathInElement(el, { delimiters: [{left: "$", right: "$", display: false}], throwOnError: false });
         }
 
         function mqIn(cmd) { mathField.write(cmd); mathField.focus(); }
 
-        document.getElementById("player-name-input").addEventListener("keypress", (e) => { if (e.key === "Enter") goToMenu(); });
-
         function goToMenu() {
-            const val = document.getElementById("player-name-input").value.trim();
-            if(!val) return alert("Escreve o teu nome!");
-            playerName = val;
+            playerName = document.getElementById("player-name-input").value.trim();
+            if(!playerName) return alert("Nome sff!");
             document.getElementById("login-screen").classList.add("hidden");
             document.getElementById("quiz-selection").style.display = "block";
             renderQuizList();
         }
 
         function renderQuizList() {
-            const listDiv = document.getElementById("quiz-list");
-            listDiv.innerHTML = "";
-            database.forEach(q => {
-                const card = document.createElement("div");
-                card.className = "quiz-card";
-                card.innerHTML = `<strong>${q.title}</strong><br><small>${q.questions.length} questões</small><br>
-                <button onclick="startQuiz('${q.id}')" style="background:var(--accent); border:none; color:white; padding:10px; border-radius:8px; cursor:pointer; font-weight:bold; margin-top:10px; width:100%;">JOGAR</button>`;
-                listDiv.appendChild(card);
-            });
+            const list = document.getElementById("quiz-list");
+            list.innerHTML = database.map(q => `
+                <div class="quiz-card">
+                    <strong>${q.title}</strong><br><small>${q.questions.length} questões</small><br>
+                    <button onclick="startQuiz('${q.id}')" style="background:var(--accent); color:white; border:none; padding:10px; border-radius:8px; cursor:pointer; margin-top:10px; width:100%;">JOGAR</button>
+                </div>`).join("");
         }
 
         function startQuiz(id) {
-            quiz = database.find(x => x.id === id);
-            cur = 0; pts = 0;
+            quiz = JSON.parse(JSON.stringify(database.find(x => x.id === id)));
+            // ALEATORIEDADE: Baralha as questões
+            quiz.questions.sort(() => Math.random() - 0.5);
+            cur = 0; pts = 0; 
+            pwrUsed = { fifty: false, x3: false, stop: false };
+            updatePwrButtons();
             document.getElementById("quiz-selection").style.display = "none";
             document.getElementById("game-ui").classList.remove("hidden");
             loadQuestion();
         }
 
         function loadQuestion() {
-            clearInterval(time); tLeft = TIME_LIMIT; 
-            document.getElementById("score-val").innerText = pts + " pts";
+            clearInterval(time); 
+            tLeft = 120; timerPaused = false; isX3 = false;
             updateT();
+            document.getElementById("score-val").innerText = pts + " pts";
             
             let q = quiz.questions[cur];
-            const txtQ = document.getElementById("txt-q");
-            safeRender(txtQ, q.q); 
-
-            document.getElementById("img-q").innerHTML = q.img ? `<img src="${q.img}" style="max-width:100%; max-height:200px; border-radius:10px; margin-bottom:15px;">` : "";
+            safeRender(document.getElementById("txt-q"), q.q);
+            document.getElementById("q-info").innerText = `Questão ${cur+1}/${quiz.questions.length}`;
+            document.getElementById("img-q").innerHTML = q.img ? `<img src="${q.img}" style="max-width:100%; max-height:200px; border-radius:10px;">` : "";
             
             const grid = document.getElementById("opt-grid"), sz = document.getElementById("short-zone");
             if(q.type === "multiple") {
                 grid.classList.remove("hidden"); sz.classList.add("hidden");
-                grid.innerHTML = "";
-                q.opts.forEach((o, i) => {
-                    let b = document.createElement("button"); 
-                    b.className = "opt-btn"; 
-                    safeRender(b, o);
-                    b.onclick = () => validate(i === q.ans, q.opts[q.ans]);
-                    grid.appendChild(b);
-                });
+                grid.innerHTML = q.opts.map((o, i) => `<button class="opt-btn" onclick="validate(${i === q.ans}, '${q.opts[q.ans]}')">${o}</button>`).join("");
+                Array.from(grid.children).forEach(b => safeRender(b, b.innerHTML));
             } else {
                 grid.classList.add("hidden"); sz.classList.remove("hidden");
                 mathField.latex(""); setTimeout(() => mathField.focus(), 100);
             }
-            time = setInterval(() => { tLeft--; updateT(); if(tLeft<=0) validate(false, q.type === "multiple" ? q.opts[q.ans] : q.ans); }, 1000);
+            
+            time = setInterval(() => {
+                if(!timerPaused) {
+                    tLeft--; updateT();
+                    if(tLeft <= 0) validate(false, q.type === "multiple" ? q.opts[q.ans] : q.ans);
+                }
+            }, 1000);
         }
 
-        function updateT() { document.getElementById("timer-bar").style.width = (tLeft/TIME_LIMIT*100)+"%"; document.getElementById("t-txt").innerText = tLeft+"s"; }
+        function updateT() { document.getElementById("timer-bar").style.width = (tLeft/120*100)+"%"; document.getElementById("t-txt").innerText = tLeft+"s"; }
+
+        // Power-ups
+        function updatePwrButtons() {
+            document.getElementById("pwr-50").disabled = pwrUsed.fifty;
+            document.getElementById("pwr-x3").disabled = pwrUsed.x3;
+            document.getElementById("pwr-stop").disabled = pwrUsed.stop;
+        }
+
+        function use5050() {
+            let q = quiz.questions[cur];
+            if(q.type !== 'multiple' || pwrUsed.fifty) return;
+            pwrUsed.fifty = true; updatePwrButtons();
+            let btns = Array.from(document.querySelectorAll('.opt-btn'));
+            let removed = 0;
+            btns.forEach((b, i) => {
+                if(i !== q.ans && removed < 2) { b.classList.add('wrong-option'); removed++; }
+            });
+            playSound(440, 'square');
+        }
+
+        function useX3() { pwrUsed.x3 = true; isX3 = true; updatePwrButtons(); playSound(880, 'sine'); }
+        function useStop() { pwrUsed.stop = true; timerPaused = true; updatePwrButtons(); playSound(330, 'triangle'); }
 
         function checkShort() { 
             const val = mathField.latex().replace(/\\ /g, "").replace(/\s/g, "");
@@ -221,24 +235,24 @@
         function validate(isCorrect, rightAns) {
             clearInterval(time);
             const fb = document.getElementById("feedback");
-            const fbAns = document.getElementById("fb-correct-ans");
-            const fbLabel = document.getElementById("fb-ans-label");
             fb.style.display = "flex";
             
             if(isCorrect) { 
-                pts += 10; 
+                let gain = isX3 ? 30 : 10;
+                pts += gain; 
                 document.getElementById("fb-icon").innerText = "🎯";
-                document.getElementById("fb-msg").innerText = "BRILHANTE!";
-                fbAns.style.display = "none";
-                fbLabel.style.display = "none";
+                document.getElementById("fb-msg").innerText = isX3 ? "TRIUNFO X3! +" + gain : "CORRETO!";
+                document.getElementById("fb-correct-ans").style.display = "none";
                 fb.style.background = "rgba(0, 167, 116, 0.98)"; 
+                playSound(660, 'sine');
             } else { 
                 document.getElementById("fb-icon").innerText = "❌";
                 document.getElementById("fb-msg").innerText = "ESTUDAR MAIS!";
-                fbAns.style.display = "block";
-                fbLabel.style.display = "block";
-                safeRender(fbAns, "$" + rightAns + "$");
+                const ansBox = document.getElementById("fb-correct-ans");
+                ansBox.style.display = "block";
+                safeRender(ansBox, "$" + rightAns + "$");
                 fb.style.background = "rgba(208, 0, 0, 0.98)"; 
+                playSound(150, 'sawtooth');
             }
             setTimeout(() => { fb.style.display = "none"; cur++; if(cur < quiz.questions.length) loadQuestion(); else location.reload(); }, 3500);
         }
