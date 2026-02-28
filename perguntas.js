@@ -1,4 +1,4 @@
-const database = [
+window.database = [
     {
         id: "mat_01",
         title: "Matemática 9º Ano - Preparação",
