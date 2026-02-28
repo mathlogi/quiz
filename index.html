@@ -2,7 +2,7 @@
 <html lang="pt-pt">
 <head>
     <meta charset="UTF-8">
-    <title>MathLogi Lab</title>
+    <title>Math Logi Lab - Pro Quiz</title>
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 
@@ -15,8 +15,9 @@
 
     <style>
         :root { --primary: #0b3163; --accent: #00a774; --danger: #d00000; --white: #ffffff; }
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: #0b3163; min-height: 100vh; color: #333; }
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: #0b3163; min-height: 100vh; color: #333; overflow-x: hidden; }
 
+        /* ABERTURA */
         #login-screen {
             height: 100vh; width: 100%;
             background: url('https://raw.githubusercontent.com/mathlogi/quiz/main/PREPARAÇÃO EXAME 9ºANO (10).svg') no-repeat center center;
@@ -26,39 +27,42 @@
         #player-name-input { border: none; padding: 12px; width: 100%; font-size: 16px; text-align: center; outline: none; }
         #ok-btn { background: var(--accent); color: white; border: none; padding: 10px 25px; border-radius: 50px; cursor: pointer; font-weight: bold; }
 
+        /* MENU */
         #quiz-selection { display: none; text-align: center; padding: 40px; background: #f0f2f5; min-height: 100vh; }
         #quiz-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 1100px; margin: 0 auto; }
         @media (max-width: 768px) { #quiz-list { grid-template-columns: repeat(2, 1fr); } }
-        .quiz-card { background: white; padding: 25px; border-radius: 15px; border-top: 6px solid var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .quiz-card { background: white; padding: 25px; border-radius: 15px; border-top: 6px solid var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: 0.3s; }
+        .quiz-card:hover { transform: translateY(-5px); }
 
+        /* JOGO */
         .top-bar { background: var(--primary); color: white; padding: 15px; display: flex; justify-content: space-between; font-weight: bold; }
         #timer-bar { height: 8px; background: var(--accent); width: 100%; transition: width 1s linear; }
         .box { background: white; padding: 30px; border-radius: 20px; margin: 20px auto; max-width: 750px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); width: 90%; }
 
-        /* TECLADO EXPANDIDO */
+        /* TECLADO E MATHQUILL */
         #math-field { width: 90%; margin: 0 auto 15px; padding: 15px; border: 2px solid #ddd; border-radius: 10px; background: #fafafa; min-height: 50px; font-size: 24px; display: inline-block; }
         #math-keyboard { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; margin-bottom: 20px; max-width: 650px; margin: 0 auto; }
-        .kb-btn { 
-            background: white; border: 1.5px solid var(--primary); color: var(--primary); 
-            padding: 8px; border-radius: 8px; cursor: pointer; font-size: 15px; 
-            min-width: 45px; height: 45px; font-weight: bold; transition: 0.2s;
-            display: flex; align-items: center; justify-content: center;
-        }
+        .kb-btn { background: white; border: 1.5px solid var(--primary); color: var(--primary); padding: 8px; border-radius: 8px; cursor: pointer; font-size: 15px; min-width: 45px; height: 45px; font-weight: bold; }
         .kb-btn:hover { background: var(--primary); color: white; }
 
+        /* OPÇÕES */
         .options { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; max-width: 750px; margin: 0 auto; width: 90%; padding-bottom: 30px; }
-        .opt-btn { background: #0b3163; border: 2px solid #ffffff; color: white; padding: 20px; border-radius: 15px; font-size: 18px; cursor: pointer; transition: 0.2s; min-height: 80px; }
-        .opt-btn:hover { background: #00a774; border-color: #00a774; }
+        .opt-btn { background: var(--primary); border: 2px solid white; color: white; padding: 20px; border-radius: 15px; font-size: 18px; cursor: pointer; min-height: 80px; display: flex; align-items: center; justify-content: center; }
+        .opt-btn:hover { background: var(--accent); }
 
+        /* FEEDBACK REFORMULADO (CORREÇÃO PARA IMAGEM 737579) */
         #feedback { 
             position: fixed; inset: 0; display: none; flex-direction: column; 
-            align-items: center; justify-content: center; color: white; z-index: 2000; 
-            text-align: center; background: rgba(0,0,0,0.92); padding: 20px;
+            align-items: center; justify-content: center; color: white; z-index: 9999; 
+            text-align: center; background: rgba(0,0,0,0.95); padding: 30px;
         }
-        .fb-math-ans { font-size: 32px; background: rgba(255,255,255,0.1); padding: 15px 30px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.3); margin-top:15px; }
+        .fb-icon { font-size: 80px; margin-bottom: 10px; }
+        .fb-msg { font-size: 28px; font-weight: bold; margin-bottom: 20px; }
+        .fb-ans-label { font-size: 18px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; opacity: 0.8; }
+        .fb-math-ans { font-size: 36px; background: rgba(255,255,255,0.15); padding: 20px 40px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.4); min-width: 200px; }
 
         .hidden { display: none !important; }
-        .submit-btn { background: var(--accent); padding: 15px 50px; border: none; color: white; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 18px; }
+        .submit-btn { background: var(--accent); padding: 15px 50px; border: none; color: white; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 18px; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -84,7 +88,7 @@
         <div style="background:rgba(255,255,255,0.2)"><div id="timer-bar"></div></div>
         <div class="box">
             <div id="img-q"></div>
-            <div id="txt-q"></div>
+            <div id="txt-q" style="font-size: 20px; line-height: 1.6;"></div>
             
             <div id="short-zone" class="hidden">
                 <div id="math-field"></div>
@@ -95,18 +99,14 @@
                     <button class="kb-btn" onclick="mqIn('%')">%</button>
                     <button class="kb-btn" onclick="mqIn('\\pi')">π</button>
                     <button class="kb-btn" onclick="mqIn('!')">n!</button>
-                    
                     <button class="kb-btn" onclick="mqIn('+')">+</button>
                     <button class="kb-btn" onclick="mqIn('-')">-</button>
                     <button class="kb-btn" onclick="mqIn('\\cdot')">⋅</button>
-                    <button class="kb-btn" onclick="mqIn('\\div')">÷</button>
-                    
                     <button class="kb-btn" onclick="mqIn('\\frac{}{}')">a/b</button>
                     <button class="kb-btn" onclick="mqIn('^{}')">xⁿ</button>
                     <button class="kb-btn" onclick="mqIn('\\sqrt{}')">√</button>
                     <button class="kb-btn" onclick="mqIn('(')">(</button>
                     <button class="kb-btn" onclick="mqIn(')')">)</button>
-                    
                     <button class="kb-btn" onclick="mqIn('\\le')">≤</button>
                     <button class="kb-btn" onclick="mqIn('\\ge')">≥</button>
                     <button class="kb-btn" onclick="mqIn('\\infty')">∞</button>
@@ -118,16 +118,17 @@
     </div>
 
     <div id="feedback">
-        <div id="fb-icon" style="font-size: 50px; margin-bottom:10px;"></div>
-        <div id="fb-msg" style="font-size: 24px; font-weight: bold;"></div>
-        <div id="fb-correct-ans" class="fb-math-ans"></div>
+        <div class="fb-icon" id="fb-icon"></div>
+        <div class="fb-msg" id="fb-msg"></div>
+        <div class="fb-ans-label" id="fb-ans-label">Resposta Correta:</div>
+        <div class="fb-math-ans" id="fb-correct-ans"></div>
     </div>
 
     <script src="perguntas.js"></script>
     <script>
         let cur = 0, pts = 0, time, tLeft, quiz, playerName, mathField;
         const MQ = MathQuill.getInterface(2);
-        const TIME_LIMIT = 120; // Tempo atualizado para 120 segundos
+        const TIME_LIMIT = 120;
 
         $(document).ready(function() {
             mathField = MQ.MathField(document.getElementById('math-field'), {
@@ -135,7 +136,12 @@
             });
         });
 
-        function renderMath(element) {
+        // Função de renderização robusta
+        function safeRender(element, text) {
+            if(!text) return;
+            // Corrige problemas de barras invertidas antes de renderizar
+            let cleanText = text.replace(/\\\\/g, '\\'); 
+            element.innerHTML = cleanText;
             renderMathInElement(element, {
                 delimiters: [{left: "$", right: "$", display: false}],
                 throwOnError : false
@@ -162,7 +168,7 @@
                 const card = document.createElement("div");
                 card.className = "quiz-card";
                 card.innerHTML = `<strong>${q.title}</strong><br><small>${q.questions.length} questões</small><br>
-                <button onclick="startQuiz('${q.id}')" style="background:var(--accent); border:none; color:white; padding:10px; border-radius:8px; cursor:pointer; font-weight:bold; margin-top:10px; width:100%;">COMEÇAR</button>`;
+                <button onclick="startQuiz('${q.id}')" style="background:var(--accent); border:none; color:white; padding:10px; border-radius:8px; cursor:pointer; font-weight:bold; margin-top:10px; width:100%;">JOGAR</button>`;
                 listDiv.appendChild(card);
             });
         }
@@ -182,18 +188,18 @@
             
             let q = quiz.questions[cur];
             const txtQ = document.getElementById("txt-q");
-            txtQ.innerHTML = q.q;
-            renderMath(txtQ); 
+            safeRender(txtQ, q.q); 
 
-            document.getElementById("img-q").innerHTML = q.img ? `<img src="${q.img}" style="max-width:100%; max-height:220px; border-radius:10px; margin-bottom:15px;">` : "";
+            document.getElementById("img-q").innerHTML = q.img ? `<img src="${q.img}" style="max-width:100%; max-height:200px; border-radius:10px; margin-bottom:15px;">` : "";
             
             const grid = document.getElementById("opt-grid"), sz = document.getElementById("short-zone");
             if(q.type === "multiple") {
                 grid.classList.remove("hidden"); sz.classList.add("hidden");
                 grid.innerHTML = "";
                 q.opts.forEach((o, i) => {
-                    let b = document.createElement("button"); b.className = "opt-btn"; b.innerHTML = o;
-                    renderMath(b);
+                    let b = document.createElement("button"); 
+                    b.className = "opt-btn"; 
+                    safeRender(b, o);
                     b.onclick = () => validate(i === q.ans, q.opts[q.ans]);
                     grid.appendChild(b);
                 });
@@ -216,23 +222,25 @@
             clearInterval(time);
             const fb = document.getElementById("feedback");
             const fbAns = document.getElementById("fb-correct-ans");
+            const fbLabel = document.getElementById("fb-ans-label");
             fb.style.display = "flex";
             
             if(isCorrect) { 
                 pts += 10; 
                 document.getElementById("fb-icon").innerText = "🎯";
-                document.getElementById("fb-msg").innerText = "CORRETO!";
+                document.getElementById("fb-msg").innerText = "BRILHANTE!";
                 fbAns.style.display = "none";
-                fb.style.background = "rgba(0, 167, 116, 0.96)"; 
+                fbLabel.style.display = "none";
+                fb.style.background = "rgba(0, 167, 116, 0.98)"; 
             } else { 
                 document.getElementById("fb-icon").innerText = "❌";
-                document.getElementById("fb-msg").innerText = "Resposta correta:";
+                document.getElementById("fb-msg").innerText = "ESTUDAR MAIS!";
                 fbAns.style.display = "block";
-                fbAns.innerHTML = "$" + rightAns + "$";
-                renderMath(fbAns);
-                fb.style.background = "rgba(208, 0, 0, 0.96)"; 
+                fbLabel.style.display = "block";
+                safeRender(fbAns, "$" + rightAns + "$");
+                fb.style.background = "rgba(208, 0, 0, 0.98)"; 
             }
-            setTimeout(() => { fb.style.display = "none"; cur++; if(cur < quiz.questions.length) loadQuestion(); else alert("Fim do Quiz! Pontuação: " + pts); }, 3000);
+            setTimeout(() => { fb.style.display = "none"; cur++; if(cur < quiz.questions.length) loadQuestion(); else location.reload(); }, 3500);
         }
     </script>
 </body>
