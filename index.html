@@ -6,18 +6,9 @@
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 
-    <script>
-        window.MathJax = {
-            tex: {
-                inlineMath: [['$', '$'], ['\\(', '\\)']],
-                displayMath: [['$$', '$$'], ['\\[', '\\]']]
-            },
-            options: {
-                enableMenu: false
-            }
-        };
-    </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.js"></script>
@@ -26,43 +17,49 @@
         :root { --primary: #0b3163; --accent: #00a774; --danger: #d00000; --white: #ffffff; }
         body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: #0b3163; min-height: 100vh; color: #333; }
 
+        /* ABERTURA */
         #login-screen {
             height: 100vh; width: 100%;
             background: url('https://raw.githubusercontent.com/mathlogi/quiz/main/PREPARAÇÃO EXAME 9ºANO (15).png') no-repeat center center;
             background-size: cover; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 12vh;
         }
         .input-wrapper { background: white; border-radius: 50px; padding: 5px 15px; width: 85%; max-width: 450px; display: flex; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
-        #player-name-input { border: none; padding: 12px; width: 100%; font-size: 16px; text-align: center; outline: none; border-radius: 50px; }
+        #player-name-input { border: none; padding: 12px; width: 100%; font-size: 16px; text-align: center; outline: none; }
         #ok-btn { background: var(--accent); color: white; border: none; padding: 10px 25px; border-radius: 50px; cursor: pointer; font-weight: bold; }
 
+        /* MENU */
         #quiz-selection { display: none; text-align: center; padding: 40px; background: #f0f2f5; min-height: 100vh; }
-        .menu-logo { max-width: 180px; margin-bottom: 25px; }
         #quiz-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 1100px; margin: 0 auto; }
         @media (max-width: 768px) { #quiz-list { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 480px) { #quiz-list { grid-template-columns: 1fr; } }
-        
-        .quiz-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-top: 6px solid var(--primary); display: flex; flex-direction: column; justify-content: space-between; }
-        
-        .top-bar { background: var(--primary); color: white; padding: 15px; display: flex; justify-content: space-between; font-weight: bold; }
-        #timer-bar { height: 8px; background: var(--accent); width: 100%; transition: width 1s linear; }
-        
-        .box { background: white; padding: 30px; border-radius: 20px; margin: 20px auto; max-width: 750px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); width: 90%; }
-        #txt-q { font-size: 22px; margin-bottom: 20px; line-height: 1.5; }
+        .quiz-card { background: white; padding: 25px; border-radius: 15px; border-top: 6px solid var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
 
-        /* TECLADO E CAMPO DE RESPOSTA */
-        #math-field { width: 90%; margin: 0 auto 15px; padding: 15px; border: 2px solid #ddd; border-radius: 10px; background: #fafafa; min-height: 50px; font-size: 24px; }
-        #math-keyboard { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; max-width: 600px; margin-left: auto; margin-right: auto; }
-        .kb-btn { background: #f8f9fa; border: 1px solid var(--primary); color: var(--primary); padding: 10px 14px; border-radius: 8px; cursor: pointer; font-size: 18px; min-width: 50px; font-weight: bold; }
+        /* JOGO */
+        .top-bar { background: var(--primary); color: white; padding: 15px; display: flex; justify-content: space-between; }
+        #timer-bar { height: 8px; background: var(--accent); width: 100%; transition: width 1s linear; }
+        .box { background: white; padding: 30px; border-radius: 20px; margin: 20px auto; max-width: 750px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); width: 90%; }
+
+        /* TECLADO MATEMÁTICO ESTILIZADO */
+        #math-field { width: 90%; margin: 0 auto 15px; padding: 15px; border: 2px solid #ddd; border-radius: 10px; background: #fafafa; min-height: 50px; font-size: 24px; display: inline-block; }
+        #math-keyboard { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+        .kb-btn { 
+            background: white; border: 2px solid var(--primary); color: var(--primary); 
+            padding: 10px; border-radius: 8px; cursor: pointer; font-size: 16px; 
+            min-width: 55px; height: 50px; font-weight: bold; transition: 0.2s;
+            display: flex; align-items: center; justify-content: center;
+        }
         .kb-btn:hover { background: var(--primary); color: white; }
 
-        .options { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; max-width: 750px; margin: 0 auto; width: 90%; padding-bottom: 30px; }
-        button.opt-btn { background: rgba(255,255,255,0.1); border: 2px solid white; color: white; padding: 20px; border-radius: 15px; font-size: 18px; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        button.opt-btn:hover { background: white; color: var(--primary); }
+        /* BOTÕES DE ESCOLHA MÚLTIPLA */
+        .options { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; max-width: 750px; margin: 0 auto; width: 90%; }
+        .opt-btn { background: #0b3163; border: 2px solid #ffffff; color: white; padding: 20px; border-radius: 15px; font-size: 18px; cursor: pointer; transition: 0.2s; min-height: 80px; }
+        .opt-btn:hover { background: #00a774; border-color: #00a774; }
 
-        #feedback { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; color: white; font-size: 35px; font-weight: bold; z-index: 2000; text-align: center; background: rgba(0,0,0,0.8); }
+        #feedback { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; color: white; font-size: 35px; font-weight: bold; z-index: 2000; text-align: center; background: rgba(0,0,0,0.85); }
         .hidden { display: none !important; }
-        .submit-btn { background: var(--accent); padding: 15px 50px; border: none; color: white; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 18px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-
+        .submit-btn { background: var(--accent); padding: 15px 50px; border: none; color: white; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 18px; }
+        
+        #rank-screen { text-align: center; padding: 40px; background: #f0f2f5; min-height: 100vh; }
         table { width: 100%; max-width: 500px; margin: 20px auto; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; }
         th { background: var(--primary); color: white; padding: 15px; }
         td { padding: 12px; border-bottom: 1px solid #eee; text-align: center; }
@@ -72,13 +69,13 @@
 
     <div id="login-screen">
         <div class="input-wrapper">
-            <input type="text" id="player-name-input" placeholder="INTRODUZ O TEU NOME...">
+            <input type="text" id="player-name-input" placeholder="O TEU NOME...">
             <button id="ok-btn" onclick="goToMenu()">OK</button>
         </div>
     </div>
 
     <div id="quiz-selection">
-        <img src="https://raw.githubusercontent.com/mathlogi/quiz/main/PREPARAÇÃO EXAME 9ºANO (15).png" class="menu-logo">
+        <img src="https://raw.githubusercontent.com/mathlogi/quiz/main/PREPARAÇÃO EXAME 9ºANO (15).png" style="max-width:180px; margin-bottom:20px;">
         <div id="quiz-list"></div>
     </div>
 
@@ -91,7 +88,7 @@
         <div style="background:rgba(255,255,255,0.2)"><div id="timer-bar"></div></div>
         <div class="box">
             <div id="img-q"></div>
-            <div id="txt-q">A carregar pergunta...</div>
+            <div id="txt-q" style="min-height: 60px;"></div>
             
             <div id="short-zone" class="hidden">
                 <div id="math-field"></div>
@@ -100,7 +97,7 @@
                     <button class="kb-btn" onclick="mqIn('y')">y</button>
                     <button class="kb-btn" onclick="mqIn('+')">+</button>
                     <button class="kb-btn" onclick="mqIn('-')">-</button>
-                    <button class="kb-btn" onclick="mqIn('\\cdot')">·</button>
+                    <button class="kb-btn" onclick="mqIn('\\cdot')">⋅</button>
                     <button class="kb-btn" onclick="mqIn('\\div')">÷</button>
                     <button class="kb-btn" onclick="mqIn('(')">(</button>
                     <button class="kb-btn" onclick="mqIn(')')">)</button>
@@ -118,15 +115,15 @@
 
     <div id="feedback"></div>
 
-    <div id="rank-screen" class="hidden" style="text-align:center; padding: 40px; background:#f0f2f5; min-height:100vh;">
+    <div id="rank-screen" class="hidden">
         <h2 style="color:var(--primary)">Quiz Concluído!</h2>
         <div id="res-grade" style="font-size: 60px; font-weight: bold; color: var(--accent); margin-bottom: 20px;"></div>
         <div id="congrats-area"></div>
-        <div style="background: white; padding: 25px; border-radius: 15px; display: inline-block; width: 90%; max-width: 500px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-            <h3 style="margin:0 0 15px 0">🏆 TOP 5 GLOBAL</h3>
+        <div style="background: white; padding: 25px; border-radius: 15px; display: inline-block; width: 90%; max-width: 500px;">
+            <h3>🏆 TOP 5 GLOBAL</h3>
             <table id="table"></table>
         </div>
-        <br><br><button onclick="location.reload()" style="background:var(--primary); color:white; border:none; padding:18px 40px; border-radius:50px; cursor:pointer; font-weight:bold; font-size:16px;">VOLTAR AO MENU</button>
+        <br><br><button onclick="location.reload()" class="submit-btn" style="background:var(--primary)">VOLTAR AO MENU</button>
     </div>
 
     <script src="perguntas.js"></script>
@@ -143,10 +140,16 @@
             });
         });
 
-        function refreshMath() {
-            if (window.MathJax && MathJax.typesetPromise) {
-                MathJax.typesetPromise();
-            }
+        // FUNÇÃO DE RENDERIZAÇÃO MELHORADA
+        function renderMath(element) {
+            renderMathInElement(element, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\\(", right: "\\)", display: false}
+                ],
+                throwOnError : false
+            });
         }
 
         function mqIn(cmd) { mathField.write(cmd); mathField.focus(); }
@@ -162,7 +165,7 @@
 
         function goToMenu() {
             const val = document.getElementById("player-name-input").value.trim();
-            if(!val) return alert("Escreve o teu nome primeiro!");
+            if(!val) return alert("Escreve o teu nome!");
             playerName = val;
             document.getElementById("login-screen").classList.add("hidden");
             document.getElementById("quiz-selection").style.display = "block";
@@ -179,7 +182,6 @@
                 <button onclick="startQuiz('${q.id}')" style="background:var(--accent); border:none; color:white; padding:12px; border-radius:8px; cursor:pointer; font-weight:bold; margin-top:15px;">COMEÇAR</button>`;
                 listDiv.appendChild(card);
             });
-            refreshMath();
         }
 
         function startQuiz(id) {
@@ -196,7 +198,10 @@
             updateT();
             
             let q = quiz.questions[cur];
-            document.getElementById("txt-q").innerHTML = q.q;
+            const txtQ = document.getElementById("txt-q");
+            txtQ.innerHTML = q.q;
+            renderMath(txtQ); // Renderiza a pergunta
+
             document.getElementById("q-info").innerText = `Questão ${cur+1}/${quiz.questions.length}`;
             document.getElementById("img-q").innerHTML = q.img ? `<img src="${q.img}" style="max-width:100%; max-height:250px; border-radius:10px; margin-bottom:15px;">` : "";
             
@@ -205,7 +210,10 @@
                 grid.classList.remove("hidden"); sz.classList.add("hidden");
                 grid.innerHTML = "";
                 q.opts.forEach((o, i) => {
-                    let b = document.createElement("button"); b.className = "opt-btn"; b.innerHTML = o;
+                    let b = document.createElement("button"); 
+                    b.className = "opt-btn"; 
+                    b.innerHTML = o;
+                    renderMath(b); // Renderiza as opções
                     b.onclick = () => validate(i === q.ans, q.opts[q.ans]);
                     grid.appendChild(b);
                 });
@@ -213,8 +221,6 @@
                 grid.classList.add("hidden"); sz.classList.remove("hidden");
                 mathField.latex(""); setTimeout(() => mathField.focus(), 100);
             }
-            
-            refreshMath();
             time = setInterval(() => { tLeft--; updateT(); if(tLeft<=0) validate(false, q.type === "multiple" ? q.opts[q.ans] : q.ans); }, 1000);
         }
 
@@ -236,11 +242,11 @@
                 fb.style.background = "rgba(0, 167, 116, 0.9)"; 
                 play(600, 0.2); 
             } else { 
-                fb.innerHTML = `❌ ERRADO!<br><br><span style="font-size:20px">A resposta certa era:</span><br>$${rightAns}$`; 
+                fb.innerHTML = `❌ ERRADO!<br><br><span style="font-size:20px">Resposta:</span><br><div id='ans-corr'>${rightAns}</div>`; 
+                renderMath(document.getElementById('feedback'));
                 fb.style.background = "rgba(208, 0, 0, 0.9)"; 
                 play(200, 0.3); 
             }
-            refreshMath();
             setTimeout(() => { fb.style.display = "none"; cur++; if(cur < quiz.questions.length) loadQuestion(); else finish(); }, 3500);
         }
 
@@ -249,7 +255,6 @@
             document.getElementById("rank-screen").classList.remove("hidden");
             let grade = Math.round((pts / (quiz.questions.length * 10)) * 100);
             document.getElementById("res-grade").innerText = grade + "%";
-            
             try {
                 const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, { headers: { 'X-Master-Key': API_KEY } });
                 const data = await res.json();
