@@ -3,36 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>MathLogi Lab</title>
+  <title>Math Logi Lab - Pro Edition</title>
 
-  <!-- KaTeX -->
+  <!-- === CSS de terceiros === -->
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
-
-  <!-- MathQuill -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.js"></script>
 
   <style>
     :root { --primary:#0b3163; --accent:#00a774; --danger:#d00000; --gold:#ffd700; --muted:#e7ecf3; }
     * { box-sizing:border-box; }
     body { margin:0; font-family:'Segoe UI', Tahoma, sans-serif; background:var(--primary); color:#333; overflow-x:hidden; }
-
-    /* Login */
     #login-screen { height:100vh;
-      background:url('https://raw.githubusercontent.com/mathlogi/quiz/main/PREPARAÇÃO EXAME 9ºANO (10).svg') no-repeat center center/cover;
+      background:url('https://raw.githubusercontent.com/mathlogi/quiz/main/PREPARA%C3%87%C3%83O%20EXAME%209%C2%BAANO%20(15).png') no-repeat center center/cover;
       display:flex; flex-direction:column; align-items:center; justify-content:flex-end; padding-bottom:12vh; }
     .input-wrapper { background:#fff; border-radius:50px; padding:5px 15px; width:85%; max-width:450px; display:flex; box-shadow:0 10px 30px rgba(0,0,0,0.4); }
     #player-name-input { border:none; padding:12px; width:100%; outline:none; text-align:center; font-size:16px; }
     #ok-btn { background:var(--accent); color:#fff; border:none; padding:10px 25px; border-radius:50px; cursor:pointer; font-weight:bold; }
 
-    /* Menu */
     #quiz-selection { display:none; text-align:center; padding:40px; background:#f0f2f5; min-height:100vh; }
     #quiz-list { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:20px; max-width:1100px; margin:0 auto; }
     .quiz-card { background:#fff; padding:25px; border-radius:15px; border-top:6px solid var(--primary); box-shadow:0 4px 10px rgba(0,0,0,0.1); }
 
-    /* Game */
     .top-bar { background:var(--primary); color:#fff; padding:15px; display:flex; justify-content:space-between; align-items:center; font-weight:bold; gap:10px; }
     #timer-bar-container { height:8px; background:rgba(255,255,255,0.2); width:100%; }
     #timer-bar { height:100%; background:var(--accent); width:100%; transition:width 1s linear; }
@@ -43,16 +35,11 @@
 
     .box { background:#fff; padding:30px; border-radius:20px; margin:10px auto; max-width:900px; text-align:center; box-shadow:0 10px 25px rgba(0,0,0,0.2); width:95%; }
     #img-q img { max-width:100%; max-height:220px; border-radius:10px; }
-
-    /* Math input */
     #math-field { width:100%; max-width:820px; margin:15px auto; padding:15px; border:2px solid #ddd; border-radius:10px; font-size:24px; min-height:52px; }
 
-    /* Keyboard tabs */
     .kb-tabs { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:10px auto 6px; }
     .kb-tab { background:#fff; color:var(--primary); border:1.5px solid var(--primary); padding:6px 10px; border-radius:8px; cursor:pointer; font-weight:600; font-size:14px; }
     .kb-tab.active { background:var(--primary); color:#fff; }
-
-    /* Keyboard groups */
     #math-keyboard { background:var(--muted); border:1px solid #d6dde8; border-radius:10px; padding:10px; max-width:900px; margin:0 auto; }
     .kb-group { display:none; gap:6px; flex-wrap:wrap; justify-content:center; }
     .kb-group.active { display:flex; }
@@ -64,11 +51,9 @@
     .opt-btn { background:var(--primary); color:#fff; border:2px solid #fff; padding:18px; border-radius:15px; font-size:18px; cursor:pointer; min-height:80px; }
     .opt-btn.wrong-option { visibility:hidden; pointer-events:none; }
 
-    /* Feedback */
     #feedback { position:fixed; inset:0; display:none; flex-direction:column; align-items:center; justify-content:center; color:#fff; z-index:9999; text-align:center; background:rgba(0,0,0,0.95); padding:30px; cursor:pointer; }
     .fb-math-ans { font-size:38px; background:rgba(255,255,255,0.1); padding:25px 50px; border-radius:15px; border:2px solid var(--accent); margin-top:20px; min-width:200px; }
 
-    /* Rank */
     #rank-screen { text-align:center; padding:40px; background:#f0f2f5; min-height:100vh; }
     table { width:100%; max-width:500px; margin:20px auto; border-collapse:collapse; background:#fff; border-radius:10px; overflow:hidden; }
     th { background:var(--primary); color:#fff; padding:15px; }
@@ -90,7 +75,7 @@
 
   <!-- MENU QUIZ -->
   <div id="quiz-selection">
-    <img src="https://raw.githubusercontent.com/mathlogi/quiz/main/PREPARAÇÃO EXAME 9ºANO (11).svg" alt="Math Logi Lab" style="max-width:160px; margin-bottom:15px;">
+    <img src="https://raw.githubusercontent.com/mathlogi/quiz/main/PREPARA%C3%87%C3%83O%20EXAME%209%C2%BAANO%20(15).png" alt="" style="max-width:160px; margin-bottom:15px;">
     <div id="quiz-list"></div>
   </div>
 
@@ -179,7 +164,7 @@
             </div>
           </div>
 
-          <!-- ALGEBRA -->
+          <!-- outras abas (iguais às versões anteriores; mantidas) -->
           <div class="kb-group" data-tab="algebra">
             <div class="kb-row">
               <button class="kb-btn" onclick="mqWrite('a')">a</button>
@@ -206,7 +191,6 @@
             </div>
           </div>
 
-          <!-- TRIG/LOG -->
           <div class="kb-group" data-tab="triglog">
             <div class="kb-row">
               <button class="kb-btn" onclick="mqWrite('\\sin')">sin</button>
@@ -225,7 +209,6 @@
             </div>
           </div>
 
-          <!-- CÁLCULO -->
           <div class="kb-group" data-tab="calc">
             <div class="kb-row">
               <button class="kb-btn wide" onclick="mqWrite('\\lim_{x\\to }')">lim x→</button>
@@ -238,7 +221,6 @@
             </div>
           </div>
 
-          <!-- CONJUNTOS/LÓGICA -->
           <div class="kb-group" data-tab="sets">
             <div class="kb-row">
               <button class="kb-btn" onclick="mqWrite('\\in')">∈</button>
@@ -259,7 +241,6 @@
             </div>
           </div>
 
-          <!-- VETORES/MATRIZES -->
           <div class="kb-group" data-tab="vectors">
             <div class="kb-row">
               <button class="kb-btn" onclick="mqWrite('\\vec{v}')">→v</button>
@@ -274,7 +255,6 @@
             </div>
           </div>
 
-          <!-- COMPLEXOS / MISC -->
           <div class="kb-group" data-tab="complex">
             <div class="kb-row">
               <button class="kb-btn" onclick="mqWrite('i')">i</button>
@@ -282,10 +262,6 @@
               <button class="kb-btn" onclick="mqWrite('\\Re')">Re</button>
               <button class="kb-btn" onclick="mqWrite('\\Im')">Im</button>
               <button class="kb-btn" onclick="mqWrite('\\infty')">∞</button>
-              <button class="kb-btn" onclick="mqWrite('\\Gamma')">Γ</button>
-              <button class="kb-btn" onclick="mqWrite('\\Delta')">Δ</button>
-              <button class="kb-btn" onclick="mqWrite('\\Sigma')">Σ</button>
-              <button class="kb-btn" onclick="mqWrite('\\Omega')">Ω</button>
               <button class="kb-btn" onclick="mqWrite('\\alpha')">α</button>
               <button class="kb-btn" onclick="mqWrite('\\beta')">β</button>
               <button class="kb-btn" onclick="mqWrite('\\gamma')">γ</button>
@@ -298,7 +274,6 @@
             </div>
           </div>
 
-          <!-- EDIÇÃO -->
           <div class="kb-group" data-tab="edit">
             <div class="kb-row">
               <button class="kb-btn wide" onclick="mqKey('Backspace')">⌫</button>
@@ -318,7 +293,6 @@
     <div id="opt-grid" class="options"></div>
   </div>
 
-  <!-- FEEDBACK (clicável e com foco) -->
   <div id="feedback" aria-live="polite" role="dialog" aria-modal="true" tabindex="0">
     <div id="fb-icon" style="font-size:80px;"></div>
     <div id="fb-msg" style="font-size:30px; font-weight:bold; margin-top:10px;"></div>
@@ -326,7 +300,6 @@
     <div style="margin-top:12px; opacity:.85; font-size:14px;">Toca/clica para continuar</div>
   </div>
 
-  <!-- RANK -->
   <div id="rank-screen" class="hidden">
     <h2 style="color:var(--primary)">Quiz Concluído!</h2>
     <div id="res-grade" style="font-size:60px; font-weight:bold; color:var(--accent); margin-bottom:20px;"></div>
@@ -338,29 +311,30 @@
     <br /><br /><button onclick="location.reload()" class="submit-btn" style="background:var(--primary)">VOLTAR AO MENU</button>
   </div>
 
-  <!-- Perguntas (na mesma pasta; tem de começar por window.database = [...]) -->
+  <!-- === JS de terceiros (defer → só executam depois do HTML) === -->
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.min.js"></script>
+
+  <!-- Perguntas (deve expor window.database = [...]) -->
   <script src="perguntas.js"></script>
 
+  <!-- === O TEU SCRIPT PRINCIPAL === -->
   <script>
-    // =========================
-    // Estado, Audio e Config
-    // =========================
     let cur = 0, pts = 0, hits = 0, time, tLeft, quiz, playerName, mathField;
     let isX3 = false, timerPaused = false;
     let pwrUsed = { fifty: false, x3: false, stop: false };
 
-    const MQ = MathQuill.getInterface(2);
-
-    // Ranking (como no original)
     const BIN_ID  = '69a03d0843b1c97be9a0345b';
     const API_KEY = '$2a$10$uPoUexkH5KHeuMHnDPbc0O/tP1KH4rqeSLkGjLk8R6lsV4MXfeTEG';
+
+    let MQ; // só vamos obter a interface depois do load
 
     // Áudio
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     function tryResumeAudio() { if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume(); }
     document.addEventListener('pointerdown', tryResumeAudio, { once: true });
     document.addEventListener('keydown', tryResumeAudio, { once: true });
-
     function playSound(freq, type) {
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
@@ -372,9 +346,6 @@
       osc.start(); osc.stop(audioCtx.currentTime + 1);
     }
 
-    // =========================
-    // Utilitários
-    // =========================
     function escapeHtml(s) {
       return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
     }
@@ -382,13 +353,11 @@
 
     function safeRender(el, textWithDollar) {
       el.textContent = textWithDollar || '';
-      renderMathInElement(el, {
-        delimiters: [{left:'$', right:'$', display:false}],
-        throwOnError:false
-      });
+      if (window.renderMathInElement) {
+        renderMathInElement(el, { delimiters: [{left:'$', right:'$', display:false}], throwOnError:false });
+      }
     }
 
-    // --- Normalizações (LaTeX e Texto) ---
     function normalizeLatex(l) {
       return String(l || '')
         .replace(/\\left|\\right/g, '')
@@ -404,71 +373,51 @@
       return false;
     }
 
-    // Converte acentos LaTeX (\'{a}, \~{a}, \c{c}, etc.) para a letra base (sem acento)
     function stripLatexAccentMacros(s) {
       return String(s || '')
-        // acentos tipo \'{a}, \`{a}, \^{a}, \"{a}, \~{a}
         .replace(/\\['`^"~]\s*{?\s*([A-Za-z])\s*}?/g, '$1')
-        // cedilha \c{c} ou \c{C}
         .replace(/\\c\s*{\s*([Cc])\s*}/g, (m, c) => (c === 'C' ? 'C' : 'c'))
-        // outros comandos simples \textalpha etc. → removidos
         .replace(/\\[a-zA-Z]+/g, '');
     }
-
-    // Remove diacríticos: “áàâãä”→“a”, “ç”→“c”, etc.
     function stripDiacritics(s) {
       try { return s.normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
-      catch { return s; } // fallback se o browser não suportar normalize
+      catch { return s; }
     }
-
-    // Normaliza TEXTO para comparação acento/maius/minus-insensível
     function normalizePlainText(s) {
-      const base = String(s || '')
-        .replace(/\s+/g, ' ')   // colapsa espaços
-        .trim()
-        .toLowerCase();
+      const base = String(s || '').replace(/\s+/g,' ').trim().toLowerCase();
       return stripDiacritics(base);
     }
-
-    // Extrai texto “humano” de um LaTeX simples que o aluno escreveu
     function latexToPlainHuman(latex) {
       return stripLatexAccentMacros(
-        String(latex || '')
-          .replace(/\\text\s*{\s*([^}]*)\s*}/g, '$1') // \text{...} → ...
-          .replace(/\\ /g, ' ')                       // espaço LaTeX
-          .replace(/[{}]/g, '')                       // remove chaves
+        String(latex || '').replace(/\\text\s*{\s*([^}]*)\s*}/g,'$1').replace(/\\ /g,' ').replace(/[{}]/g,'')
       );
     }
 
-    // ---- Feedback control ----
-    let fbTimeout = null;                              // id do setTimeout
-    const FEEDBACK_AUTO_CLOSE_MS = 3500;               // <== ajusta o tempo (ms)
-
+    let fbTimeout = null;
+    const FEEDBACK_AUTO_CLOSE_MS = 3500;
     function closeFeedbackAndContinue() {
       const fb = document.getElementById("feedback");
-      if (fb.style.display !== "flex") return;   // já fechado
+      if (fb.style.display !== "flex") return;
       fb.style.display = "none";
       cur++;
       if (cur < quiz.questions.length) loadQuestion(); else finish();
     }
 
-    // =========================
-    // MathQuill helpers
-    // =========================
-    function mqWrite(latex) { mathField.write(latex); mathField.focus(); }
-    function mqKey(key)     { mathField.keystroke(key); mathField.focus(); }
-    function mqClear()      { mathField.latex(''); mathField.focus(); }
+    function mqWrite(latex) { if (!mathField) return; mathField.write(latex); mathField.focus(); }
+    function mqKey(key)     { if (!mathField) return; mathField.keystroke(key); mathField.focus(); }
+    function mqClear()      { if (!mathField) return; mathField.latex(''); mathField.focus(); }
 
-    // =========================
-    // Arranque
-    // =========================
-    document.addEventListener('DOMContentLoaded', () => {
-      const mf = document.getElementById('math-field');
-      if (mf) {
-        mathField = MQ.MathField(mf, { handlers: { enter: checkShort} });
+    // Espera pelo load completo (CSS+JS de terceiros) para ter KaTeX/MathQuill disponíveis
+    window.addEventListener('load', () => {
+      if (window.MathQuill) {
+        MQ = MathQuill.getInterface(2);
+        const mf = document.getElementById('math-field');
+        if (mf) {
+          mathField = MQ.MathField(mf, { handlers: { enter: checkShort } });
+        }
       }
 
-      // Tabs do teclado
+      // Tabs teclado
       const tabs = document.querySelectorAll('.kb-tab');
       tabs.forEach(t => t.addEventListener('click', () => {
         tabs.forEach(x => x.classList.remove('active'));
@@ -479,21 +428,14 @@
         });
       }));
 
-      // Fechar feedback por clique/teclado
+      // Fecho de feedback
       const fb = document.getElementById("feedback");
-      fb.addEventListener("click", () => {
-        if (fbTimeout) { clearTimeout(fbTimeout); fbTimeout = null; }
-        closeFeedbackAndContinue();
-      });
+      fb.addEventListener("click", () => { if (fbTimeout) clearTimeout(fbTimeout); fbTimeout=null; closeFeedbackAndContinue(); });
       fb.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          if (fbTimeout) { clearTimeout(fbTimeout); fbTimeout = null; }
-          closeFeedbackAndContinue();
-        }
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); if (fbTimeout) clearTimeout(fbTimeout); fbTimeout=null; closeFeedbackAndContinue(); }
       });
 
-      // Se perguntas.js não carregou, mostra erro explícito
+      // Se perguntas.js falhou
       if (!Array.isArray(window.database)) {
         document.getElementById("login-screen").classList.add("hidden");
         document.getElementById("quiz-selection").style.display = "block";
@@ -503,9 +445,6 @@
       }
     });
 
-    // =========================
-    // Fluxo do Jogo
-    // =========================
     function goToMenu() {
       playerName = document.getElementById("player-name-input").value.trim();
       if (!playerName) return alert("Nome sff!");
@@ -540,7 +479,6 @@
       document.getElementById("quiz-selection").style.display = "none";
       document.getElementById("game-ui").classList.remove("hidden");
 
-      // Preload imagens
       quiz.questions.filter(q => q.img).forEach(qi => { const im = new Image(); im.src = qi.img; });
 
       loadQuestion();
@@ -567,13 +505,9 @@
         q.opts.forEach((o, i) => {
           const btn = document.createElement('button');
           btn.className = 'opt-btn';
-          btn.textContent = o; // texto seguro
-          renderMathInElement(btn, { delimiters: [{left:'$', right:'$', display:false}], throwOnError:false });
-          btn.addEventListener('click', () => {
-            const isCorrect = (i === q.ans);
-            const rightAns = q.opts[q.ans];
-            validate(isCorrect, rightAns);
-          });
+          btn.textContent = o;
+          if (window.renderMathInElement) renderMathInElement(btn, { delimiters: [{left:'$', right:'$', display:false}], throwOnError:false });
+          btn.addEventListener('click', () => validate(i === q.ans, q.opts[q.ans]));
           grid.appendChild(btn);
         });
         requestAnimationFrame(() => {
@@ -583,10 +517,10 @@
       } else {
         grid.classList.add("hidden");
         sz.classList.remove("hidden");
-        mathField.latex("");
-        requestAnimationFrame(() => mathField.focus());
+        if (mathField) { mathField.latex(""); requestAnimationFrame(() => mathField.focus()); }
       }
 
+      // ⚠️ setInterval só é criado se nada rebentar acima
       time = setInterval(() => {
         if (!timerPaused) {
           tLeft--; updateT();
@@ -614,49 +548,30 @@
       if (q.type !== 'multiple' || pwrUsed.fifty) return;
       pwrUsed.fifty = true; updatePwrButtons();
       const btns = Array.from(document.querySelectorAll('.opt-btn'));
-      const total = q.opts.length;
-      const idxs = [...Array(total).keys()];
+      const total = q.opts.length, idxs = [...Array(total).keys()];
       shuffle(idxs);
       let removed = 0;
       idxs.forEach(i => {
-        if (i !== q.ans && removed < 2) {
-          btns[i].classList.add('wrong-option');
-          removed++;
-        }
+        if (i !== q.ans && removed < 2) { btns[i].classList.add('wrong-option'); removed++; }
       });
       playSound(440, 'square');
     }
 
     function useX3() { if (pwrUsed.x3) return; pwrUsed.x3 = true; isX3 = true; updatePwrButtons(); playSound(880, 'sine'); }
+    function useStop() { if (pwrUsed.stop) return; pwrUsed.stop = true; timerPaused = true; updatePwrButtons(); playSound(330, 'triangle'); updateT(); }
 
-    // STOP TEMPO: pausa até responder
-    function useStop() {
-      if (pwrUsed.stop) return;
-      pwrUsed.stop = true; timerPaused = true; updatePwrButtons(); playSound(330, 'triangle');
-      updateT();
-    }
-
-    // =========================
-    // Resposta curta:
-    // - Se gabarito é texto simples, compara sem acentos/maiús./minús. e ignora espaços extra;
-    // - Caso contrário, usa comparação LaTeX normalizada (com eqWithSwap para "a=b" vs "b=a").
-    // =========================
     function checkShort() {
       const q = quiz.questions[cur];
-      const userLatex = mathField.latex();
-
-      // Identifica se o gabarito é TEXTUAL (sem LaTeX)
+      const userLatex = mathField ? mathField.latex() : "";
       const ansIsPlainText = !/\$/.test(q.ans) && !/[\\{}^_]/.test(q.ans);
 
       if (ansIsPlainText) {
-        // Extrai texto “humano” que o aluno escreveu e normaliza (sem acentos)
         const userHuman = latexToPlainHuman(userLatex);
         const userNorm  = normalizePlainText(userHuman);
         const correctNorm = normalizePlainText(q.ans);
         return validate(userNorm === correctNorm, q.ans);
       }
 
-      // Caso MATEMÁTICO (LaTeX)
       const user = normalizeLatex(userLatex);
       const correct = normalizeLatex(q.ans);
       validate(user === correct || eqWithSwap(user, correct), q.ans);
@@ -671,7 +586,7 @@
       const ansBox = document.getElementById("fb-correct-ans");
 
       fb.style.display = "flex";
-      fb.focus();   // acessibilidade
+      fb.focus();
       if (fbTimeout) { clearTimeout(fbTimeout); fbTimeout = null; }
 
       if (isCorrect) {
@@ -687,27 +602,12 @@
         msg.innerText  = "ESTUDAR MAIS!";
         ansBox.style.display = "block";
         ansBox.textContent = "$" + rightAns + "$";
-        renderMathInElement(ansBox, { delimiters: [{left:'$', right:'$', display:false}], throwOnError:false });
+        if (window.renderMathInElement) renderMathInElement(ansBox, { delimiters: [{left:'$', right:'$', display:false}], throwOnError:false });
         fb.style.background = "rgba(208, 0, 0, 0.98)";
         playSound(150, 'sawtooth');
       }
 
-      // Auto-fecho ao fim de X ms (ou fecha ao clicar/Enter)
-      fbTimeout = setTimeout(() => {
-        fbTimeout = null;
-        closeFeedbackAndContinue();
-      }, FEEDBACK_AUTO_CLOSE_MS);
-    }
-
-    // =========================
-    // Ranking (JSONBin como no original)
-    // =========================
-    async function finish() {
-      document.getElementById("game-ui").classList.add("hidden");
-      document.getElementById("rank-screen").classList.remove("hidden");
-
-      // Nota como no original (base 10 p/ pergunta)
-      let grade = Math.round((pts / (quiz.questions.length * 10)) * 100);
+      fbTimeout = setTimeout(()rade = Math.round((pts / (quiz.questions.length * 10)) * 100);
       document.getElementById("res-grade").innerText = grade + "%";
 
       try {
@@ -725,9 +625,7 @@
         });
         document.getElementById("table").innerHTML =
           "<tr><th>Pos</th><th>Nome</th><th>Nota</th></tr>" +
-          topRanks.slice(0, 5).map((x, i) =>
-            `<tr><td>${i+1}º</td><td>${escapeHtml(x.n || '')}</td><td>${x.s}%</td></tr>`
-          ).join("");
+          topRanks.slice(0, 5).map((x, i) => `<tr><td>${i+1}º</td><td>${escapeHtml(x.n || '')}</td><td>${x.s}%</td></tr>`).join("");
       } catch (e) {
         document.getElementById("table").innerHTML = "<tr><td>Ranking Offline</td></tr>";
       }
