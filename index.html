@@ -1,230 +1,467 @@
-<!DOCTYPE html>
-<html lang="pt-pt">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>MathLogi Lab</title>
+(() => {
+  // ====== RANKING (JSONBin, por quiz) ======
+  const BIN_ID = '69a03d0843b1c97be9a0345b';
+  const API_KEY = '$2a$10$uPoUexkH5KHeuMHnDPbc0O/tP1KH4rqeSLkGjLk8R6lsV4MXfeTEG';
 
-  <!-- KaTeX / MathQuill CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.css">
+  // ====== ESTADO ======
+  let cur = 0;
+  let pts = 0;         // score visível (base + bónus [+ fogo] [+ x3])
+  let correctCount = 0; // nº de respostas certas (para percentagem)
+  let time = null;
+  let tLeft = 120;
+  let quiz = null;
+  let playerName = '';
+  let mathField = null;
+  let MQ = null;
+  let isX3 = false;
+  let timerPaused = false;
+  let feedbackLocked = false;
+  let pwrUsed = { fifty:false, x3:false, stop:false };
+  let streak = 0;      // acertos seguidos
+  let wrongCount = 0;  // erradas
 
-  <style>
-    :root { --primary:#0b3163; --accent:#00a774; --danger:#d00000; --gold:#ffd700; --muted:#e7ecf3; }
-    * { box-sizing:border-box; }
-    body { margin:0; font-family:'Segoe UI', Tahoma, sans-serif; background:var(--primary); color:#333; overflow-x:hidden; }
+  // ====== HELPERS ======
+  const $  = sel => document.querySelector(sel);
+  const $$ = sel => Array.from(document.querySelectorAll(sel));
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const shuffle = arr => arr.map(v=>[v,Math.random()]).sort((a,b)=>a[1]-b[1]).map(x=>x[0]);
 
-    /* Login */
-    #login-screen { height:100vh;
-      background:url('https://raw.githubusercontent.com/mathlogi/quiz/main/PREPARAÇÃO EXAME 9ºANO (10).svg') no-repeat center center/cover;
-      display:flex; flex-direction:column; align-items:center; justify-content:flex-end; padding-bottom:12vh; }
-    .input-wrapper { background:#fff; border-radius:50px; padding:5px 15px; width:85%; max-width:450px; display:flex; box-shadow:0 10px 30px rgba(0,0,0,0.4); }
-    #player-name-input { border:none; padding:12px; width:100%; outline:none; text-align:center; font-size:16px; }
-    #ok-btn { background:var(--accent); color:#fff; border:none; padding:10px 25px; border-radius:50px; cursor:pointer; font-weight:bold; }
+  function updatePwrButtons() {
+    $('#pwr-50').disabled = pwrUsed.fifty;
+    $('#pwr-x3').disabled = pwrUsed.x3;
+    $('#pwr-stop').disabled = pwrUsed.stop;
+  }
 
-    /* Menu */
-    #quiz-selection { display:none; text-align:center; padding:40px; background:#f0f2f5; min-height:100vh; }
-    #quiz-list { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:20px; max-width:1100px; margin:0 auto; }
-    .quiz-card { background:#fff; padding:25px; border-radius:15px; border-top:6px solid var(--primary); box-shadow:0 4px 10px rgba(0,0,0,0.1); }
+  function setTimerPaused(paused){
+    timerPaused = paused;
+    const bar = $('#timer-bar');
+    if(paused){
+      bar.classList.add('paused');
+      $('#t-txt').innerText = `${tLeft}s ⏸`;
+    } else {
+      bar.classList.remove('paused');
+      $('#t-txt').innerText = `${tLeft}s`;
+    }
+  }
 
-    /* Game UI */
-    .top-bar { background:var(--primary); color:#fff; padding:15px; display:flex; justify-content:space-between; align-items:center; font-weight:bold; gap:10px; }
-    #left-top { display:flex; align-items:center; gap:10px; }
-    #streak-icon { display:none; padding:4px 10px; border-radius:20px; background:rgba(255,140,0,.18); border:1px solid rgba(255,140,0,.35); font-weight:800; }
-    #streak-icon.pop { animation: pop .3s ease; }
-    @keyframes pop { 0%{transform:scale(.9)} 70%{transform:scale(1.05)} 100%{transform:scale(1)} }
-    #timer-bar-container { height:8px; background:rgba(255,255,255,0.2); width:100%; }
-    #timer-bar { height:100%; background:var(--accent); width:100%; transition:width 1s linear; }
-    #timer-bar.paused { background:#888; }
-    .powerups { display:flex; justify-content:center; gap:15px; margin:15px 0; flex-wrap:wrap; }
-    .pwr-btn { background:#fff; border:2px solid var(--gold); padding:8px 15px; border-radius:10px; cursor:pointer; font-weight:bold; }
-    .pwr-btn:disabled { opacity:0.3; filter:grayscale(1); cursor:not-allowed; }
-    .box { background:#fff; padding:30px; border-radius:20px; margin:10px auto; max-width:900px; text-align:center; box-shadow:0 10px 25px rgba(0,0,0,0.2); width:95%; }
-    #math-field { width:100%; max-width:820px; margin:15px auto; padding:15px; border:2px solid #ddd; border-radius:10px; font-size:24px; min-height:52px; }
+  function updateT(){
+    $('#timer-bar').style.width = (tLeft/120*100) + '%';
+    if(!timerPaused) $('#t-txt').innerText = `${tLeft}s`;
+  }
 
-    /* Teclado */
-    .kb-tabs { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:10px auto 6px; }
-    .kb-tab { background:#fff; color:var(--primary); border:1.5px solid var(--primary); padding:6px 10px; border-radius:8px; cursor:pointer; font-weight:600; font-size:14px; }
-    .kb-tab.active { background:var(--primary); color:#fff; }
-    #math-keyboard { background:var(--muted); border:1px solid #d6dde8; border-radius:10px; padding:10px; max-width:900px; margin:0 auto; }
-    .kb-group { display:none; gap:6px; flex-wrap:wrap; justify-content:center; }
-    .kb-group.active { display:flex; }
-    .kb-btn { background:#fff; border:1.5px solid var(--primary); color:var(--primary); padding:8px 10px; border-radius:8px; cursor:pointer; font-size:15px; min-width:44px; min-height:38px; }
-    .kb-row { display:flex; flex-wrap:wrap; gap:6px; justify-content:center; width:100%; margin:4px 0; }
+  function disableOptions(){
+    $$('.opt-btn').forEach(b => b.disabled = true);
+  }
 
-    .options { display:grid; grid-template-columns:1fr 1fr; gap:15px; max-width:900px; margin:0 auto; width:95%; }
-    .opt-btn { background:var(--primary); color:#fff; border:2px solid #fff; padding:18px; border-radius:15px; font-size:18px; cursor:pointer; min-height:80px; }
-    .opt-btn.wrong-option { visibility:hidden; pointer-events:none; }
+  function showStreak(){
+    const el = $('#streak-icon');
+    if(streak > 3){ // foguinho quando >3 seguidas (4+)
+      el.style.display = 'inline-block';
+      el.textContent = `🔥 x${streak}`;
+      el.classList.add('pop');
+      setTimeout(()=>el.classList.remove('pop'), 300);
+    } else {
+      el.style.display = 'none';
+      el.textContent = '';
+    }
+  }
 
-    /* Feedback */
-    #feedback { position:fixed; inset:0; display:none; flex-direction:column; align-items:center; justify-content:center; color:#fff; z-index:9999; text-align:center; background:rgba(0,0,0,0.95); padding:30px; }
-    .fb-math-ans { font-size:38px; background:rgba(255,255,255,0.1); padding:25px 50px; border-radius:15px; border:2px solid var(--accent); margin-top:20px; min-width:200px; }
+  // ====== RESPOSTAS CURTAS ======
+  function normalizeLatex(lx){
+    return lx
+      .replace(/\\left|\\right/g, '')
+      .replace(/,/g, '.')
+      .replace(/\s+/g, '');
+  }
 
-    #rank-screen { text-align:center; padding:40px; background:#f0f2f5; min-height:100vh; }
-    table { width:100%; max-width:640px; margin:20px auto; border-collapse:collapse; background:#fff; border-radius:10px; overflow:hidden; }
-    th { background:var(--primary); color:#fff; padding:15px; }
-    td { padding:12px; border-bottom:1px solid #eee; text-align:center; }
-    .hidden { display:none !important; }
-    .submit-btn { background:var(--accent); padding:15px 50px; border:none; color:#fff; border-radius:50px; cursor:pointer; font-weight:bold; font-size:18px; }
-    #wrong-msg { margin-top:10px; font-size:16px; color:#555; }
-  </style>
-</head>
-<body>
+  function latexFractionToNumber(lx){
+    const m = lx.match(/^\\frac\{(-?\d+(?:\.\d+)?)\}\{(-?\d+(?:\.\d+)?)\}$/);
+    if(!m) return null;
+    const n = parseFloat(m[1]); const d = parseFloat(m[2]);
+    if(!isFinite(n) || !isFinite(d) || d === 0) return null;
+    return n/d;
+  }
 
-  <div id="login-screen">
-    <div class="input-wrapper">
-      <input type="text" id="player-name-input" placeholder="INTRODUZ O TEU NOME..." />
-      <button id="ok-btn">OK</button>
-    </div>
-  </div>
+  function tryNumberValue(s){
+    const frac = latexFractionToNumber(s);
+    if(frac !== null) return frac;
+    const n = Number(s);
+    return isFinite(n) ? n : null;
+  }
 
-  <div id="quiz-selection">
-    <img src="https://raw.githubusercontent.com/mathlogi/quiz/main/PREPARAÇÃO EXAME 9ºANO (11).svg" style="max-width:160px; margin-bottom:15px;" alt="Math Logi Lab">
-    <div id="quiz-list"></div>
-  </div>
+  function nearlyEqual(a,b,eps=1e-6){ return Math.abs(a-b) <= eps; }
 
-  <div id="game-ui" class="hidden" aria-live="polite">
-    <div class="top-bar">
-      <div id="left-top">
-        <span id="q-info">Questão</span>
-        <span id="streak-icon">🔥 x4</span>
+  // ====== BÓNUS POR TEMPO (PATAMARES) ======
+  // <=30s -> +20, <=60s -> +15, <=90s -> +10, senão +0
+  function timeBonus(){
+    const used = clamp(120 - tLeft, 0, 120);
+    if (used <= 30) return 20;
+    if (used <= 60) return 15;
+    if (used <= 90) return 10;
+    return 0;
+  }
+
+  function isFireActiveBeforeAnswer(){
+    // "Foguinho ativo" significa vir de >3 certas seguidas ANTES desta resposta
+    return streak > 3;
+  }
+
+  /**
+   * Breakdown de pontos para a questão atual (se certa):
+   * - base: 50
+   * - bónus tempo: patamares
+   * - bónus fogo: +15 se streak >3 (antes da resposta)
+   * - total: (base + tempo + fogo) * 3 se x3 ativo; senão valor simples
+   */
+  function pointsForQuestion(fireActive){
+    const base = 50;
+    const bonusTime = timeBonus();
+    const bonusFire = fireActive ? 15 : 0;
+    const subtotal = base + bonusTime + bonusFire;
+    const total = isX3 ? subtotal * 3 : subtotal;
+    return { base, bonusTime, bonusFire, subtotal, total, x3: isX3 };
+  }
+
+  // ====== FLUXO ======
+  function goToMenu(){
+    const input = $('#player-name-input');
+    playerName = input.value.trim();
+    if(!playerName) { alert('Nome sff!'); return; }
+    localStorage.setItem('playerName', playerName);
+    $('#login-screen').classList.add('hidden');
+    $('#quiz-selection').style.display = 'block';
+    renderQuizList();
+  }
+
+  function renderQuizList(){
+    const list = $('#quiz-list');
+    const db = window.database || [];
+    list.innerHTML = db.map(q => `
+      <div class="quiz-card">
+        <strong>${q.title}</strong><br><small>${q.questions.length} questões</small><br>
+        <button class="play-btn" data-id="${q.id}" style="background:var(--accent);color:#fff;border:none;padding:10px;border-radius:8px;cursor:pointer;margin-top:10px;width:100%;">JOGAR</button>
       </div>
-      <span id="score-val">0 pts</span>
-      <span id="t-txt">120s</span>
-    </div>
-    <div id="timer-bar-container"><div id="timer-bar"></div></div>
+    `).join('');
 
-    <div class="powerups">
-      <button id="pwr-50" class="pwr-btn">🌓 50/50</button>
-      <button id="pwr-x3" class="pwr-btn">🚀 PONTOS x3</button>
-      <button id="pwr-stop" class="pwr-btn">⏳ STOP TEMPO</button>
-    </div>
+    $$('.play-btn').forEach(btn => {
+      btn.addEventListener('click', () => startQuiz(btn.dataset.id));
+    });
+  }
 
-    <div class="box">
-      <div id="img-q" aria-live="polite"></div>
-      <div id="txt-q" style="font-size:22px;"></div>
+  function startQuiz(id){
+    const base = (window.database || []).find(x => x.id === id);
+    if(!base){ alert('Quiz não encontrado.'); return; }
 
-      <div id="short-zone" class="hidden">
-        <div id="math-field"></div>
+    quiz = JSON.parse(JSON.stringify(base));
 
-        <!-- TABS -->
-        <div class="kb-tabs">
-          <button class="kb-tab active" data-tab="basic">Básico</button>
-          <button class="kb-tab" data-tab="algebra">Álgebra</button>
-          <button class="kb-tab" data-tab="edit">Edição</button>
-        </div>
+    // baralhar opções e reajustar índice correto
+    quiz.questions.forEach(q => {
+      if(q.type === 'multiple'){
+        const pairs = q.opts.map((o,i)=>({o,i}));
+        const shuffled = shuffle(pairs);
+        q.opts = shuffled.map(p => p.o);
+        q.ans = shuffled.findIndex(p => p.i === q.ans);
+      }
+    });
 
-        <!-- TECLADO (5.º–12.º) -->
-        <div id="math-keyboard">
-          <!-- Básico -->
-          <div class="kb-group active" data-tab="basic">
-            <div class="kb-row">
-              <button class="kb-btn" data-write="7">7</button>
-              <button class="kb-btn" data-write="8">8</button>
-              <button class="kb-btn" data-write="9">9</button>
-              <button class="kb-btn" data-write="+">+</button>
-              <button class="kb-btn" data-write="-">−</button>
-              <button class="kb-btn" data-write="\\times">×</button>
-              <button class="kb-btn" data-write="\\div">÷</button>
-            </div>
-            <div class="kb-row">
-              <button class="kb-btn" data-write="4">4</button>
-              <button class="kb-btn" data-write="5">5</button>
-              <button class="kb-btn" data-write="6">6</button>
-              <button class="kb-btn" data-write="\\frac{}{}">a/b</button>
-              <button class="kb-btn" data-write="^{}">xⁿ</button>
-              <button class="kb-btn" data-write="\\sqrt{}">√</button>
-              <button class="kb-btn" data-write="|">|</button>
-            </div>
-            <div class="kb-row">
-              <button class="kb-btn" data-write="1">1</button>
-              <button class="kb-btn" data-write="2">2</button>
-              <button class="kb-btn" data-write="3">3</button>
-              <button class="kb-btn" data-write="(">(</button>
-              <button class="kb-btn" data-write=")">)</button>
-              <button class="kb-btn" data-write="[">[</button>
-              <button class="kb-btn" data-write="]">]</button>
-            </div>
-            <div class="kb-row">
-              <button class="kb-btn" data-write="0">0</button>
-              <button class="kb-btn" data-write=",">,</button>
-              <button class="kb-btn" data-write=".">.</button>
-              <button class="kb-btn" data-write="=">=</button>
-              <button class="kb-btn" data-write="\\cdot">·</button>
-            </div>
-          </div>
+    // baralhar perguntas
+    quiz.questions = shuffle(quiz.questions);
 
-          <!-- Álgebra -->
-          <div class="kb-group" data-tab="algebra">
-            <div class="kb-row">
-              <button class="kb-btn" data-write="x">x</button>
-              <button class="kb-btn" data-write="y">y</button>
-              <button class="kb-btn" data-write="z">z</button>
-              <button class="kb-btn" data-write="<">&lt;</button>
-              <button class="kb-btn" data-write=">">&gt;</button>
-              <button class="kb-btn" data-write="\\le">≤</button>
-              <button class="kb-btn" data-write="\\ge">≥</button>
-              <button class="kb-btn" data-write="\\ne">≠</button>
-            </div>
-            <div class="kb-row">
-              <button class="kb-btn" data-write="\\pi">π</button>
-              <button class="kb-btn" data-write="e">e</button>
-              <button class="kb-btn" data-write="^\\circ">°</button>
-              <button class="kb-btn" data-write="\\sin">sin</button>
-              <button class="kb-btn" data-write="\\cos">cos</button>
-              <button class="kb-btn" data-write="\\tan">tan</button>
-              <button class="kb-btn" data-write="\\log">log</button>
-              <button class="kb-btn" data-write="\\ln">ln</button>
-              <button class="kb-btn" data-write="\\exp">exp</button>
-            </div>
-            <div class="kb-row">
-              <button class="kb-btn" data-write="\\times10^{}">×10^n</button>
-              <button class="kb-btn" data-write="_{ }">xₙ</button>
-              <button class="kb-btn" data-write="\\sqrt[]{}">√[n]</button>
-            </div>
-          </div>
+    // reset estado
+    cur = 0; pts = 0; correctCount = 0; wrongCount = 0; streak = 0;
+    pwrUsed = {fifty:false, x3:false, stop:false};
+    updatePwrButtons();
+    showStreak();
 
-          <!-- Edição -->
-          <div class="kb-group" data-tab="edit">
-            <div class="kb-row">
-              <button class="kb-btn" data-key="Left">◀</button>
-              <button class="kb-btn" data-key="Right">▶</button>
-              <button class="kb-btn" data-key="Backspace">⌫</button>
-              <button class="kb-btn" data-clear="1">Limpar</button>
-            </div>
-          </div>
-        </div>
+    // UI
+    $('#quiz-selection').style.display = 'none';
+    $('#game-ui').classList.remove('hidden');
 
-        <br><button id="short-submit" class="submit-btn">SUBMETER</button>
-      </div>
-    </div>
-    <div id="opt-grid" class="options"></div>
-  </div>
+    loadQuestion();
+  }
 
-  <div id="feedback" role="dialog" aria-modal="true">
-    <div id="fb-icon" style="font-size:80px;"></div>
-    <div id="fb-msg" style="font-size:30px; font-weight:bold; margin-top:10px;"></div>
-    <div id="fb-correct-ans" class="fb-math-ans"></div>
-    <div style="margin-top:12px; opacity:.85; font-size:14px;">Toca para continuar</div>
-  </div>
+  function loadQuestion(){
+    clearInterval(time);
+    tLeft = 120;
+    isX3 = false;
+    setTimerPaused(false);
+    updateT();
+    $('#score-val').innerText = `${pts} pts`;
 
-  <div id="rank-screen" class="hidden">
-    <h2 style="color:var(--primary)">Quiz Concluído!</h2>
-    <div id="res-grade" style="font-size:60px; font-weight:bold; color:var(--accent); margin-bottom:6px;"></div>
-    <div id="wrong-msg"></div>
-    <table id="table"></table>
-    <button id="btn-back" class="submit-btn" style="background:var(--primary)">VOLTAR</button>
-  </div>
+    const q = quiz.questions[cur];
+    $('#q-info').innerText = `Questão ${cur+1}/${quiz.questions.length}`;
 
-  <!-- Libs JS -->
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
-  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.min.js"></script>
+    const txtQ = $('#txt-q');
+    txtQ.textContent = q.q;
+    renderMathInElement(txtQ, { delimiters: [{left:'$', right:'$', display:false}] });
 
-  <!-- Base de perguntas -->
-  <script defer src="perguntas.js"></script>
+    const imgZone = $('#img-q');
+    imgZone.innerHTML = '';
+    if(q.img){
+      const im = document.createElement('img');
+      im.src = q.img;
+      im.alt = 'Imagem da questão';
+      imgZone.appendChild(im);
+    }
 
-  <!-- Lógica -->
-  <script defer src="app.js"></script>
-</head>
-</html>
+    if(q.type === 'multiple'){
+      $('#opt-grid').classList.remove('hidden');
+      $('#short-zone').classList.add('hidden');
+      renderOptions(q);
+    } else {
+      $('#opt-grid').classList.add('hidden');
+      $('#short-zone').classList.remove('hidden');
+      mathField.latex('');
+    }
+
+    time = setInterval(() => {
+      if(!timerPaused){
+        tLeft--;
+        updateT();
+        if(tLeft <= 0){
+          clearInterval(time);
+          const rightAns = (q.type === 'multiple') ? q.opts[q.ans] : q.ans;
+          validate(false, rightAns);
+        }
+      }
+    }, 1000);
+  }
+
+  function renderOptions(q){
+    const grid = $('#opt-grid');
+    grid.innerHTML = '';
+    q.opts.forEach((opt, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'opt-btn';
+      btn.textContent = opt; // seguro
+      btn.addEventListener('click', () => validateOption(i));
+      grid.appendChild(btn);
+    });
+    renderMathInElement(grid, { delimiters: [{ left:'$', right:'$', display:false }] });
+  }
+
+  function validateOption(chosenIndex){
+    disableOptions();
+    const q = quiz.questions[cur];
+    const isCorrect = chosenIndex === q.ans;
+    const rightAns = q.opts[q.ans];
+    validate(isCorrect, rightAns);
+  }
+
+  function use5050(){
+    const q = quiz.questions[cur];
+    if(q.type !== 'multiple') return;
+    if(pwrUsed.fifty) return;
+
+    pwrUsed.fifty = true; updatePwrButtons();
+    const btns = $$('.opt-btn');
+    const toHide = btns
+      .map((b, i) => ({ b, i }))
+      .filter(x => x.i !== q.ans)
+      .sort(() => Math.random() - 0.5)
+      .slice(0,2);
+    toHide.forEach(x => x.b.classList.add('wrong-option'));
+  }
+
+  function useX3(){
+    if(pwrUsed.x3) return;
+    pwrUsed.x3 = true; isX3 = true; updatePwrButtons();
+  }
+
+  function useStop(){
+    if(pwrUsed.stop) return;
+    pwrUsed.stop = true; updatePwrButtons();
+    setTimerPaused(true);
+  }
+
+  function checkShort(){
+    const q = quiz.questions[cur];
+    const userRaw = mathField.latex();
+    const correctRaw = q.ans;
+
+    const user = normalizeLatex(userRaw);
+    const correct = normalizeLatex(correctRaw);
+
+    if(user === correct){
+      return validate(true, correctRaw);
+    }
+
+    const uNum = tryNumberValue(user);
+    const cNum = tryNumberValue(correct);
+    if(uNum !== null && cNum !== null && nearlyEqual(uNum, cNum)){
+      return validate(true, correctRaw);
+    }
+
+    return validate(false, correctRaw);
+  }
+
+  function validate(isCorrect, rightAns){
+    clearInterval(time);
+    disableOptions();
+
+    const fb = $('#feedback');
+    const ansBox = $('#fb-correct-ans');
+    const det = $('#fb-details');
+
+    if(isCorrect){
+      // Determina se o foguinho já estava ativo ANTES desta resposta
+      const fireActive = isFireActiveBeforeAnswer();
+      const { base, bonusTime, bonusFire, subtotal, total, x3 } = pointsForQuestion(fireActive);
+
+      pts += total;          // score total visível
+      correctCount += 1;     // para percentagem
+      streak += 1;
+      $('#score-val').innerText = `${pts} pts`;
+      showStreak();
+
+      $('#fb-icon').innerText = '🎯';
+      $('#fb-msg').innerText = 'CORRETO!';
+
+      // Mensagem detalhada
+      const parts = [`Base: +${base}`, `Bónus tempo: +${bonusTime}`];
+      if (bonusFire > 0) parts.push(`Bónus 🔥: +${bonusFire}`);
+      if (x3) parts.push('x3 aplicado');
+      det.textContent = `${parts.join(' | ')} → +${total} pts`;
+
+      ansBox.style.display = 'none';
+      fb.style.background = 'rgba(0, 167, 116, 0.98)';
+    } else {
+      wrongCount += 1;
+      streak = 0;
+      showStreak();
+
+      $('#fb-icon').innerText = '❌';
+      $('#fb-msg').innerText = 'Resposta:';
+      det.textContent = '0 pts nesta questão';
+
+      ansBox.style.display = 'block';
+      ansBox.innerHTML = '';
+      try {
+        katex.render(String(rightAns), ansBox, { throwOnError: false });
+      } catch {
+        ansBox.textContent = String(rightAns);
+      }
+      fb.style.background = 'rgba(208, 0, 0, 0.98)';
+    }
+
+    fb.style.display = 'flex';
+  }
+
+  function closeFeedbackAndContinue(){
+    if(feedbackLocked) return;
+    feedbackLocked = true;
+    setTimeout(() => feedbackLocked = false, 350);
+
+    $('#feedback').style.display = 'none';
+    cur++;
+    if(cur < quiz.questions.length) loadQuestion(); else finish();
+  }
+
+  // ====== FIM & RANKING POR QUIZ ======
+  async function finish(){
+    $('#game-ui').classList.add('hidden');
+    $('#rank-screen').classList.remove('hidden');
+
+    const total = quiz.questions.length;
+    const grade = Math.round((correctCount / total) * 100);
+
+    $('#res-grade').innerText = `${grade}%`;
+    const erradas = total - correctCount;
+    $('#wrong-msg').innerText = `Erraste ${erradas} ${ erradas === 1 ? 'pergunta' : 'perguntas' }.`;
+
+    try {
+      const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+        headers: { 'X-Master-Key': API_KEY }
+      });
+      const data = await res.json();
+
+      // Suporta estilos antigos (array) e novos (objeto)
+      let root = data.record;
+      if (root && root.record !== undefined) root = root.record;
+
+      let store;
+      if (Array.isArray(root)) {
+        store = {}; // migrar de global antigo para objeto
+      } else if (root && typeof root === 'object') {
+        store = root;
+      } else {
+        store = {};
+      }
+
+      const qid = quiz.id || 'default';
+      const currentList = Array.isArray(store[qid]) ? store[qid] : [];
+
+      currentList.push({ n: playerName, p: pts, g: grade });
+      currentList.sort((a,b) => (b.p ?? 0) - (a.p ?? 0));
+      const top5 = currentList.slice(0, 5);
+      store[qid] = top5;
+
+      await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Master-Key': API_KEY
+        },
+        body: JSON.stringify({ record: store })
+      });
+
+      $('#table').innerHTML =
+        "<tr><th>Pos</th><th>Nome</th><th>Pontos</th><th>Nota</th></tr>" +
+        top5.map((x,i)=>`<tr><td>${i+1}º</td><td>${x.n}</td><td>${x.p ?? 0}</td><td>${x.g ?? 0}%</td></tr>`).join("");
+
+    } catch(e) {
+      $('#table').innerHTML = "<tr><td>Ranking Offline</td></tr>";
+    }
+  }
+
+  // ====== INICIALIZAÇÃO ======
+  window.addEventListener('DOMContentLoaded', () => {
+    // MathQuill
+    MQ = MathQuill.getInterface(2);
+    mathField = MQ.MathField($('#math-field'), { handlers: { enter: checkShort } });
+
+    // Tabs do teclado
+    $$('.kb-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        $$('.kb-tab').forEach(t => t.classList.remove('active'));
+        $$('.kb-group').forEach(g => g.classList.remove('active'));
+        tab.classList.add('active');
+        $(`.kb-group[data-tab="${tab.dataset.tab}"]`).classList.add('active');
+      });
+    });
+
+    // Botões do teclado
+    $$('#math-keyboard .kb-btn').forEach(btn => {
+      if(btn.dataset.write){
+        btn.addEventListener('click', () => { mathField.write(btn.dataset.write); mathField.focus(); });
+      }
+      if(btn.dataset.key){
+        btn.addEventListener('click', () => { mathField.keystroke(btn.dataset.key); mathField.focus(); });
+      }
+      if(btn.dataset.clear){
+        btn.addEventListener('click', () => { mathField.latex(''); mathField.focus(); });
+      }
+    });
+
+    // Login OK
+    $('#ok-btn').addEventListener('click', goToMenu);
+
+    // Persistir nome
+    const saved = localStorage.getItem('playerName');
+    if(saved) $('#player-name-input').value = saved;
+
+    // Power-ups
+    $('#pwr-50').addEventListener('click', use5050);
+    $('#pwr-x3').addEventListener('click', useX3);
+    $('#pwr-stop').addEventListener('click', useStop);
+
+    // Submeter resposta curta
+    $('#short-submit').addEventListener('click', checkShort);
+
+    // Feedback overlay
+    $('#feedback').addEventListener('click', closeFeedbackAndContinue);
+
+    // Voltar
+    $('#btn-back').addEventListener('click', () => location.reload());
+  });
+})();
