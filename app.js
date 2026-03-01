@@ -5,8 +5,8 @@
 
   // ====== ESTADO ======
   let cur = 0;
-  let pts = 0;         // score visível (base + bónus [+ x3])
-  let basePts = 0;     // 10 por certa -> para Nota (%)
+  let pts = 0;         // score visível (base + bónus [+ fogo] [+ x3])
+  let correctCount = 0; // nº de respostas certas (para percentagem)
   let time = null;
   let tLeft = 120;
   let quiz = null;
@@ -101,12 +101,25 @@
     return 0;
   }
 
-  // Pontos finais por questão correta: 10 (base) + bónus; aplica x3 se ativo
-  function pointsForQuestion(){
-    const base = 10;
-    const bonus = timeBonus();
-    const total = base + bonus;
-    return isX3 ? total * 3 : total;
+  function isFireActiveBeforeAnswer(){
+    // "Foguinho ativo" significa vir de >3 certas seguidas ANTES desta resposta
+    return streak > 3;
+  }
+
+  /**
+   * Breakdown de pontos para a questão atual (se certa):
+   * - base: 50
+   * - bónus tempo: patamares
+   * - bónus fogo: +15 se streak >3 (antes da resposta)
+   * - total: (base + tempo + fogo) * 3 se x3 ativo; senão valor simples
+   */
+  function pointsForQuestion(fireActive){
+    const base = 50;
+    const bonusTime = timeBonus();
+    const bonusFire = fireActive ? 15 : 0;
+    const subtotal = base + bonusTime + bonusFire;
+    const total = isX3 ? subtotal * 3 : subtotal;
+    return { base, bonusTime, bonusFire, subtotal, total, x3: isX3 };
   }
 
   // ====== FLUXO ======
@@ -155,7 +168,7 @@
     quiz.questions = shuffle(quiz.questions);
 
     // reset estado
-    cur = 0; pts = 0; basePts = 0; wrongCount = 0; streak = 0;
+    cur = 0; pts = 0; correctCount = 0; wrongCount = 0; streak = 0;
     pwrUsed = {fifty:false, x3:false, stop:false};
     updatePwrButtons();
     showStreak();
@@ -288,16 +301,28 @@
 
     const fb = $('#feedback');
     const ansBox = $('#fb-correct-ans');
+    const det = $('#fb-details');
 
     if(isCorrect){
-      pts += pointsForQuestion();   // com bónus + x3 quando ativo
-      basePts += 10;                // nota (%)
+      // Determina se o foguinho já estava ativo ANTES desta resposta
+      const fireActive = isFireActiveBeforeAnswer();
+      const { base, bonusTime, bonusFire, subtotal, total, x3 } = pointsForQuestion(fireActive);
+
+      pts += total;          // score total visível
+      correctCount += 1;     // para percentagem
       streak += 1;
       $('#score-val').innerText = `${pts} pts`;
       showStreak();
 
       $('#fb-icon').innerText = '🎯';
       $('#fb-msg').innerText = 'CORRETO!';
+
+      // Mensagem detalhada
+      const parts = [`Base: +${base}`, `Bónus tempo: +${bonusTime}`];
+      if (bonusFire > 0) parts.push(`Bónus 🔥: +${bonusFire}`);
+      if (x3) parts.push('x3 aplicado');
+      det.textContent = `${parts.join(' | ')} → +${total} pts`;
+
       ansBox.style.display = 'none';
       fb.style.background = 'rgba(0, 167, 116, 0.98)';
     } else {
@@ -307,6 +332,8 @@
 
       $('#fb-icon').innerText = '❌';
       $('#fb-msg').innerText = 'Resposta:';
+      det.textContent = '0 pts nesta questão';
+
       ansBox.style.display = 'block';
       ansBox.innerHTML = '';
       try {
@@ -330,17 +357,17 @@
     if(cur < quiz.questions.length) loadQuestion(); else finish();
   }
 
-  // ====== RANKING POR QUIZ (guardar e ler por quiz.id) ======
+  // ====== FIM & RANKING POR QUIZ ======
   async function finish(){
     $('#game-ui').classList.add('hidden');
     $('#rank-screen').classList.remove('hidden');
 
     const total = quiz.questions.length;
-    const correct = basePts / 10;
-    const grade = Math.round((correct / total) * 100);
+    const grade = Math.round((correctCount / total) * 100);
 
     $('#res-grade').innerText = `${grade}%`;
-    $('#wrong-msg').innerText = `Erraste ${total - correct} ${ (total - correct) === 1 ? 'pergunta' : 'perguntas' }.`;
+    const erradas = total - correctCount;
+    $('#wrong-msg').innerText = `Erraste ${erradas} ${ erradas === 1 ? 'pergunta' : 'perguntas' }.`;
 
     try {
       const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
@@ -348,16 +375,13 @@
       });
       const data = await res.json();
 
-      // Normalizar estrutura do bin:
-      // - se vier {record: [...]}, convertemos para { [quizId]: [...] }
-      // - se vier {record: { ... }}, usamos como objeto
+      // Suporta estilos antigos (array) e novos (objeto)
       let root = data.record;
       if (root && root.record !== undefined) root = root.record;
 
       let store;
       if (Array.isArray(root)) {
-        // estilo antigo (global) -> migra para objeto mantendo no default
-        store = {};
+        store = {}; // migrar de global antigo para objeto
       } else if (root && typeof root === 'object') {
         store = root;
       } else {
@@ -367,13 +391,11 @@
       const qid = quiz.id || 'default';
       const currentList = Array.isArray(store[qid]) ? store[qid] : [];
 
-      // Inserir entrada (ordenar por pontos desc)
       currentList.push({ n: playerName, p: pts, g: grade });
       currentList.sort((a,b) => (b.p ?? 0) - (a.p ?? 0));
       const top5 = currentList.slice(0, 5);
       store[qid] = top5;
 
-      // PUT de volta
       await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
         method: 'PUT',
         headers: {
@@ -383,7 +405,6 @@
         body: JSON.stringify({ record: store })
       });
 
-      // Render tabela (por pontos)
       $('#table').innerHTML =
         "<tr><th>Pos</th><th>Nome</th><th>Pontos</th><th>Nota</th></tr>" +
         top5.map((x,i)=>`<tr><td>${i+1}º</td><td>${x.n}</td><td>${x.p ?? 0}</td><td>${x.g ?? 0}%</td></tr>`).join("");
