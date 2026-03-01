@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>MathLogi Lab</title>
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+  <!-- KaTeX / MathQuill CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.css">
-  
+
   <style>
     :root { --primary:#0b3163; --accent:#00a774; --danger:#d00000; --gold:#ffd700; --muted:#e7ecf3; }
     * { box-sizing:border-box; }
@@ -29,8 +29,13 @@
 
     /* Game UI */
     .top-bar { background:var(--primary); color:#fff; padding:15px; display:flex; justify-content:space-between; align-items:center; font-weight:bold; gap:10px; }
+    #left-top { display:flex; align-items:center; gap:10px; }
+    #streak-icon { display:none; padding:4px 10px; border-radius:20px; background:rgba(255,140,0,.18); border:1px solid rgba(255,140,0,.35); font-weight:800; }
+    #streak-icon.pop { animation: pop .3s ease; }
+    @keyframes pop { 0%{transform:scale(.9)} 70%{transform:scale(1.05)} 100%{transform:scale(1)} }
     #timer-bar-container { height:8px; background:rgba(255,255,255,0.2); width:100%; }
     #timer-bar { height:100%; background:var(--accent); width:100%; transition:width 1s linear; }
+    #timer-bar.paused { background:#888; }
     .powerups { display:flex; justify-content:center; gap:15px; margin:15px 0; flex-wrap:wrap; }
     .pwr-btn { background:#fff; border:2px solid var(--gold); padding:8px 15px; border-radius:10px; cursor:pointer; font-weight:bold; }
     .pwr-btn:disabled { opacity:0.3; filter:grayscale(1); cursor:not-allowed; }
@@ -56,11 +61,12 @@
     .fb-math-ans { font-size:38px; background:rgba(255,255,255,0.1); padding:25px 50px; border-radius:15px; border:2px solid var(--accent); margin-top:20px; min-width:200px; }
 
     #rank-screen { text-align:center; padding:40px; background:#f0f2f5; min-height:100vh; }
-    table { width:100%; max-width:500px; margin:20px auto; border-collapse:collapse; background:#fff; border-radius:10px; overflow:hidden; }
+    table { width:100%; max-width:640px; margin:20px auto; border-collapse:collapse; background:#fff; border-radius:10px; overflow:hidden; }
     th { background:var(--primary); color:#fff; padding:15px; }
     td { padding:12px; border-bottom:1px solid #eee; text-align:center; }
     .hidden { display:none !important; }
     .submit-btn { background:var(--accent); padding:15px 50px; border:none; color:#fff; border-radius:50px; cursor:pointer; font-weight:bold; font-size:18px; }
+    #wrong-msg { margin-top:10px; font-size:16px; color:#555; }
   </style>
 </head>
 <body>
@@ -68,7 +74,7 @@
   <div id="login-screen">
     <div class="input-wrapper">
       <input type="text" id="player-name-input" placeholder="INTRODUZ O TEU NOME..." />
-      <button id="ok-btn" onclick="goToMenu()">OK</button>
+      <button id="ok-btn">OK</button>
     </div>
   </div>
 
@@ -77,64 +83,125 @@
     <div id="quiz-list"></div>
   </div>
 
-  <div id="game-ui" class="hidden">
+  <div id="game-ui" class="hidden" aria-live="polite">
     <div class="top-bar">
-      <span id="q-info">Questão</span>
+      <div id="left-top">
+        <span id="q-info">Questão</span>
+        <span id="streak-icon">🔥 x4</span>
+      </div>
       <span id="score-val">0 pts</span>
       <span id="t-txt">120s</span>
     </div>
     <div id="timer-bar-container"><div id="timer-bar"></div></div>
 
     <div class="powerups">
-      <button id="pwr-50" class="pwr-btn" onclick="use5050()">🌓 50/50</button>
-      <button id="pwr-x3" class="pwr-btn" onclick="useX3()">🚀 PONTOS x3</button>
-      <button id="pwr-stop" class="pwr-btn" onclick="useStop()">⏳ STOP TEMPO</button>
+      <button id="pwr-50" class="pwr-btn">🌓 50/50</button>
+      <button id="pwr-x3" class="pwr-btn">🚀 PONTOS x3</button>
+      <button id="pwr-stop" class="pwr-btn">⏳ STOP TEMPO</button>
     </div>
 
     <div class="box">
-      <div id="img-q"></div>
+      <div id="img-q" aria-live="polite"></div>
       <div id="txt-q" style="font-size:22px;"></div>
 
       <div id="short-zone" class="hidden">
         <div id="math-field"></div>
+
+        <!-- TABS -->
         <div class="kb-tabs">
           <button class="kb-tab active" data-tab="basic">Básico</button>
           <button class="kb-tab" data-tab="algebra">Álgebra</button>
           <button class="kb-tab" data-tab="edit">Edição</button>
         </div>
+
+        <!-- TECLADO (5.º–12.º) -->
         <div id="math-keyboard">
+          <!-- Básico -->
           <div class="kb-group active" data-tab="basic">
             <div class="kb-row">
-              <button class="kb-btn" onclick="mqWrite('7')">7</button><button class="kb-btn" onclick="mqWrite('8')">8</button>
-              <button class="kb-btn" onclick="mqWrite('9')">9</button><button class="kb-btn" onclick="mqWrite('+')">+</button>
-              <button class="kb-btn" onclick="mqWrite('-')">−</button>
+              <button class="kb-btn" data-write="7">7</button>
+              <button class="kb-btn" data-write="8">8</button>
+              <button class="kb-btn" data-write="9">9</button>
+              <button class="kb-btn" data-write="+">+</button>
+              <button class="kb-btn" data-write="-">−</button>
+              <button class="kb-btn" data-write="\\times">×</button>
+              <button class="kb-btn" data-write="\\div">÷</button>
             </div>
             <div class="kb-row">
-              <button class="kb-btn" onclick="mqWrite('\\frac{}{}')">a/b</button>
-              <button class="kb-btn" onclick="mqWrite('^{}')">xⁿ</button>
-              <button class="kb-btn" onclick="mqWrite('\\sqrt{}')">√</button>
-              <button class="kb-btn" onclick="mqWrite('(')">(</button>
-              <button class="kb-btn" onclick="mqWrite(')')">)</button>
+              <button class="kb-btn" data-write="4">4</button>
+              <button class="kb-btn" data-write="5">5</button>
+              <button class="kb-btn" data-write="6">6</button>
+              <button class="kb-btn" data-write="\\frac{}{}">a/b</button>
+              <button class="kb-btn" data-write="^{}">xⁿ</button>
+              <button class="kb-btn" data-write="\\sqrt{}">√</button>
+              <button class="kb-btn" data-write="|">|</button>
+            </div>
+            <div class="kb-row">
+              <button class="kb-btn" data-write="1">1</button>
+              <button class="kb-btn" data-write="2">2</button>
+              <button class="kb-btn" data-write="3">3</button>
+              <button class="kb-btn" data-write="(">(</button>
+              <button class="kb-btn" data-write=")">)</button>
+              <button class="kb-btn" data-write="[">[</button>
+              <button class="kb-btn" data-write="]">]</button>
+            </div>
+            <div class="kb-row">
+              <button class="kb-btn" data-write="0">0</button>
+              <button class="kb-btn" data-write=",">,</button>
+              <button class="kb-btn" data-write=".">.</button>
+              <button class="kb-btn" data-write="=">=</button>
+              <button class="kb-btn" data-write="\\cdot">·</button>
             </div>
           </div>
+
+          <!-- Álgebra -->
           <div class="kb-group" data-tab="algebra">
-             <div class="kb-row">
-                <button class="kb-btn" onclick="mqWrite('x')">x</button><button class="kb-btn" onclick="mqWrite('y')">y</button>
-                <button class="kb-btn" onclick="mqWrite('=')">=</button>
-             </div>
+            <div class="kb-row">
+              <button class="kb-btn" data-write="x">x</button>
+              <button class="kb-btn" data-write="y">y</button>
+              <button class="kb-btn" data-write="z">z</button>
+              <button class="kb-btn" data-write="<">&lt;</button>
+              <button class="kb-btn" data-write=">">&gt;</button>
+              <button class="kb-btn" data-write="\\le">≤</button>
+              <button class="kb-btn" data-write="\\ge">≥</button>
+              <button class="kb-btn" data-write="\\ne">≠</button>
+            </div>
+            <div class="kb-row">
+              <button class="kb-btn" data-write="\\pi">π</button>
+              <button class="kb-btn" data-write="e">e</button>
+              <button class="kb-btn" data-write="^\\circ">°</button>
+              <button class="kb-btn" data-write="\\sin">sin</button>
+              <button class="kb-btn" data-write="\\cos">cos</button>
+              <button class="kb-btn" data-write="\\tan">tan</button>
+              <button class="kb-btn" data-write="\\log">log</button>
+              <button class="kb-btn" data-write="\\ln">ln</button>
+              <button class="kb-btn" data-write="\\exp">exp</button>
+            </div>
+            <div class="kb-row">
+              <button class="kb-btn" data-write="\\times10^{}">×10^n</button>
+              <button class="kb-btn" data-write="_{ }">xₙ</button>
+              <button class="kb-btn" data-write="\\sqrt[]{}">√[n]</button>
+            </div>
           </div>
+
+          <!-- Edição -->
           <div class="kb-group" data-tab="edit">
-            <button class="kb-btn" onclick="mqKey('Backspace')">⌫</button>
-            <button class="kb-btn" onclick="mqClear()">Limpar</button>
+            <div class="kb-row">
+              <button class="kb-btn" data-key="Left">◀</button>
+              <button class="kb-btn" data-key="Right">▶</button>
+              <button class="kb-btn" data-key="Backspace">⌫</button>
+              <button class="kb-btn" data-clear="1">Limpar</button>
+            </div>
           </div>
         </div>
-        <br><button class="submit-btn" onclick="checkShort()">SUBMETER</button>
+
+        <br><button id="short-submit" class="submit-btn">SUBMETER</button>
       </div>
     </div>
     <div id="opt-grid" class="options"></div>
   </div>
 
-  <div id="feedback" onclick="closeFeedbackAndContinue()">
+  <div id="feedback" role="dialog" aria-modal="true">
     <div id="fb-icon" style="font-size:80px;"></div>
     <div id="fb-msg" style="font-size:30px; font-weight:bold; margin-top:10px;"></div>
     <div id="fb-correct-ans" class="fb-math-ans"></div>
@@ -143,163 +210,21 @@
 
   <div id="rank-screen" class="hidden">
     <h2 style="color:var(--primary)">Quiz Concluído!</h2>
-    <div id="res-grade" style="font-size:60px; font-weight:bold; color:var(--accent); margin-bottom:20px;"></div>
+    <div id="res-grade" style="font-size:60px; font-weight:bold; color:var(--accent); margin-bottom:6px;"></div>
+    <div id="wrong-msg"></div>
     <table id="table"></table>
-    <button onclick="location.reload()" class="submit-btn" style="background:var(--primary)">VOLTAR</button>
+    <button id="btn-back" class="submit-btn" style="background:var(--primary)">VOLTAR</button>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.min.js"></script>
-  <script src="perguntas.js"></script>
+  <!-- Libs JS -->
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.min.js"></script>
 
-  <script>
-    let cur=0, pts=0, time, tLeft, quiz, playerName, mathField, MQ;
-    let isX3=false, timerPaused=false, pwrUsed={ fifty:false, x3:false, stop:false };
+  <!-- Base de perguntas -->
+  <script defer src="perguntas.js"></script>
 
-    const BIN_ID='69a03d0843b1c97be9a0345b';
-    const API_KEY='$2a$10$uPoUexkH5KHeuMHnDPbc0O/tP1KH4rqeSLkGjLk8R6lsV4MXfeTEG';
-
-    window.onload = () => {
-      MQ = MathQuill.getInterface(2);
-      mathField = MQ.MathField(document.getElementById('math-field'), { handlers: { enter: checkShort } });
-      
-      document.querySelectorAll('.kb-tab').forEach(t => {
-        t.onclick = () => {
-          document.querySelectorAll('.kb-tab').forEach(x => x.classList.remove('active'));
-          document.querySelectorAll('.kb-group').forEach(g => g.classList.remove('active'));
-          t.classList.add('active');
-          document.querySelector(`.kb-group[data-tab="${t.dataset.tab}"]`).classList.add('active');
-        };
-      });
-    };
-
-    function mqWrite(l){ mathField.write(l); mathField.focus(); }
-    function mqKey(k){ mathField.keystroke(k); mathField.focus(); }
-    function mqClear(){ mathField.latex(''); mathField.focus(); }
-
-    function goToMenu(){
-      playerName = document.getElementById("player-name-input").value.trim();
-      if(!playerName) return alert("Nome sff!");
-      document.getElementById("login-screen").classList.add("hidden");
-      document.getElementById("quiz-selection").style.display="block";
-      renderQuizList();
-    }
-
-    function renderQuizList(){
-      const list = document.getElementById("quiz-list");
-      list.innerHTML = window.database.map(q => `
-        <div class="quiz-card">
-          <strong>${q.title}</strong><br><small>${q.questions.length} questões</small><br>
-          <button onclick="startQuiz('${q.id}')" style="background:var(--accent);color:#fff;border:none;padding:10px;border-radius:8px;cursor:pointer;margin-top:10px;width:100%;">JOGAR</button>
-        </div>`).join("");
-    }
-
-    function startQuiz(id){
-      const base = window.database.find(x => x.id === id);
-      quiz = JSON.parse(JSON.stringify(base));
-      quiz.questions.sort(() => Math.random() - 0.5);
-      cur=0; pts=0; pwrUsed={fifty:false,x3:false,stop:false};
-      updatePwrButtons();
-      document.getElementById("quiz-selection").style.display="none";
-      document.getElementById("game-ui").classList.remove("hidden");
-      loadQuestion();
-    }
-
-    function loadQuestion(){
-      clearInterval(time);
-      tLeft=120; timerPaused=false; isX3=false;
-      updateT();
-      document.getElementById("score-val").innerText = pts + " pts";
-      
-      const q = quiz.questions[cur];
-      const txtQ = document.getElementById("txt-q");
-      txtQ.textContent = q.q;
-      renderMathInElement(txtQ, { delimiters: [{left:'$',right:'$',display:false}] });
-      
-      document.getElementById("q-info").innerText = `Questão ${cur+1}/${quiz.questions.length}`;
-      document.getElementById("img-q").innerHTML = q.img ? `<img src="${q.img}">` : "";
-
-      if(q.type === "multiple"){
-        document.getElementById("opt-grid").classList.remove("hidden");
-        document.getElementById("short-zone").classList.add("hidden");
-        document.getElementById("opt-grid").innerHTML = q.opts.map((o,i) => `<button class="opt-btn" onclick="validate(${i===q.ans},'${q.opts[q.ans]}')">${o}</button>`).join("");
-        renderMathInElement(document.getElementById("opt-grid"), { delimiters: [{left:'$',right:'$',display:false}] });
-      } else {
-        document.getElementById("opt-grid").classList.add("hidden");
-        document.getElementById("short-zone").classList.remove("hidden");
-        mathField.latex("");
-      }
-      
-      time = setInterval(() => { if(!timerPaused){ tLeft--; updateT(); if(tLeft<=0) validate(false, q.type==="multiple"?q.opts[q.ans]:q.ans); } }, 1000);
-    }
-
-    function updateT(){ document.getElementById("timer-bar").style.width=(tLeft/120*100)+"%"; document.getElementById("t-txt").innerText=tLeft+"s"; }
-    function updatePwrButtons(){ document.getElementById("pwr-50").disabled=pwrUsed.fifty; document.getElementById("pwr-x3").disabled=pwrUsed.x3; document.getElementById("pwr-stop").disabled=pwrUsed.stop; }
-    
-    function use5050(){
-      const q = quiz.questions[cur];
-      if(q.type !== 'multiple') return;
-      pwrUsed.fifty = true; updatePwrButtons();
-      let btns = document.querySelectorAll('.opt-btn'), removed = 0;
-      btns.forEach((b, i) => { if(i !== q.ans && removed < 2){ b.classList.add('wrong-option'); removed++; } });
-    }
-    function useX3(){ pwrUsed.x3=true; isX3=true; updatePwrButtons(); }
-    function useStop(){ pwrUsed.stop=true; timerPaused=true; updatePwrButtons(); }
-
-    function checkShort(){
-      const user = mathField.latex().replace(/\s/g,'');
-      const correct = quiz.questions[cur].ans.replace(/\s/g,'');
-      validate(user === correct, quiz.questions[cur].ans);
-    }
-
-    function validate(isCorrect, rightAns){
-      clearInterval(time);
-      const fb = document.getElementById("feedback");
-      fb.style.display = "flex";
-      if(isCorrect){
-        pts += (isX3 ? 30 : 10);
-        document.getElementById("fb-icon").innerText = "🎯";
-        document.getElementById("fb-msg").innerText = "CORRETO!";
-        document.getElementById("fb-correct-ans").style.display = "none";
-        fb.style.background = "rgba(0, 167, 116, 0.98)";
-      } else {
-        document.getElementById("fb-icon").innerText = "❌";
-        document.getElementById("fb-msg").innerText = "Resposta:";
-        const ansBox = document.getElementById("fb-correct-ans");
-        ansBox.style.display = "block";
-        ansBox.textContent = "$" + rightAns + "$";
-        renderMathInElement(ansBox, { delimiters: [{left:'$',right:'$',display:false}] });
-        fb.style.background = "rgba(208, 0, 0, 0.98)";
-      }
-    }
-
-    function closeFeedbackAndContinue(){
-      document.getElementById("feedback").style.display = "none";
-      cur++;
-      if(cur < quiz.questions.length) loadQuestion(); else finish();
-    }
-
-    async function finish(){
-      document.getElementById("game-ui").classList.add("hidden");
-      document.getElementById("rank-screen").classList.remove("hidden");
-      let grade = Math.round((pts / (quiz.questions.length * 10)) * 100);
-      document.getElementById("res-grade").innerText = grade + "%";
-      try {
-        const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, { headers: { 'X-Master-Key': API_KEY } });
-        const data = await res.json();
-        let ranks = data.record.record || [];
-        ranks.push({ n: playerName, s: grade });
-        ranks.sort((a,b) => b.s - a.s);
-        const topRanks = ranks.slice(0, 5);
-        await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
-          method: 'PUT', headers: { 'Content-Type': 'application/json', 'X-Master-Key': API_KEY },
-          body: JSON.stringify({ record: topRanks })
-        });
-        document.getElementById("table").innerHTML = "<tr><th>Pos</th><th>Nome</th><th>Nota</th></tr>" + 
-          topRanks.map((x,i) => `<tr><td>${i+1}º</td><td>${x.n}</td><td>${x.s}%</td></tr>`).join("");
-      } catch(e) { document.getElementById("table").innerHTML = "<tr><td>Ranking Offline</td></tr>"; }
-    }
-  </script>
-</body>
+  <!-- Lógica -->
+  <script defer src="app.js"></script>
+</head>
 </html>
