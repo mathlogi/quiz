@@ -49,6 +49,22 @@
     checkShortInternal();
   };
 
+  // ====== RENDERIZAÇÃO MELHORADA (CORRIGE GRAUS E LATEX) ======
+  function safeRender(el, txt) {
+    if (!txt) return;
+    // Corrige formatos comuns de graus e garante barras duplas
+    let cleanTxt = txt.replace(/circ/g, '^{\\circ}').replace(/\\\\/g, '\\');
+    el.innerHTML = cleanTxt;
+    renderMathInElement(el, {
+      delimiters: [
+        {left: "$$", right: "$$", display: true},
+        {left: "$", right: "$", display: false},
+        {left: "\\(", right: "\\)", display: false}
+      ],
+      throwOnError: false
+    });
+  }
+
   function updatePwrButtons() {
     $('#pwr-50').disabled = pwrUsed.fifty;
     $('#pwr-x3').disabled = pwrUsed.x3;
@@ -203,8 +219,7 @@
     $('#q-info').innerText = `Questão ${cur+1}/${quiz.questions.length}`;
 
     const txtQ = $('#txt-q');
-    txtQ.textContent = q.q;
-    renderMathInElement(txtQ, { delimiters: [{left:'$', right:'$', display:false}] });
+    safeRender(txtQ, q.q); // Renderização segura com correção de graus
 
     const imgZone = $('#img-q');
     imgZone.innerHTML = '';
@@ -244,11 +259,10 @@
     q.opts.forEach((opt, i) => {
       const btn = document.createElement('button');
       btn.className = 'opt-btn';
-      btn.textContent = opt; 
+      safeRender(btn, opt); // Renderização segura nas opções
       btn.addEventListener('click', () => validateOption(i));
       grid.appendChild(btn);
     });
-    renderMathInElement(grid, { delimiters: [{ left:'$', right:'$', display:false }] });
   }
 
   function validateOption(chosenIndex){
@@ -261,8 +275,7 @@
 
   window.use5050 = () => {
     const q = quiz.questions[cur];
-    if(q.type !== 'multiple') return;
-    if(pwrUsed.fifty) return;
+    if(q.type !== 'multiple' || pwrUsed.fifty) return;
 
     pwrUsed.fifty = true; updatePwrButtons();
     const btns = $$('.opt-btn');
@@ -344,14 +357,10 @@
       det.textContent = '0 pts';
 
       ansBox.style.display = 'block';
-      ansBox.innerHTML = '';
-      // Garante que o KaTeX renderiza a resposta no feedback
-      const latexAns = String(rightAns).replace(/\\\\/g, '\\');
-      try {
-        katex.render(latexAns, ansBox, { throwOnError: false });
-      } catch {
-        ansBox.textContent = latexAns;
-      }
+      // Garante que a resposta de erro seja renderizada matematicamente e corrija graus
+      let formattedAns = String(rightAns).includes('$') ? rightAns : `$${rightAns}$`;
+      safeRender(ansBox, formattedAns);
+      
       fb.style.background = 'rgba(208, 0, 0, 0.98)';
     }
 
@@ -437,6 +446,11 @@
 
     const saved = localStorage.getItem('playerName');
     if(saved && $('#player-name-input')) $('#player-name-input').value = saved;
+
+    // LIGAR OS BOTÕES DE POWER-UP (Importante para que funcionem)
+    if($('#pwr-50')) $('#pwr-50').onclick = use5050;
+    if($('#pwr-x3')) $('#pwr-x3').onclick = useX3;
+    if($('#pwr-stop')) $('#pwr-stop').onclick = useStop;
 
     if($('#short-submit')) $('#short-submit').addEventListener('click', checkShortInternal);
     if($('#feedback')) $('#feedback').addEventListener('click', window.closeFeedbackAndContinue);
