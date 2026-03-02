@@ -5,9 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>MathLogi Lab</title>
 
-  <!-- CSS de bibliotecas -->
-  https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css
-  https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.css
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.css">
 
   <style>
     :root { --primary:#0b3163; --accent:#00a774; --danger:#d00000; --gold:#ffd700; --muted:#e7ecf3; }
@@ -34,10 +33,13 @@
     #timer-bar-container { height:8px; background:rgba(255,255,255,0.2); width:100%; }
     #timer-bar { height:100%; background:var(--accent); width:100%; transition:width 1s linear; }
     #timer-bar.paused { background:#888; }
+    
     .powerups { display:flex; justify-content:center; gap:15px; margin:15px 0; flex-wrap:wrap; }
     .pwr-btn { background:#fff; border:2px solid var(--gold); padding:8px 15px; border-radius:10px; cursor:pointer; font-weight:bold; }
     .pwr-btn:disabled { opacity:0.3; filter:grayscale(1); cursor:not-allowed; }
+    
     .box { background:#fff; padding:30px; border-radius:20px; margin:10px auto; max-width:900px; text-align:center; box-shadow:0 10px 25px rgba(0,0,0,0.2); width:95%; }
+    #img-q img { max-width:100%; max-height:220px; border-radius:10px; }
     #math-field { width:100%; max-width:820px; margin:15px auto; padding:15px; border:2px solid #ddd; border-radius:10px; font-size:24px; min-height:52px; }
 
     /* Teclado */
@@ -55,7 +57,7 @@
     .opt-btn.wrong-option { visibility:hidden; pointer-events:none; }
 
     /* Feedback */
-    #feedback { position:fixed; inset:0; display:none; flex-direction:column; align-items:center; justify-content:center; color:#fff; z-index:9999; text-align:center; background:rgba(0,0,0,0.95); padding:30px; }
+    #feedback { position:fixed; inset:0; display:none; flex-direction:column; align-items:center; justify-content:center; color:#fff; z-index:9999; text-align:center; background:rgba(0,0,0,0.95); padding:30px; cursor:pointer; }
     .fb-math-ans { font-size:38px; background:rgba(255,255,255,0.1); padding:25px 50px; border-radius:15px; border:2px solid var(--accent); margin-top:20px; min-width:200px; }
     #fb-details { margin-top:8px; font-size:18px; font-weight:600; }
 
@@ -78,15 +80,15 @@
   </div>
 
   <div id="quiz-selection">
-    https://raw.githubusercontent.com/mathlogi/quiz/main/PREPARA%C3%87%C3%83O%20EXAME%209%C2%BAANO%20(11).svg
+    <img src="https://raw.githubusercontent.com/mathlogi/quiz/main/PREPARA%C3%87%C3%83O%20EXAME%209%C2%BAANO%20(11).svg" style="max-width:160px; margin-bottom:15px;" alt="Math Logi Lab">
     <div id="quiz-list"></div>
   </div>
 
-  <div id="game-ui" class="hidden" aria-live="polite">
+  <div id="game-ui" class="hidden">
     <div class="top-bar">
       <div id="left-top">
         <span id="q-info">Questão</span>
-        <span id="streak-icon">🔥 x4</span>
+        <span id="streak-icon">🔥 x0</span>
       </div>
       <span id="score-val">0 pts</span>
       <span id="t-txt">120s</span>
@@ -100,22 +102,50 @@
     </div>
 
     <div class="box">
-      <div id="img-q" aria-live="polite"></div>
+      <div id="img-q"></div>
       <div id="txt-q" style="font-size:22px;"></div>
 
       <div id="short-zone" class="hidden">
         <div id="math-field"></div>
 
-        <!-- TABS -->
         <div class="kb-tabs">
           <button class="kb-tab active" data-tab="basic">Básico</button>
           <button class="kb-tab" data-tab="algebra">Álgebra</button>
           <button class="kb-tab" data-tab="edit">Edição</button>
         </div>
 
-        <!-- TECLADO (5.º–12.º) -->
         <div id="math-keyboard">
-          <!-- (… mantém o teclado como já está …) -->
+          <div class="kb-group active" data-tab="basic">
+            <div class="kb-row">
+              <button class="kb-btn" data-write="7">7</button>
+              <button class="kb-btn" data-write="8">8</button>
+              <button class="kb-btn" data-write="9">9</button>
+              <button class="kb-btn" data-write="+">+</button>
+              <button class="kb-btn" data-write="-">−</button>
+            </div>
+            <div class="kb-row">
+              <button class="kb-btn" data-write="\frac{}{}">a/b</button>
+              <button class="kb-btn" data-write="^{}">xⁿ</button>
+              <button class="kb-btn" data-write="\sqrt{}">√</button>
+              <button class="kb-btn" data-write="(">(</button>
+              <button class="kb-btn" data-write=")">)</button>
+            </div>
+          </div>
+          <div class="kb-group" data-tab="algebra">
+            <div class="kb-row">
+              <button class="kb-btn" data-write="x">x</button>
+              <button class="kb-btn" data-write="y">y</button>
+              <button class="kb-btn" data-write="=">=</button>
+              <button class="kb-btn" data-write="\pi">π</button>
+              <button class="kb-btn" data-write="\infty">∞</button>
+            </div>
+          </div>
+          <div class="kb-group" data-tab="edit">
+            <div class="kb-row">
+              <button class="kb-btn" data-key="Backspace">⌫</button>
+              <button class="kb-btn" data-clear="true">C</button>
+            </div>
+          </div>
         </div>
 
         <br><button id="short-submit" class="submit-btn">SUBMETER</button>
@@ -124,9 +154,9 @@
     <div id="opt-grid" class="options"></div>
   </div>
 
-  <div id="feedback" role="dialog" aria-modal="true">
-    <div id="fb-icon" style="font-size:80px;"></div>
-    <div id="fb-msg" style="font-size:30px; font-weight:bold; margin-top:10px;"></div>
+  <div id="feedback">
+    <div id="fb-icon"></div>
+    <div id="fb-msg"></div>
     <div id="fb-details"></div>
     <div id="fb-correct-ans" class="fb-math-ans"></div>
     <div style="margin-top:12px; opacity:.85; font-size:14px;">Toca para continuar</div>
@@ -140,15 +170,12 @@
     <button id="btn-back" class="submit-btn" style="background:var(--primary)">VOLTAR</button>
   </div>
 
-  <!-- JS de bibliotecas (com defer) -->
-  https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js</script>
-  https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js</script>
-  https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.min.js</script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.min.js"></script>
 
-  <!-- A tua base de perguntas TEM de vir antes do app.js -->
-  perguntas.js</script>
-
-  <!-- A app (listeners do OK e restante lógica) -->
-  app.js</script>
+  <script src="perguntas.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
