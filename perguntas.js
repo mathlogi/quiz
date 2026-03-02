@@ -238,6 +238,215 @@ window.database = [
                 "ans": "-1"
             }
         ]
-    }
+    },
+    {
+    "id": "mat_6ano_01",
+    "title": "Quiz de Revisão - Matemática 6.º Ano",
+    "questions": [
+        {
+            "type": "multiple",
+            "q": "Dois ângulos são complementares. Se um mede $35^{\circ}$, qual é a amplitude do outro?",
+            "img": "",
+            "opts": ["$45^{\circ}$", "$55^{\circ}$", "$145^{\circ}$", "$65^{\circ}$"],
+            "ans": 1
+        },
+        {
+            "type": "multiple",
+            "q": "Qual é a soma dos ângulos internos de qualquer triângulo?",
+            "img": "",
+            "opts": ["$90^{\circ}$", "$360^{\circ}$", "$180^{\circ}$", "$270^{\circ}$"],
+            "ans": 2
+        },
+        {
+            "type": "short",
+            "q": "Como se denomina um polígono com 6 lados?",
+            "img": "",
+            "ans": "hexágono"
+        },
+        {
+            "type": "multiple",
+            "q": "Qual destas transformações geométricas é uma isometria que mantém a orientação da figura?",
+            "img": "",
+            "opts": ["Reflexão", "Reflexão deslizante", "Translação", "Simetria central"],
+            "ans": 2
+        },
+        {
+            "type": "multiple",
+            "q": "Calcula o valor da seguinte expressão: $\\frac{1}{2} + \\frac{1}{4}$.",
+            "img": "",
+            "opts": ["$\\frac{2}{6}$", "$\\frac{1}{6}$", "$\\frac{3}{4}$", "$\\frac{2}{4}$"],
+            "ans": 2
+        },
+        {
+            "type": "multiple",
+            "q": "Um triângulo que possui um ângulo de $110^{\circ}$ é classificado como:",
+            "img": "",
+            "opts": ["Acutângulo", "Retângulo", "Obtusângulo", "Equilátero"],
+            "ans": 2
+        },
+        {
+            "type": "multiple",
+            "q": "O suplemento de um ângulo de $70^{\circ}$ é:",
+            "img": "",
+            "opts": ["$20^{\circ}$", "$110^{\circ}$", "$180^{\circ}$", "$90^{\circ}$"],
+            "ans": 1
+        },
+        {
+            "type": "short",
+            "q": "Como se chama o lado oposto ao ângulo reto num triângulo retângulo?",
+            "img": "",
+            "ans": "hipotenusa"
+        },
+        {
+            "type": "multiple",
+            "q": "Qual é o valor decimal da fração $\\frac{3}{5}$?",
+            "img": "",
+            "opts": ["$0,3$", "$0,5$", "$0,6$", "$1,5$"],
+            "ans": 2
+        },
+        {
+            "type": "multiple",
+            "q": "Quantas diagonais partem de cada vértice de um pentágono?",
+            "img": "",
+            "opts": ["$2$", "$3$", "$5$", "$1$"],
+            "ans": 0
+        },
+        {
+            "type": "multiple",
+            "q": "Qual é o resultado de $\\frac{2}{3} \\times \\frac{4}{5}$?",
+            "img": "",
+            "opts": ["$\\frac{8}{15}$", "$\\frac{6}{8}$", "$\\frac{10}{12}$", "$\\frac{8}{8}$"],
+            "ans": 0
+        },
+        {
+            "type": "short",
+            "q": "Qual é o nome da isometria associada a um espelho?",
+            "img": "",
+            "ans": "reflexão"
+        },
+        {
+            "type": "multiple",
+            "q": "Se dois lados de um triângulo medem $5$ cm e $8$ cm, qual destes valores NÃO pode ser a medida do terceiro lado?",
+            "img": "",
+            "opts": ["$4$ cm", "$7$ cm", "$12$ cm", "$14$ cm"],
+            "ans": 3
+        },
+        {
+            "type": "multiple",
+            "q": "Um ângulo de $90^{\circ}$ chama-se:",
+            "img": "",
+            "opts": ["Raso", "Agudo", "Reto", "Obtuso"],
+            "ans": 2
+        },
+        {
+            "type": "multiple",
+            "q": "A fração inversa de $\\frac{4}{7}$ é:",
+            "img": "",
+            "opts": ["$-\\frac{4}{7}$", "$\\frac{7}{4}$", "$\\frac{1}{4}$", "$\\frac{4}{1}$"],
+            "ans": 1
+        },
+        {
+            "type": "short",
+            "q": "Qual é o polígono regular com o menor número de lados?",
+            "img": "",
+            "ans": "triângulo equilátero"
+        },
+        {
+            "type": "multiple",
+            "q": "Numa rotação de $180^{\circ}$, o centro de rotação é o único ponto:",
+            "img": "",
+            "opts": ["Móvel", "Invariante", "De reflexão", "Distante"],
+            "ans": 1
+        },
+        {
+            "type": "multiple",
+            "q": "Qual é o valor de $2 - \\frac{1}{3}$?",
+            "img": "",
+            "opts": ["$\\frac{1}{3}$", "$\\frac{5}{3}$", "$\\frac{6}{3}$", "$\\frac{4}{3}$"],
+            "ans": 1
+        },
+        {
+            "type": "multiple",
+            "q": "Dois ângulos verticalmente opostos são sempre:",
+            "img": "",
+            "opts": ["Complementares", "Suplementares", "Adjacentes", "Iguais"],
+            "ans": 3
+        },
+        {
+            "type": "short",
+            "q": "Como se chama um triângulo com todos os lados iguais?",
+            "img": "",
+            "ans": "equilátero"
+        },
+        {
+            "type": "multiple",
+            "q": "Qual é a dízima correspondente a $\\frac{1}{3}$?",
+            "img": "",
+            "opts": ["$0,3$", "$0,33$", "$0,(3)$", "$3,0$"],
+            "ans": 2
+        },
+        {
+            "type": "multiple",
+            "q": "O perímetro de um quadrado com $6$ cm de lado é:",
+            "img": "",
+            "opts": ["$12$ cm", "$24$ cm", "$36$ cm", "$18$ cm"],
+            "ans": 1
+        },
+        {
+            "type": "multiple",
+            "q": "Numa translação, a figura original e a imagem são:",
+            "img": "",
+            "opts": ["Diferentes", "Semelhantes mas não iguais", "Congruentes", "Inversas"],
+            "ans": 2
+        },
+        {
+            "type": "short",
+            "q": "Qual é o resultado de $\\frac{3}{4} \\div \\frac{3}{4}$?",
+            "img": "",
+            "ans": "1"
+        },
+        {
+            "type": "multiple",
+            "q": "Um polígono convexo é aquele em que todos os seus ângulos internos são:",
+            "img": "",
+            "opts": ["Maiores que $180^{\circ}$", "Menores que $180^{\circ}$", "Iguais a $90^{\circ}$", "Maiores que $360^{\circ}$"],
+            "ans": 1
+        },
+        {
+            "type": "multiple",
+            "q": "Se um triângulo é isósceles e tem um ângulo de $100^{\circ}$, os outros dois medem:",
+            "img": "",
+            "opts": ["$40^{\circ}$ cada", "$80^{\circ}$ cada", "$100^{\circ}$ cada", "$50^{\circ}$ cada"],
+            "ans": 0
+        },
+        {
+            "type": "multiple",
+            "q": "Qual fração é equivalente a $\\frac{2}{5}$?",
+            "img": "",
+            "opts": ["$\\frac{4}{7}$", "$\\frac{6}{15}$", "$\\frac{10}{20}$", "$\\frac{4}{8}$"],
+            "ans": 1
+        },
+        {
+            "type": "short",
+            "q": "Quantos eixos de simetria tem um retângulo (não quadrado)?",
+            "img": "",
+            "ans": "2"
+        },
+        {
+            "type": "multiple",
+            "q": "O ângulo formado pelos ponteiros de um relógio às 3 horas exatas é:",
+            "img": "",
+            "opts": ["Agudo", "Raso", "Reto", "Obtuso"],
+            "ans": 2
+        },
+        {
+            "type": "multiple",
+            "q": "Na expressão $x + \\frac{1}{2} = 1$, qual é o valor de $x$?",
+            "img": "",
+            "opts": ["$\\frac{1}{2}$", "$1$", "$\\frac{3}{2}$", "$0$"],
+            "ans": 0
+        }
+    ]
+}
 
 ];
