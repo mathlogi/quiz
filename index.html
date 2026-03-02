@@ -150,20 +150,38 @@
             <div class="kb-row">
               <button class="kb-btn wide" onclick="mqWrite('\\frac{}{}')">a/b</button>
               <button class="kb-btn" onclick="mqWrite('^{}')">xⁿ</button>
+              <button class="kb-btn" onclick="mqWrite('_{}')">xₙ</button>
               <button class="kb-btn" onclick="mqWrite('\\sqrt{}')">√</button>
+              <button class="kb-btn" onclick="mqWrite('\\sqrt[]{}')">ⁿ√</button>
               <button class="kb-btn" onclick="mqWrite('(')">(</button>
               <button class="kb-btn" onclick="mqWrite(')')">)</button>
+              <button class="kb-btn" onclick="mqWrite('[')">[</button>
+              <button class="kb-btn" onclick="mqWrite(']')">]</button>
+              <button class="kb-btn" onclick="mqWrite('\\{')">{</button>
+              <button class="kb-btn" onclick="mqWrite('\\}')">}</button>
+              <button class="kb-btn" onclick="mqWrite('| |')">| |</button>
+            </div>
+            <div class="kb-row">
+              <button class="kb-btn" onclick="mqWrite('\\pi')">π</button>
+              <button class="kb-btn" onclick="mqWrite('e')">e</button>
+              <button class="kb-btn" onclick="mqWrite('x')">x</button>
+              <button class="kb-btn" onclick="mqWrite('y')">y</button>
+              <button class="kb-btn" onclick="mqWrite('z')">z</button>
+              <button class="kb-btn" onclick="mqWrite('=')">=</button>
+              <button class="kb-btn" onclick="mqWrite(',')">,</button>
             </div>
           </div>
 
           <div class="kb-group" data-tab="algebra">
             <div class="kb-row">
-              <button class="kb-btn" onclick="mqWrite('x')">x</button>
-              <button class="kb-btn" onclick="mqWrite('y')">y</button>
-              <button class="kb-btn" onclick="mqWrite('z')">z</button>
               <button class="kb-btn" onclick="mqWrite('a')">a</button>
               <button class="kb-btn" onclick="mqWrite('b')">b</button>
-              <button class="kb-btn" onclick="mqWrite('=')">=</button>
+              <button class="kb-btn" onclick="mqWrite('c')">c</button>
+              <button class="kb-btn" onclick="mqWrite('m')">m</button>
+              <button class="kb-btn" onclick="mqWrite('n')">n</button>
+              <button class="kb-btn" onclick="mqWrite('\\binom{}{}')">nCk</button>
+              <button class="kb-btn" onclick="mqWrite('\\approx')">≈</button>
+              <button class="kb-btn" onclick="mqWrite('\\propto')">∝</button>
             </div>
             <div class="kb-row">
               <button class="kb-btn" onclick="mqWrite('<')">&lt;</button>
@@ -172,6 +190,12 @@
               <button class="kb-btn" onclick="mqWrite('\\ge')">≥</button>
               <button class="kb-btn" onclick="mqWrite('\\neq')">≠</button>
             </div>
+            <div class="kb-row">
+              <button class="kb-btn wide" onclick="mqWrite('\\begin{cases} \\\\ \\end{cases}')">Sistema {}</button>
+              <button class="kb-btn" onclick="mqWrite('\\overline{}')">sobrelinha</button>
+              <button class="kb-btn" onclick="mqWrite('\\lfloor\\rfloor')">⌊ ⌋</button>
+              <button class="kb-btn" onclick="mqWrite('\\lceil\\rceil')">⌈ ⌉</button>
+            </div>
           </div>
 
           <div class="kb-group" data-tab="triglog">
@@ -179,22 +203,28 @@
               <button class="kb-btn" onclick="mqWrite('\\sin')">sin</button>
               <button class="kb-btn" onclick="mqWrite('\\cos')">cos</button>
               <button class="kb-btn" onclick="mqWrite('\\tan')">tan</button>
-              <button class="kb-btn" onclick="mqWrite('\\ln')">ln</button>
-              <button class="kb-btn" onclick="mqWrite('\\log')">log</button>
+              <button class="kb-btn" onclick="mqWrite('\\arcsin')">arcsin</button>
+              <button class="kb-btn" onclick="mqWrite('\\arccos')">arccos</button>
+              <button class="kb-btn" onclick="mqWrite('\\arctan')">arctan</button>
+              <button class="kb-btn" onclick="mqWrite('^{{-1}}')">x⁻¹</button>
+              <button class="kb-btn" onclick="mqWrite('^\\circ')">°</button>
             </div>
             <div class="kb-row">
-              <button class="kb-btn" onclick="mqWrite('\\pi')">π</button>
-              <button class="kb-btn" onclick="mqWrite('^\\circ')">°</button>
-              <button class="kb-btn" onclick="mqWrite('e')">e</button>
+              <button class="kb-btn" onclick="mqWrite('\\ln')">ln</button>
+              <button class="kb-btn" onclick="mqWrite('\\log')">log</button>
+              <button class="kb-btn wide" onclick="mqWrite('\\log_{}()')">log₍₎ base</button>
             </div>
           </div>
 
           <div class="kb-group" data-tab="calc">
             <div class="kb-row">
               <button class="kb-btn wide" onclick="mqWrite('\\lim_{x\\to }')">lim x→</button>
+              <button class="kb-btn" onclick="mqWrite('\\to')">→</button>
+              <button class="kb-btn wide" onclick="mqWrite('\\frac{d}{dx}')">d/dx</button>
               <button class="kb-btn" onclick="mqWrite('\\int')">∫</button>
-              <button class="kb-btn" onclick="mqWrite('\\sum')">∑</button>
-              <button class="kb-btn" onclick="mqWrite('\\infty')">∞</button>
+              <button class="kb-btn wide" onclick="mqWrite('\\int_{}^{}')">∫ a^b</button>
+              <button class="kb-btn" onclick="mqWrite('\\sum_{}^{}')">∑</button>
+              <button class="kb-btn" onclick="mqWrite('\\prod_{}^{}')">∏</button>
             </div>
           </div>
 
@@ -202,24 +232,52 @@
             <div class="kb-row">
               <button class="kb-btn" onclick="mqWrite('\\in')">∈</button>
               <button class="kb-btn" onclick="mqWrite('\\notin')">∉</button>
+              <button class="kb-btn" onclick="mqWrite('\\subset')">⊂</button>
+              <button class="kb-btn" onclick="mqWrite('\\subseteq')">⊆</button>
               <button class="kb-btn" onclick="mqWrite('\\cup')">∪</button>
               <button class="kb-btn" onclick="mqWrite('\\cap')">∩</button>
-              <button class="kb-btn" onclick="mqWrite('\\mathbb{R}')">ℝ</button>
+            </div>
+            <div class="kb-row">
+              <button class="kb-btn" onclick="mqWrite('\\forall')">∀</button>
+              <button class="kb-btn" onclick="mqWrite('\\exists')">∃</button>
+              <button class="kb-btn" onclick="mqWrite('\\neg')">¬</button>
+              <button class="kb-btn" onclick="mqWrite('\\land')">∧</button>
+              <button class="kb-btn" onclick="mqWrite('\\lor')">∨</button>
+              <button class="kb-btn" onclick="mqWrite('\\implies')">⇒</button>
+              <button class="kb-btn" onclick="mqWrite('\\iff')">⇔</button>
             </div>
           </div>
 
           <div class="kb-group" data-tab="vectors">
             <div class="kb-row">
-              <button class="kb-btn" onclick="mqWrite('\\vec{u}')">→u</button>
-              <button class="kb-btn wide" onclick="mqWrite('\\begin{bmatrix} a & b \\\\ c & d \\end{bmatrix}')">Matriz</button>
+              <button class="kb-btn" onclick="mqWrite('\\vec{v}')">→v</button>
+              <button class="kb-btn" onclick="mqWrite('\\cdot')">·</button>
+              <button class="kb-btn" onclick="mqWrite('\\times')">×</button>
+              <button class="kb-btn wide" onclick="mqWrite('\\|\\|\\,\\|\\|')">‖ ‖</button>
+              <button class="kb-btn" onclick="mqWrite('\\angle')">∠</button>
+            </div>
+            <div class="kb-row">
+              <button class="kb-btn wide" onclick="mqWrite('\\begin{bmatrix} a & b \\\\ c & d \\end{bmatrix}')">Matriz 2×2</button>
+              <button class="kb-btn wide" onclick="mqWrite('\\begin{pmatrix}  \\end{pmatrix}')">( ) matriz</button>
             </div>
           </div>
 
           <div class="kb-group" data-tab="complex">
             <div class="kb-row">
               <button class="kb-btn" onclick="mqWrite('i')">i</button>
+              <button class="kb-btn" onclick="mqWrite('\\overline{z}')">z̄</button>
+              <button class="kb-btn" onclick="mqWrite('\\Re')">Re</button>
+              <button class="kb-btn" onclick="mqWrite('\\Im')">Im</button>
+              <button class="kb-btn" onclick="mqWrite('\\infty')">∞</button>
               <button class="kb-btn" onclick="mqWrite('\\alpha')">α</button>
+              <button class="kb-btn" onclick="mqWrite('\\beta')">β</button>
+              <button class="kb-btn" onclick="mqWrite('\\gamma')">γ</button>
               <button class="kb-btn" onclick="mqWrite('\\theta')">θ</button>
+              <button class="kb-btn" onclick="mqWrite('\\lambda')">λ</button>
+              <button class="kb-btn" onclick="mqWrite('\\mu')">μ</button>
+              <button class="kb-btn" onclick="mqWrite('\\sigma')">σ</button>
+              <button class="kb-btn" onclick="mqWrite('\\phi')">φ</button>
+              <button class="kb-btn" onclick="mqWrite('\\omega')">ω</button>
             </div>
           </div>
 
@@ -229,6 +287,7 @@
               <button class="kb-btn" onclick="mqKey('Left')">◀</button>
               <button class="kb-btn" onclick="mqKey('Right')">▶</button>
               <button class="kb-btn wide" onclick="mqClear()">C Limpar</button>
+              <button class="kb-btn wide" onclick="checkShort()">Enter</button>
             </div>
           </div>
         </div>
@@ -262,11 +321,5 @@
 
   <script src="perguntas.js"></script>
   <script src="app.js"></script>
-
-  <script>
-    // Pequena ponte necessária para os botões do teclado chamarem as funções do app.js
-    // Se as funções mqWrite, mqKey e mqClear não estiverem globais no app.js, 
-    // garante que as adicionas ao objeto window dentro do app.js.
-  </script>
 </body>
 </html>
