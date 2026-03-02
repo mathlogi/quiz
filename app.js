@@ -26,6 +26,29 @@
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const shuffle = arr => arr.map(v=>[v,Math.random()]).sort((a,b)=>a[1]-b[1]).map(x=>x[0]);
 
+  // ====== FUNÇÕES GLOBAIS (PARA O HTML ENCONTRAR) ======
+  window.mqWrite = (latex) => {
+    if (!mathField) return;
+    mathField.write(latex);
+    mathField.focus();
+  };
+
+  window.mqKey = (key) => {
+    if (!mathField) return;
+    mathField.keystroke(key);
+    mathField.focus();
+  };
+
+  window.mqClear = () => {
+    if (!mathField) return;
+    mathField.latex('');
+    mathField.focus();
+  };
+
+  window.checkShort = () => {
+    checkShortInternal();
+  };
+
   function updatePwrButtons() {
     $('#pwr-50').disabled = pwrUsed.fifty;
     $('#pwr-x3').disabled = pwrUsed.x3;
@@ -55,6 +78,7 @@
 
   function showStreak(){
     const el = $('#streak-icon');
+    if(!el) return;
     if(streak > 3){ // foguinho quando >3 seguidas (4+)
       el.style.display = 'inline-block';
       el.textContent = `🔥 x${streak}`;
@@ -92,7 +116,6 @@
   function nearlyEqual(a,b,eps=1e-6){ return Math.abs(a-b) <= eps; }
 
   // ====== BÓNUS POR TEMPO (PATAMARES) ======
-  // <=30s -> +20, <=60s -> +15, <=90s -> +10, senão +0
   function timeBonus(){
     const used = clamp(120 - tLeft, 0, 120);
     if (used <= 30) return 20;
@@ -102,17 +125,9 @@
   }
 
   function isFireActiveBeforeAnswer(){
-    // "Foguinho ativo" significa vir de >3 certas seguidas ANTES desta resposta
     return streak > 3;
   }
 
-  /**
-   * Breakdown de pontos para a questão atual (se certa):
-   * - base: 50
-   * - bónus tempo: patamares
-   * - bónus fogo: +15 se streak >3 (antes da resposta)
-   * - total: (base + tempo + fogo) * 3 se x3 ativo; senão valor simples
-   */
   function pointsForQuestion(fireActive){
     const base = 50;
     const bonusTime = timeBonus();
@@ -123,7 +138,7 @@
   }
 
   // ====== FLUXO ======
-  function goToMenu(){
+  window.goToMenu = () => {
     const input = $('#player-name-input');
     playerName = input.value.trim();
     if(!playerName) { alert('Nome sff!'); return; }
@@ -131,7 +146,7 @@
     $('#login-screen').classList.add('hidden');
     $('#quiz-selection').style.display = 'block';
     renderQuizList();
-  }
+  };
 
   function renderQuizList(){
     const list = $('#quiz-list');
@@ -154,7 +169,6 @@
 
     quiz = JSON.parse(JSON.stringify(base));
 
-    // baralhar opções e reajustar índice correto
     quiz.questions.forEach(q => {
       if(q.type === 'multiple'){
         const pairs = q.opts.map((o,i)=>({o,i}));
@@ -164,16 +178,13 @@
       }
     });
 
-    // baralhar perguntas
     quiz.questions = shuffle(quiz.questions);
 
-    // reset estado
     cur = 0; pts = 0; correctCount = 0; wrongCount = 0; streak = 0;
     pwrUsed = {fifty:false, x3:false, stop:false};
     updatePwrButtons();
     showStreak();
 
-    // UI
     $('#quiz-selection').style.display = 'none';
     $('#game-ui').classList.remove('hidden');
 
@@ -233,7 +244,7 @@
     q.opts.forEach((opt, i) => {
       const btn = document.createElement('button');
       btn.className = 'opt-btn';
-      btn.textContent = opt; // seguro
+      btn.textContent = opt; 
       btn.addEventListener('click', () => validateOption(i));
       grid.appendChild(btn);
     });
@@ -248,7 +259,7 @@
     validate(isCorrect, rightAns);
   }
 
-  function use5050(){
+  window.use5050 = () => {
     const q = quiz.questions[cur];
     if(q.type !== 'multiple') return;
     if(pwrUsed.fifty) return;
@@ -261,20 +272,20 @@
       .sort(() => Math.random() - 0.5)
       .slice(0,2);
     toHide.forEach(x => x.b.classList.add('wrong-option'));
-  }
+  };
 
-  function useX3(){
+  window.useX3 = () => {
     if(pwrUsed.x3) return;
     pwrUsed.x3 = true; isX3 = true; updatePwrButtons();
-  }
+  };
 
-  function useStop(){
+  window.useStop = () => {
     if(pwrUsed.stop) return;
     pwrUsed.stop = true; updatePwrButtons();
     setTimerPaused(true);
-  }
+  };
 
-  function checkShort(){
+  function checkShortInternal(){
     const q = quiz.questions[cur];
     const userRaw = mathField.latex();
     const correctRaw = q.ans;
@@ -304,12 +315,11 @@
     const det = $('#fb-details');
 
     if(isCorrect){
-      // Determina se o foguinho já estava ativo ANTES desta resposta
       const fireActive = isFireActiveBeforeAnswer();
-      const { base, bonusTime, bonusFire, subtotal, total, x3 } = pointsForQuestion(fireActive);
+      const { base, bonusTime, bonusFire, total, x3 } = pointsForQuestion(fireActive);
 
-      pts += total;          // score total visível
-      correctCount += 1;     // para percentagem
+      pts += total;
+      correctCount += 1;
       streak += 1;
       $('#score-val').innerText = `${pts} pts`;
       showStreak();
@@ -317,10 +327,9 @@
       $('#fb-icon').innerText = '🎯';
       $('#fb-msg').innerText = 'CORRETO!';
 
-      // Mensagem detalhada
       const parts = [`Base: +${base}`, `Bónus tempo: +${bonusTime}`];
-      if (bonusFire > 0) parts.push(`Bónus 🔥: +${bonusFire}`);
-      if (x3) parts.push('x3 aplicado');
+      if (bonusFire > 0) parts.push(`🔥: +${bonusFire}`);
+      if (x3) parts.push('x3!');
       det.textContent = `${parts.join(' | ')} → +${total} pts`;
 
       ansBox.style.display = 'none';
@@ -332,14 +341,16 @@
 
       $('#fb-icon').innerText = '❌';
       $('#fb-msg').innerText = 'Resposta:';
-      det.textContent = '0 pts nesta questão';
+      det.textContent = '0 pts';
 
       ansBox.style.display = 'block';
       ansBox.innerHTML = '';
+      // Garante que o KaTeX renderiza a resposta no feedback
+      const latexAns = String(rightAns).replace(/\\\\/g, '\\');
       try {
-        katex.render(String(rightAns), ansBox, { throwOnError: false });
+        katex.render(latexAns, ansBox, { throwOnError: false });
       } catch {
-        ansBox.textContent = String(rightAns);
+        ansBox.textContent = latexAns;
       }
       fb.style.background = 'rgba(208, 0, 0, 0.98)';
     }
@@ -347,7 +358,7 @@
     fb.style.display = 'flex';
   }
 
-  function closeFeedbackAndContinue(){
+  window.closeFeedbackAndContinue = () => {
     if(feedbackLocked) return;
     feedbackLocked = true;
     setTimeout(() => feedbackLocked = false, 350);
@@ -355,9 +366,8 @@
     $('#feedback').style.display = 'none';
     cur++;
     if(cur < quiz.questions.length) loadQuestion(); else finish();
-  }
+  };
 
-  // ====== FIM & RANKING POR QUIZ ======
   async function finish(){
     $('#game-ui').classList.add('hidden');
     $('#rank-screen').classList.remove('hidden');
@@ -375,18 +385,10 @@
       });
       const data = await res.json();
 
-      // Suporta estilos antigos (array) e novos (objeto)
       let root = data.record;
       if (root && root.record !== undefined) root = root.record;
 
-      let store;
-      if (Array.isArray(root)) {
-        store = {}; // migrar de global antigo para objeto
-      } else if (root && typeof root === 'object') {
-        store = root;
-      } else {
-        store = {};
-      }
+      let store = (root && typeof root === 'object' && !Array.isArray(root)) ? root : {};
 
       const qid = quiz.id || 'default';
       const currentList = Array.isArray(store[qid]) ? store[qid] : [];
@@ -398,10 +400,7 @@
 
       await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Master-Key': API_KEY
-        },
+        headers: { 'Content-Type': 'application/json', 'X-Master-Key': API_KEY },
         body: JSON.stringify({ record: store })
       });
 
@@ -414,11 +413,12 @@
     }
   }
 
-  // ====== INICIALIZAÇÃO ======
   window.addEventListener('DOMContentLoaded', () => {
-    // MathQuill
     MQ = MathQuill.getInterface(2);
-    mathField = MQ.MathField($('#math-field'), { handlers: { enter: checkShort } });
+    const mf = $('#math-field');
+    if(mf) {
+      mathField = MQ.MathField(mf, { handlers: { enter: checkShortInternal } });
+    }
 
     // Tabs do teclado
     $$('.kb-tab').forEach(tab => {
@@ -426,42 +426,20 @@
         $$('.kb-tab').forEach(t => t.classList.remove('active'));
         $$('.kb-group').forEach(g => g.classList.remove('active'));
         tab.classList.add('active');
-        $(`.kb-group[data-tab="${tab.dataset.tab}"]`).classList.add('active');
+        const group = $(`.kb-group[data-tab="${tab.dataset.tab}"]`);
+        if(group) group.classList.add('active');
       });
     });
 
-    // Botões do teclado
-    $$('#math-keyboard .kb-btn').forEach(btn => {
-      if(btn.dataset.write){
-        btn.addEventListener('click', () => { mathField.write(btn.dataset.write); mathField.focus(); });
-      }
-      if(btn.dataset.key){
-        btn.addEventListener('click', () => { mathField.keystroke(btn.dataset.key); mathField.focus(); });
-      }
-      if(btn.dataset.clear){
-        btn.addEventListener('click', () => { mathField.latex(''); mathField.focus(); });
-      }
-    });
-
     // Login OK
-    $('#ok-btn').addEventListener('click', goToMenu);
+    const okBtn = $('#ok-btn');
+    if(okBtn) okBtn.addEventListener('click', goToMenu);
 
-    // Persistir nome
     const saved = localStorage.getItem('playerName');
-    if(saved) $('#player-name-input').value = saved;
+    if(saved && $('#player-name-input')) $('#player-name-input').value = saved;
 
-    // Power-ups
-    $('#pwr-50').addEventListener('click', use5050);
-    $('#pwr-x3').addEventListener('click', useX3);
-    $('#pwr-stop').addEventListener('click', useStop);
-
-    // Submeter resposta curta
-    $('#short-submit').addEventListener('click', checkShort);
-
-    // Feedback overlay
-    $('#feedback').addEventListener('click', closeFeedbackAndContinue);
-
-    // Voltar
-    $('#btn-back').addEventListener('click', () => location.reload());
+    if($('#short-submit')) $('#short-submit').addEventListener('click', checkShortInternal);
+    if($('#feedback')) $('#feedback').addEventListener('click', window.closeFeedbackAndContinue);
+    if($('#btn-back')) $('#btn-back').addEventListener('click', () => location.reload());
   });
 })();
