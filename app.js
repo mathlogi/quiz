@@ -113,6 +113,17 @@
       .replace(/,/g, '.')
       .replace(/\s+/g, '');
   }
+  
+  // ====== NOVO: NORMALIZAÇÃO DE TEXTO HUMANO ======
+  function normalizeHumanText(text) {
+    return text
+      .toLowerCase()                                        // Tudo em minúsculas
+      .normalize("NFD")                                     // Decompõe caracteres acentuados
+      .replace(/[\u0300-\u036f]/g, "")                     // Remove os acentos
+      .replace(/\\text\s*\{([^}]*)\}/g, '$1')              // Remove macros \text{} do LaTeX
+      .replace(/[^a-z0-9 ]/g, "")                          // Remove símbolos extras
+      .trim();                                              // Limpa espaços
+  }
 
   function latexFractionToNumber(lx){
     const m = lx.match(/^\\frac\{(-?\d+(?:\.\d+)?)\}\{(-?\d+(?:\.\d+)?)\}$/);
@@ -303,6 +314,7 @@
     const userRaw = mathField.latex();
     const correctRaw = q.ans;
 
+    // 1. Normalização Matemática (Limpeza de LaTeX)
     const user = normalizeLatex(userRaw);
     const correct = normalizeLatex(correctRaw);
 
@@ -310,9 +322,18 @@
       return validate(true, correctRaw);
     }
 
+    // 2. Comparação Numérica (Ex: 0.5 vs 1/2)
     const uNum = tryNumberValue(user);
     const cNum = tryNumberValue(correct);
     if(uNum !== null && cNum !== null && nearlyEqual(uNum, cNum)){
+      return validate(true, correctRaw);
+    }
+
+    // 3. Comparação de Texto Humano (Ignora acentos e maiúsculas)
+    const userHuman = normalizeHumanText(userRaw);
+    const correctHuman = normalizeHumanText(correctRaw);
+    
+    if(userHuman !== "" && userHuman === correctHuman){
       return validate(true, correctRaw);
     }
 
