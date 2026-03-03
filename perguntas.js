@@ -849,6 +849,145 @@ window.database = [
             "ans": 1
         }
     ]
+},
+{
+    "id": "mat6_006",
+    "title": "Matemática 6.º Ano - Operações com Frações",
+    "questions": [
+        {
+            "type": "multiple",
+            "q": "Qual é a fração irredutível equivalente a $\\frac{12}{18}$?",
+            "img": "",
+            "opts": ["$\\frac{6}{9}$", "$\\frac{2}{3}$", "$\\frac{3}{4}$", "$\\frac{1}{2}$"],
+            "ans": 1
+        },
+        {
+            "type": "short",
+            "q": "Escreve o inverso do número $0,25$.",
+            "img": "",
+            "ans": "4"
+        },
+        {
+            "type": "multiple",
+            "q": "Calcula a soma: $\\frac{3}{10} + \\frac{2}{5}$.",
+            "img": "",
+            "opts": ["$\\frac{5}{15}$", "$\\frac{7}{10}$", "$\\frac{5}{10}$", "$\\frac{1}{2}$"],
+            "ans": 1
+        },
+        {
+            "type": "multiple",
+            "q": "Qual o resultado de $\\frac{5}{4} - \\frac{1}{2}$?",
+            "img": "",
+            "opts": ["$\\frac{4}{2}$", "$\\frac{3}{4}$", "$\\frac{1}{2}$", "$\\frac{4}{4}$"],
+            "ans": 1
+        },
+        {
+            "type": "multiple",
+            "q": "O produto de $\\frac{2}{3}$ por $\\frac{9}{4}$ é:",
+            "img": "",
+            "opts": ["$\\frac{18}{12}$", "$\\frac{3}{2}$", "$1,5$", "Todas as anteriores"],
+            "ans": 3
+        },
+        {
+            "type": "short",
+            "q": "Calcula a terça parte de $\\frac{9}{5}$.",
+            "img": "",
+            "ans": "3/5"
+        },
+        {
+            "type": "multiple",
+            "q": "Qual é o resultado da divisão $\\frac{3}{5} \\div \\frac{3}{5}$?",
+            "img": "",
+            "opts": ["$0$", "$1$", "$\\frac{9}{25}$", "$\\frac{6}{10}$"],
+            "ans": 1
+        },
+        {
+            "type": "multiple",
+            "q": "Determina o valor de $2 \\div \\frac{1}{2}$.",
+            "img": "",
+            "opts": ["$1$", "$4$", "$0,5$", "$2,5$"],
+            "ans": 1
+        },
+        {
+            "type": "short",
+            "q": "Indica o número que multiplicado por $\\frac{7}{2}$ dá 1.",
+            "img": "",
+            "ans": "2/7"
+        },
+        {
+            "type": "multiple",
+            "q": "Qual o valor da expressão $\\frac{1}{2} \\times \\frac{4}{3} + \\frac{1}{3}$?",
+            "img": "",
+            "opts": ["$1$", "$\\frac{2}{3}$", "$\\frac{5}{6}$", "$\\frac{4}{6}$"],
+            "ans": 0
+        },
+        {
+            "type": "multiple",
+            "q": "Se gastares $\\frac{1}{4}$ de 20 euros, quanto te resta?",
+            "img": "",
+            "opts": ["5€", "10€", "15€", "12€"],
+            "ans": 2
+        },
+        {
+            "type": "short",
+            "q": "Escreve sob a forma de fração a dízima $0,75$.",
+            "img": "",
+            "ans": "3/4"
+        },
+        {
+            "type": "multiple",
+            "q": "Qual é o resultado de $1 - \\frac{1}{3} - \\frac{1}{3}$?",
+            "img": "",
+            "opts": ["$0$", "$\\frac{1}{3}$", "$\\frac{2}{3}$", "$\\frac{1}{6}$"],
+            "ans": 1
+        },
+        {
+            "type": "multiple",
+            "q": "Calcula $\\frac{10}{3} \\times \\frac{1}{5} \\div \\frac{2}{3}$.",
+            "img": "",
+            "opts": ["$1$", "$\\frac{20}{9}$", "$\\frac{4}{9}$", "$\\frac{2}{3}$"],
+            "ans": 0
+        },
+        {
+            "type": "short",
+            "q": "Como se chama a fração cujo numerador é maior que o denominador?",
+            "img": "",
+            "ans": "fração própria"
+        },
+        {
+            "type": "multiple",
+            "q": "O inverso de $1\\frac{1}{2}$ (número misto) é:",
+            "img": "",
+            "opts": ["$\\frac{1}{2}$", "$\\frac{2}{3}$", "$\\frac{3}{2}$", "$2$"],
+            "ans": 1
+        },
+        {
+            "type": "multiple",
+            "q": "Qual destas igualdades é verdadeira?",
+            "img": "",
+            "opts": ["$\\frac{1}{2} + \\frac{1}{2} = \\frac{2}{4}$", "$\\frac{2}{3} \\times 0 = \\frac{2}{3}$", "$\\frac{4}{5} \\div 1 = \\frac{4}{5}$", "$\\frac{1}{3} < \\frac{1}{4}$"],
+            "ans": 2
+        },
+        {
+            "type": "short",
+            "q": "Resolve: $(\\frac{1}{2})^2$.",
+            "img": "",
+            "ans": "1/4"
+        },
+        {
+            "type": "multiple",
+            "q": "Numa turma de 24 alunos, $\\frac{2}{3}$ são raparigas. Quantos são os rapazes?",
+            "img": "",
+            "opts": ["16", "12", "8", "10"],
+            "ans": 2
+        },
+        {
+            "type": "short",
+            "q": "Calcula e simplifica: $\\frac{5}{6} \\div 5$.",
+            "img": "",
+            "ans": "1/6"
+        }
+    ]
 }
 
 ];
