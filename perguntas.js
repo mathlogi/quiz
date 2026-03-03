@@ -988,6 +988,113 @@ window.database = [
             "ans": "1/6"
         }
     ]
+},
+{
+    "id": "mat6_007",
+    "title": "Matemática 6.º Ano - Áreas e Perímetros",
+    "questions": [
+        {
+            "type": "multiple",
+            "q": "Qual é a fórmula correta para calcular o perímetro (P) de uma circunferência dado o raio (r)?",
+            "img": "",
+            "opts": ["P = π × r", "P = 2 × π × r", "P = π × r²", "P = d / π"],
+            "ans": 1
+        },
+        {
+            "type": "multiple",
+            "q": "Se um círculo tem um diâmetro de 10 cm, qual é o valor do seu raio?",
+            "img": "",
+            "opts": ["20 cm", "10 cm", "5 cm", "2,5 cm"],
+            "ans": 2
+        },
+        {
+            "type": "short",
+            "q": "Como se designa a constante grega utilizada para calcular a área do círculo?",
+            "img": "",
+            "ans": "pi"
+        },
+        {
+            "type": "multiple",
+            "q": "Qual é a área de um quadrado com 6 cm de lado?",
+            "img": "",
+            "opts": ["12 cm²", "24 cm²", "36 cm²", "30 cm²"],
+            "ans": 2
+        },
+        {
+            "type": "multiple",
+            "q": "Utilizando π ≈ 3,14, qual é o perímetro de um círculo com 2 m de diâmetro?",
+            "img": "",
+            "opts": ["3,14 m", "6,28 m", "12,56 m", "1,57 m"],
+            "ans": 1
+        },
+        {
+            "type": "short",
+            "q": "Qual é o nome da figura geométrica que corresponde a metade de um círculo?",
+            "img": "",
+            "ans": "semicírculo"
+        },
+        {
+            "type": "multiple",
+            "q": "Se um retângulo tem base 8 cm e altura 4 cm, qual é a sua área?",
+            "img": "",
+            "opts": ["12 cm²", "24 cm²", "32 cm²", "16 cm²"],
+            "ans": 2
+        },
+        {
+            "type": "multiple",
+            "q": "Duas figuras planas que têm a mesma área dizem-se...",
+            "img": "",
+            "opts": ["Semelhantes", "Equivalentes", "Iguais", "Paralelas"],
+            "ans": 1
+        },
+        {
+            "type": "multiple",
+            "q": "Qual é a área de um triângulo com base 6 cm e altura 3 cm?",
+            "img": "",
+            "opts": ["18 cm²", "9 cm²", "12 cm²", "6 cm²"],
+            "ans": 1
+        },
+        {
+            "type": "short",
+            "q": "Complete a fórmula da área do círculo: A = π × ...",
+            "img": "",
+            "ans": "r²"
+        },
+        {
+            "type": "multiple",
+            "q": "Se o raio de uma circunferência triplicar, o que acontece ao diâmetro?",
+            "img": "",
+            "opts": ["Fica igual", "Duplica", "Triplica", "Fica reduzido a metade"],
+            "ans": 2
+        },
+        {
+            "type": "multiple",
+            "q": "Qual é a área aproximada de um círculo com raio 3 cm? (Considera π ≈ 3,14)",
+            "img": "",
+            "opts": ["9,42 cm²", "18,84 cm²", "28,26 cm²", "31,4 cm²"],
+            "ans": 2
+        },
+        {
+            "type": "short",
+            "q": "Como se chama o segmento de reta que une o centro do círculo a qualquer ponto da circunferência?",
+            "img": "",
+            "ans": "raio"
+        },
+        {
+            "type": "multiple",
+            "q": "Um paralelogramo tem base 5 cm e altura 4 cm. Qual é a sua área?",
+            "img": "",
+            "opts": ["9 cm²", "10 cm²", "20 cm²", "15 cm²"],
+            "ans": 2
+        },
+        {
+            "type": "multiple",
+            "q": "Se uma roda de bicicleta tem 30 cm de raio, que distância percorre (aproximadamente) numa volta completa? (π ≈ 3,14)",
+            "img": "",
+            "opts": ["94,2 cm", "188,4 cm", "60 cm", "282,6 cm"],
+            "ans": 1
+        }
+    ]
 }
 
 ];
