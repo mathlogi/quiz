@@ -1,46 +1,8 @@
 window.database = [
-    {
-        id: "mat_01",
-        title: "Matemática 9º Ano - Preparação",
-        questions: [
-            { 
-                type: "multiple", 
-                q: "Qual a área de um triângulo com base 10 e altura 8?", 
-                img: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Triangle.Area.svg/220px-Triangle.Area.svg.png", 
-                opts: ["80", "40", "20", "18"], 
-                ans: 1 
-            },
-            { 
-                type: "short", 
-                q: "Como se chama o polígono de 5 lados?", 
-                img: "", 
-                ans: "pentágono" 
-            }
-        ]
-    },
-    {
-        id: "mat_02",
-        title: "Matemática 10º Ano - Preparação",
-        questions: [
-            { 
-                type: "multiple", 
-                q: "Qual a área de um triângulo com base 10 e altura 8?", 
-                img: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Triangle.Area.svg/220px-Triangle.Area.svg.png", 
-                opts: ["80", "40", "20", "18"], 
-                ans: 1 
-            },
-            { 
-                type: "short", 
-                q: "Como se chama o polígono de 5 lados?", 
-                img: "", 
-                ans: "pentágono" 
-            }
-        ]
-    },
-    
+       
     {
         "id": "mat8_001",
-        "title": "Monómios e Polinómios",
+        "title": "Matemática 8ºano - Monómios e Polinómios",
         "questions": [
             {
                 "type": "multiple",
@@ -240,7 +202,7 @@ window.database = [
         ]
     },
     {
-    "id": "mat_6ano_01",
+    "id": "mat6_001",
     "title": "Quiz de Revisão - Matemática 6.º Ano",
     "questions": [
         {
@@ -445,6 +407,446 @@ window.database = [
             "img": "",
             "opts": ["$\\frac{1}{2}$", "$1$", "$\\frac{3}{2}$", "$0$"],
             "ans": 0
+        }
+    ]
+},
+{
+    "id": "mat6_002",
+    "title": "Matemática 6.º Ano - Operações com Frações",
+    "questions": [
+        {
+            "type": "multiple",
+            "q": "Qual é o resultado de $\\frac{2}{7} + \\frac{3}{7}$?",
+            "img": "",
+            "opts": ["$\\frac{5}{14}$", "$\\frac{5}{7}$", "$\\frac{6}{7}$", "$\\frac{1}{7}$"],
+            "ans": 1
+        },
+        {
+            "type": "multiple",
+            "q": "Calcula $\\frac{1}{2} + \\frac{1}{4}$.",
+            "img": "",
+            "opts": ["$\\frac{2}{6}$", "$\\frac{3}{4}$", "$\\frac{1}{4}$", "$\\frac{2}{4}$"],
+            "ans": 1
+        },
+        {
+            "type": "multiple",
+            "q": "Qual é o valor de $\\frac{5}{6} - \\frac{1}{6}$ na forma simplificada?",
+            "img": "",
+            "opts": ["$\\frac{4}{0}$", "$\\frac{4}{6}$", "$\\frac{2}{3}$", "$1$"],
+            "ans": 2
+        },
+        {
+            "type": "multiple",
+            "q": "Quanto é $\\frac{3}{5} - \\frac{1}{10}$?",
+            "img": "",
+            "opts": ["$\\frac{2}{5}$", "$\\frac{1}{2}$", "$\\frac{4}{10}$", "$\\frac{2}{10}$"],
+            "ans": 1
+        },
+        {
+            "type": "multiple",
+            "q": "Qual o resultado da multiplicação $\\frac{2}{3} \\times \\frac{5}{7}$?",
+            "img": "",
+            "opts": ["$\\frac{7}{10}$", "$\\frac{10}{21}$", "$\\frac{14}{15}$", "$\\frac{10}{10}$"],
+            "ans": 1
+        },
+        {
+            "type": "multiple",
+            "q": "Calcula $4 \\times \\frac{2}{9}$.",
+            "img": "",
+            "opts": ["$\\frac{8}{36}$", "$\\frac{6}{9}$", "$\\frac{8}{9}$", "$\\frac{2}{9}$"],
+            "ans": 2
+        },
+        {
+            "type": "multiple",
+            "q": "Qual é o resultado de $\\frac{3}{4} \\div \\frac{1}{2}$?",
+            "img": "",
+            "opts": ["$\\frac{3}{8}$", "$\\frac{3}{2}$", "$1$", "$\\frac{4}{3}$"],
+            "ans": 1
+        },
+        {
+            "type": "multiple",
+            "q": "Quanto dá a divisão de $\\frac{5}{8}$ por $2$?",
+            "img": "",
+            "opts": ["$\\frac{10}{8}$", "$\\frac{5}{4}$", "$\\frac{5}{16}$", "$\\frac{7}{8}$"],
+            "ans": 2
+        },
+        {
+            "type": "multiple",
+            "q": "O valor de $\\frac{1}{3} + \\frac{1}{3} + \\frac{1}{3}$ é:",
+            "img": "",
+            "opts": ["$\\frac{3}{9}$", "$\\frac{1}{3}$", "$1$", "$\\frac{3}{6}$"],
+            "ans": 2
+        },
+        {
+            "type": "multiple",
+            "q": "Calcula $1 - \\frac{2}{5}$.",
+            "img": "",
+            "opts": ["$\\frac{1}{5}$", "$\\frac{2}{5}$", "$\\frac{3}{5}$", "$-\\frac{1}{5}$"],
+            "ans": 2
+        },
+        {
+            "type": "multiple",
+            "q": "Qual é o resultado de $\\frac{2}{5} \\times \\frac{5}{2}$?",
+            "img": "",
+            "opts": ["$\\frac{10}{10}$", "$1$", "$\\frac{4}{25}$", "$\\frac{25}{4}$"],
+            "ans": 1
+        },
+        {
+            "type": "multiple",
+            "q": "Qual o quociente de $\\frac{4}{9} \\div \\frac{4}{9}$?",
+            "img": "",
+            "opts": ["$0$", "$1$", "$\\frac{16}{81}$", "$\\frac{8}{18}$"],
+            "ans": 1
+        },
+        {
+            "type": "multiple",
+            "q": "Resolve: $\\frac{1}{2} \\times (\\frac{1}{3} + \\frac{2}{3})$.",
+            "img": "",
+            "opts": ["$1$", "$\\frac{1}{2}$", "$\\frac{1}{6}$", "$\\frac{3}{6}$"],
+            "ans": 1
+        },
+        {
+            "type": "multiple",
+            "q": "Calcula $\\frac{7}{12} - \\frac{1}{4}$.",
+            "img": "",
+            "opts": ["$\\frac{6}{8}$", "$\\frac{1}{3}$", "$\\frac{8}{12}$", "$\\frac{1}{4}$"],
+            "ans": 1
+        },
+        {
+            "type": "multiple",
+            "q": "Qual o resultado de $\\frac{3}{2} \\times \\frac{4}{3}$?",
+            "img": "",
+            "opts": ["$\\frac{12}{6}$", "$\\frac{7}{5}$", "$2$", "$1$"],
+            "ans": 2
+        }
+    ]
+},
+{
+    "id": "mat6_003",
+    "title": "Matemática 6.º Ano - Adição e Subtração de Frações",
+    "questions": [
+        {
+            "type": "multiple",
+            "q": "Qual é o resultado de $\\frac{1}{5} + \\frac{2}{5}$?",
+            "img": "",
+            "opts": ["$\\frac{3}{5}$", "$\\frac{3}{10}$", "$\\frac{1}{5}$", "$\\frac{4}{5}$"],
+            "ans": 0
+        },
+        {
+            "type": "multiple",
+            "q": "Calcula $\\frac{7}{8} - \\frac{3}{8}$ e simplifica o resultado.",
+            "img": "",
+            "opts": ["$\\frac{1}{2}$", "$\\frac{4}{0}$", "$\\frac{10}{8}$", "$\\frac{4}{16}$"],
+            "ans": 0
+        },
+        {
+            "type": "multiple",
+            "q": "Qual o valor de $\\frac{1}{2} + \\frac{1}{3}$?",
+            "img": "",
+            "opts": ["$\\frac{2}{5}$", "$\\frac{1}{5}$", "$\\frac{5}{6}$", "$\\frac{1}{6}$"],
+            "ans": 2
+        },
+        {
+            "type": "multiple",
+            "q": "Resolve: $\\frac{3}{4} - \\frac{1}{2}$.",
+            "img": "",
+            "opts": ["$\\frac{2}{2}$", "$\\frac{1}{4}$", "$\\frac{2}{4}$", "$\\frac{1}{2}$"],
+            "ans": 1
+        },
+        {
+            "type": "multiple",
+            "q": "Calcula a soma $1 + \\frac{1}{2}$.",
+            "img": "",
+            "opts": ["$\\frac{1}{2}$", "$\\frac{2}{2}$", "$\\frac{3}{2}$", "$\\frac{2}{1}$"],
+            "ans": 2
+        },
+        {
+            "type": "multiple",
+            "q": "Qual o resultado de $2 - \\frac{2}{3}$?",
+            "img": "",
+            "opts": ["$\\frac{4}{3}$", "$\\frac{0}{3}$", "$\\frac{1}{3}$", "$\\frac{6}{3}$"],
+            "ans": 0
+        },
+        {
+            "type": "multiple",
+            "q": "Quanto é $\\frac{2}{9} + \\frac{4}{9} + \\frac{1}{9}$?",
+            "img": "",
+            "opts": ["$\\frac{6}{9}$", "$\\frac{7}{9}$", "$\\frac{7}{27}$", "$1$"],
+            "ans": 1
+        },
+        {
+            "type": "multiple",
+            "q": "Efetua a operação $\\frac{5}{6} - \\frac{1}{3}$.",
+            "img": "",
+            "opts": ["$\\frac{4}{3}$", "$\\frac{1}{2}$", "$\\frac{4}{6}$", "$\\frac{1}{3}$"],
+            "ans": 1
+        },
+        {
+            "type": "multiple",
+            "q": "Calcula $\\frac{3}{10} + \\frac{2}{5}$.",
+            "img": "",
+            "opts": ["$\\frac{5}{15}$", "$\\frac{7}{10}$", "$\\frac{5}{10}$", "$1$"],
+            "ans": 1
+        },
+        {
+            "type": "multiple",
+            "q": "Qual o valor de $\\frac{11}{12} - \\frac{1}{4}$ na forma simplificada?",
+            "img": "",
+            "opts": ["$\\frac{10}{8}$", "$\\frac{2}{3}$", "$\\frac{3}{4}$", "$\\frac{1}{2}$"],
+            "ans": 1
+        },
+        {
+            "type": "multiple",
+            "q": "Resolve: $\\frac{2}{7} + \\frac{1}{14}$.",
+            "img": "",
+            "opts": ["$\\frac{3}{21}$", "$\\frac{5}{14}$", "$\\frac{3}{14}$", "$\\frac{1}{2}$"],
+            "ans": 1
+        },
+        {
+            "type": "multiple",
+            "q": "Quanto é $1 - \\frac{5}{6}$?",
+            "img": "",
+            "opts": ["$\\frac{1}{6}$", "$0$", "$\\frac{5}{6}$", "$1$"],
+            "ans": 0
+        },
+        {
+            "type": "multiple",
+            "q": "Calcula $\\frac{3}{8} + \\frac{1}{4}$.",
+            "img": "",
+            "opts": ["$\\frac{4}{12}$", "$\\frac{5}{8}$", "$\\frac{1}{2}$", "$1$"],
+            "ans": 1
+        },
+        {
+            "type": "multiple",
+            "q": "Qual o resultado de $\\frac{4}{5} - \\frac{1}{2}$?",
+            "img": "",
+            "opts": ["$\\frac{3}{3}$", "$\\frac{3}{10}$", "$\\frac{5}{7}$", "$\\frac{1}{10}$"],
+            "ans": 1
+        },
+        {
+            "type": "multiple",
+            "q": "Resolve e simplifica: $\\frac{1}{3} + \\frac{1}{6}$.",
+            "img": "",
+            "opts": ["$\\frac{2}{9}$", "$\\frac{1}{2}$", "$\\frac{1}{3}$", "$\\frac{1}{9}$"],
+            "ans": 1
+        }
+    ]
+},
+{
+    "id": "mat6_004",
+    "title": "Matemática 6.º Ano - Multiplicação de Frações",
+    "questions": [
+        {
+            "type": "multiple",
+            "q": "Qual é o resultado de $\\frac{1}{2} \\times \\frac{1}{3}$?",
+            "img": "",
+            "opts": ["$\\frac{2}{5}$", "$\\frac{1}{6}$", "$\\frac{1}{5}$", "$\\frac{2}{6}$"],
+            "ans": 1
+        },
+        {
+            "type": "multiple",
+            "q": "Calcula $3 \\times \\frac{2}{5}$.",
+            "img": "",
+            "opts": ["$\\frac{6}{5}$", "$\\frac{6}{15}$", "$\\frac{5}{5}$", "$\\frac{3}{5}$"],
+            "ans": 0
+        },
+        {
+            "type": "multiple",
+            "q": "Qual é o produto de $\\frac{3}{4} \\times \\frac{4}{3}$?",
+            "img": "",
+            "opts": ["$\\frac{7}{7}$", "$0$", "$1$", "$\\frac{12}{12}$"],
+            "ans": 2
+        },
+        {
+            "type": "multiple",
+            "q": "Calcula $\\frac{2}{3} \\times \\frac{5}{7}$.",
+            "img": "",
+            "opts": ["$\\frac{10}{21}$", "$\\frac{7}{10}$", "$\\frac{10}{10}$", "$\\frac{14}{15}$"],
+            "ans": 0
+        },
+        {
+            "type": "multiple",
+            "q": "Quanto é a 'metade de três quartos'?",
+            "img": "",
+            "opts": ["$\\frac{3}{2}$", "$\\frac{4}{6}$", "$\\frac{3}{8}$", "$\\frac{1}{4}$"],
+            "ans": 2
+        },
+        {
+            "type": "multiple",
+            "q": "Qual o resultado de $\\frac{5}{2} \\times \\frac{4}{5}$ na forma simplificada?",
+            "img": "",
+            "opts": ["$\\frac{20}{10}$", "$2$", "$\\frac{9}{7}$", "$10$"],
+            "ans": 1
+        },
+        {
+            "type": "multiple",
+            "q": "Calcula $\\frac{3}{10} \\times 10$.",
+            "img": "",
+            "opts": ["$\\frac{3}{100}$", "$30$", "$\\frac{30}{100}$", "$3$"],
+            "ans": 3
+        },
+        {
+            "type": "multiple",
+            "q": "Qual é o valor de $0 \\times \\frac{7}{9}$?",
+            "img": "",
+            "opts": ["$\\frac{7}{9}$", "$0$", "$1$", "$\\frac{0}{1}$"],
+            "ans": 1
+        },
+        {
+            "type": "multiple",
+            "q": "Resolve: $\\frac{1}{2} \\times \\frac{2}{3} \\times \\frac{3}{4}$.",
+            "img": "",
+            "opts": ["$\\frac{6}{24}$", "$\\frac{1}{4}$", "$\\frac{1}{2}$", "$\\frac{6}{9}$"],
+            "ans": 1
+        },
+        {
+            "type": "multiple",
+            "q": "O quadrado de $\\frac{1}{3}$ (ou seja, $\\frac{1}{3} \\times \\frac{1}{3}$) é:",
+            "img": "",
+            "opts": ["$\\frac{2}{3}$", "$\\frac{1}{6}$", "$\\frac{1}{9}$", "$\\frac{2}{6}$"],
+            "ans": 2
+        },
+        {
+            "type": "multiple",
+            "q": "Qual é o resultado de $\\frac{4}{5} \\times \\frac{1}{2}$?",
+            "img": "",
+            "opts": ["$\\frac{4}{10}$", "$\\frac{2}{5}$", "$\\frac{5}{7}$", "$\\frac{4}{7}$"],
+            "ans": 1
+        },
+        {
+            "type": "multiple",
+            "q": "Calcula $\\frac{11}{4} \\times \\frac{2}{11}$.",
+            "img": "",
+            "opts": ["$\\frac{1}{2}$", "$\\frac{22}{44}$", "$\\frac{2}{4}$", "Todas as anteriores"],
+            "ans": 3
+        },
+        {
+            "type": "multiple",
+            "q": "Um retângulo tem $\\frac{1}{2}$ m de largura e $\\frac{3}{4}$ m de comprimento. Qual a sua área?",
+            "img": "",
+            "opts": ["$\\frac{4}{6}$ m²", "$\\frac{3}{8}$ m²", "$\\frac{4}{8}$ m²", "$1$ m²"],
+            "ans": 1
+        },
+        {
+            "type": "multiple",
+            "q": "Qual o valor de $1 \\times \\frac{5}{8}$?",
+            "img": "",
+            "opts": ["$1$", "$\\frac{8}{5}$", "$\\frac{5}{8}$", "$\\frac{6}{8}$"],
+            "ans": 2
+        },
+        {
+            "type": "multiple",
+            "q": "Ao multiplicar uma fração própria (menor que 1) por outra fração própria, o resultado é:",
+            "img": "",
+            "opts": ["Sempre maior que 1", "Sempre menor que as frações originais", "Igual a 1", "Sempre um número inteiro"],
+            "ans": 1
+        }
+    ]
+},
+{
+    "id": "mat6_005",
+    "title": "Matemática 6.º Ano - Divisão de Frações e Inversos",
+    "questions": [
+        {
+            "type": "multiple",
+            "q": "Qual é o inverso da fração $\\frac{2}{3}$?",
+            "img": "",
+            "opts": ["$\\frac{2}{3}$", "$\\frac{3}{2}$", "$\\frac{1}{3}$", "$1$"],
+            "ans": 1
+        },
+        {
+            "type": "multiple",
+            "q": "Qual é o inverso do número natural $5$?",
+            "img": "",
+            "opts": ["$5$", "$0,5$", "$\\frac{1}{5}$", "$\\frac{5}{1}$"],
+            "ans": 2
+        },
+        {
+            "type": "short",
+            "q": "Quanto vale o produto de qualquer número (diferente de zero) pelo seu inverso?",
+            "img": "",
+            "ans": "1"
+        },
+        {
+            "type": "multiple",
+            "q": "Qual é o resultado de $\\frac{3}{4} \\div \\frac{1}{2}$?",
+            "img": "",
+            "opts": ["$\\frac{3}{8}$", "$\\frac{3}{2}$", "$\\frac{4}{3}$", "$\\frac{6}{8}$"],
+            "ans": 1
+        },
+        {
+            "type": "multiple",
+            "q": "Qual destes números NÃO possui inverso?",
+            "img": "",
+            "opts": ["$1$", "$\\frac{1}{2}$", "$0$", "$100$"],
+            "ans": 2
+        },
+        {
+            "type": "short",
+            "q": "Qual é o inverso do número $1$?",
+            "img": "",
+            "ans": "1"
+        },
+        {
+            "type": "multiple",
+            "q": "Calcula $5 \\div \\frac{1}{5}$.",
+            "img": "",
+            "opts": ["$1$", "$25$", "$\\frac{1}{25}$", "$5$"],
+            "ans": 1
+        },
+        {
+            "type": "multiple",
+            "q": "Quanto é $\\frac{2}{5} \\div 2$?",
+            "img": "",
+            "opts": ["$\\frac{4}{5}$", "$\\frac{2}{10}$", "$\\frac{1}{5}$", "As opções B e C estão corretas"],
+            "ans": 3
+        },
+        {
+            "type": "short",
+            "q": "Se o inverso de um número $x$ é $8$, qual é o valor de $x$?",
+            "img": "",
+            "ans": "1/8"
+        },
+        {
+            "type": "multiple",
+            "q": "Resolve: $\\frac{1}{2} \\div \\frac{1}{2}$.",
+            "img": "",
+            "opts": ["$\\frac{1}{4}$", "$1$", "$0,25$", "$0$"],
+            "ans": 1
+        },
+        {
+            "type": "multiple",
+            "q": "Qual é o inverso do número decimal $0,5$?",
+            "img": "",
+            "opts": ["$5$", "$0,2$", "$2$", "$\\frac{1}{5}$"],
+            "ans": 2
+        },
+        {
+            "type": "multiple",
+            "q": "Ao dividir $10$ por $\\frac{1}{2}$, obtemos:",
+            "img": "",
+            "opts": ["$5$", "$20$", "$10,5$", "$2$"],
+            "ans": 1
+        },
+        {
+            "type": "short",
+            "q": "Calcula $\\frac{4}{7} \\div \\frac{4}{7}$.",
+            "img": "",
+            "ans": "1"
+        },
+        {
+            "type": "multiple",
+            "q": "Um fio de $\\frac{3}{4}$ de metro foi cortado em pedaços de $\\frac{1}{8}$ de metro cada. Quantos pedaços se obtiveram?",
+            "img": "",
+            "opts": ["$4$", "$6$", "$8$", "$3$"],
+            "ans": 1
+        },
+        {
+            "type": "multiple",
+            "q": "Qual é o resultado de $\\frac{2}{3} \\div \\frac{4}{3}$ na forma simplificada?",
+            "img": "",
+            "opts": ["$\\frac{8}{9}$", "$\\frac{1}{2}$", "$2$", "$\\frac{6}{12}$"],
+            "ans": 1
         }
     ]
 }
