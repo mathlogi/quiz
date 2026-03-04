@@ -488,8 +488,8 @@ window.database = [
             "type": "multiple",
             "q": "Qual é o resultado de $\\frac{2}{5} \\times \\frac{5}{2}$?",
             "img": "",
-            "opts": ["$\\frac{10}{10}$", "$1$", "$\\frac{4}{25}$", "$\\frac{25}{4}$"],
-            "ans": 1
+            "opts": ["$\\frac{20}{10}$", "$1$", "$\\frac{4}{25}$", "$\\frac{25}{4}$"],
+            "ans": 2
         },
         {
             "type": "multiple",
