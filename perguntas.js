@@ -1095,6 +1095,116 @@ window.database = [
             "ans": 1
         }
     ]
+},
+{
+    id: "mat_5_calculo_mental",
+    title: "Cálculo Mental - 5.º Ano",
+    questions: [
+        { 
+            type: "multiple", 
+            q: "Qual é o resultado de 7 x 8?", 
+            img: "", 
+            opts: ["48", "54", "56", "64"], 
+            ans: 2 
+        },
+        { 
+            type: "multiple", 
+            q: "Quanto é 150 + 270?", 
+            img: "", 
+            opts: ["320", "420", "390", "450"], 
+            ans: 1 
+        },
+        { 
+            type: "multiple", 
+            q: "Qual é a diferença entre 100 e 37?", 
+            img: "", 
+            opts: ["63", "73", "53", "67"], 
+            ans: 0 
+        },
+        { 
+            type: "multiple", 
+            q: "Se multiplicares 9 por 6, obténs:", 
+            img: "", 
+            opts: ["45", "54", "63", "56"], 
+            ans: 1 
+        },
+        { 
+            type: "multiple", 
+            q: "Quanto é 450 - 120?", 
+            img: "", 
+            opts: ["320", "350", "330", "230"], 
+            ans: 2 
+        },
+        { 
+            type: "multiple", 
+            q: "O triplo de 15 é:", 
+            img: "", 
+            opts: ["30", "45", "60", "35"], 
+            ans: 1 
+        },
+        { 
+            type: "multiple", 
+            q: "Qual é o resultado de 12 x 4?", 
+            img: "", 
+            opts: ["44", "48", "36", "52"], 
+            ans: 1 
+        },
+        { 
+            type: "multiple", 
+            q: "Quanto falta a 75 para chegar a 100?", 
+            img: "", 
+            opts: ["15", "20", "25", "35"], 
+            ans: 2 
+        },
+        { 
+            type: "multiple", 
+            q: "800 + 150 + 50 é igual a:", 
+            img: "", 
+            opts: ["900", "950", "1000", "1050"], 
+            ans: 2 
+        },
+        { 
+            type: "multiple", 
+            q: "Qual o valor de 7 x 7?", 
+            img: "", 
+            opts: ["42", "48", "49", "56"], 
+            ans: 2 
+        },
+        { 
+            type: "multiple", 
+            q: "Quanto é a metade de 150?", 
+            img: "", 
+            opts: ["50", "70", "75", "85"], 
+            ans: 2 
+        },
+        { 
+            type: "multiple", 
+            q: "O resultado de 1000 - 250 é:", 
+            img: "", 
+            opts: ["750", "850", "650", "700"], 
+            ans: 0 
+        },
+        { 
+            type: "multiple", 
+            q: "Quanto é 6 x 4 somado com 10?", 
+            img: "", 
+            opts: ["24", "30", "34", "40"], 
+            ans: 2 
+        },
+        { 
+            type: "multiple", 
+            q: "Qual é o dobro de 48?", 
+            img: "", 
+            opts: ["86", "96", "94", "106"], 
+            ans: 1 
+        },
+        { 
+            type: "short", 
+            q: "Qual é o número que multiplicado por 5 dá 45?", 
+            img: "", 
+            ans: "9" 
+        }
+    ]
 }
 
 ];
