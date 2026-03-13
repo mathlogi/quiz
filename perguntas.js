@@ -1205,6 +1205,156 @@ window.database = [
             ans: "9" 
         }
     ]
+},
+{
+    "id": "mat_02_circulo",
+    "title": "Matemática 6.º Ano - Circunferência e Círculo",
+    "questions": [
+        { 
+            "type": "multiple", 
+            "q": "O que é uma circunferência?", 
+            "img": "", 
+            "opts": [
+                "A linha curva e fechada que delimita o círculo.", 
+                "A região interna do círculo.", 
+                "Um polígono com infinitos lados.", 
+                "O segmento de reta que une dois pontos na borda."
+            ], 
+            "ans": 0 
+        },
+        { 
+            "type": "multiple", 
+            "q": "Como se define um círculo?", 
+            "img": "", 
+            "opts": [
+                "Apenas a linha de contorno.", 
+                "A reunião de uma circunferência com a sua respetiva parte interna.", 
+                "O ponto exato no meio da figura.", 
+                "A distância entre duas extremidades passando pelo centro."
+            ], 
+            "ans": 1 
+        },
+        { 
+            "type": "short", 
+            "q": "Como se chama o segmento de reta que une o centro a qualquer ponto da circunferência?", 
+            "img": "", 
+            "ans": "raio" 
+        },
+        { 
+            "type": "multiple", 
+            "q": "O diâmetro de uma circunferência corresponde a quantas vezes a medida do raio?", 
+            "img": "", 
+            "opts": ["A metade", "Três vezes", "Duas vezes", "Quatro vezes"], 
+            "ans": 2 
+        },
+        { 
+            "type": "short", 
+            "q": "Como se chama uma corda que passa exatamente pelo centro da circunferência?", 
+            "img": "", 
+            "ans": "diâmetro" 
+        },
+        { 
+            "type": "multiple", 
+            "q": "Qual destas expressões matemáticas permite calcular o perímetro (P) do círculo?", 
+            "img": "", 
+            "opts": ["P = π × r", "P = π × r²", "P = d / π", "P = 2 × π × r"], 
+            "ans": 3 
+        },
+        { 
+            "type": "multiple", 
+            "q": "Qual destas expressões matemáticas permite calcular a área (A) do círculo?", 
+            "img": "", 
+            "opts": ["A = 2 × π × r", "A = π × d", "A = π × r²", "A = π × r"], 
+            "ans": 2 
+        },
+        { 
+            "type": "short", 
+            "q": "Na fórmula da área do círculo (A = π × r²), o que representa a letra 'r'?", 
+            "img": "", 
+            "ans": "raio" 
+        },
+        { 
+            "type": "multiple", 
+            "q": "Considerando o valor aproximado de π = 3,1416, qual é o perímetro de um círculo com 10 cm de diâmetro?", 
+            "img": "", 
+            "opts": ["31,416 cm", "314,16 cm", "15,708 cm", "62,832 cm"], 
+            "ans": 0 
+        },
+        { 
+            "type": "multiple", 
+            "q": "Considerando π = 3,1416, qual a área de um círculo com 10 cm de raio?", 
+            "img": "", 
+            "opts": ["31,416 cm²", "314,16 cm²", "62,832 cm²", "15,708 cm²"], 
+            "ans": 1 
+        },
+        { 
+            "type": "short", 
+            "q": "Se o raio de um círculo for de 7 cm, qual é o comprimento do seu diâmetro (apenas o número)?", 
+            "img": "", 
+            "ans": "14" 
+        },
+        { 
+            "type": "multiple", 
+            "q": "Calcula a área de um círculo de raio 2 cm (usa π = 3,14).", 
+            "img": "", 
+            "opts": ["6,28 cm²", "12,56 cm²", "3,14 cm²", "25,12 cm²"], 
+            "ans": 1 
+        },
+        { 
+            "type": "multiple", 
+            "q": "Calcula o perímetro de um círculo de raio 2 cm (usa π = 3,14).", 
+            "img": "", 
+            "opts": ["12,56 cm", "6,28 cm", "25,12 cm", "3,14 cm"], 
+            "ans": 0 
+        },
+        { 
+            "type": "multiple", 
+            "q": "Uma pista de atletismo circular tem 100 metros de diâmetro. Que distância se percorre numa volta completa? (usa π = 3,14)", 
+            "img": "", 
+            "opts": ["157 m", "628 m", "314 m", "3140 m"], 
+            "ans": 2 
+        },
+        { 
+            "type": "multiple", 
+            "q": "Qual é a constante de proporcionalidade direta entre o perímetro de qualquer círculo e o seu diâmetro?", 
+            "img": "", 
+            "opts": ["O raio", "A área", "O número Pi (π)", "O centro"], 
+            "ans": 2 
+        },
+        { 
+            "type": "multiple", 
+            "q": "Determina a área de um semicírculo (metade de um círculo) com um raio de 10 cm (usa π = 3,14).", 
+            "img": "", 
+            "opts": ["314 cm²", "62,8 cm²", "31,4 cm²", "157 cm²"], 
+            "ans": 3 
+        },
+        { 
+            "type": "short", 
+            "q": "Para calcular a medida do contorno de uma tampa circular, devemos usar a fórmula do...", 
+            "img": "", 
+            "ans": "perímetro" 
+        },
+        { 
+            "type": "multiple", 
+            "q": "Qual é a área da quarta parte de um círculo (um quarto de círculo) de raio 2 cm? (usa π = 3,14)", 
+            "img": "", 
+            "opts": ["3,14 cm²", "12,56 cm²", "6,28 cm²", "1,57 cm²"], 
+            "ans": 0 
+        },
+        { 
+            "type": "short", 
+            "q": "O ponto que está exatamente à mesma distância de todos os pontos da linha da circunferência chama-se...", 
+            "img": "", 
+            "ans": "centro" 
+        },
+        { 
+            "type": "multiple", 
+            "q": "Se um círculo tem um diâmetro de 8 cm, a sua área será calculada com que valor de raio?", 
+            "img": "", 
+            "opts": ["8 cm", "16 cm", "4 cm", "2 cm"], 
+            "ans": 2 
+        }
+    ]
 }
 
 ];
